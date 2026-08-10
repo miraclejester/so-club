@@ -1,18 +1,47 @@
-import { defineConfig, globalIgnores } from "eslint/config";
-import nextVitals from "eslint-config-next/core-web-vitals";
-import nextTs from "eslint-config-next/typescript";
+import js from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import reactPlugin from 'eslint-plugin-react';
+import hooksPlugin from 'eslint-plugin-react-hooks';
+import nextPlugin from '@next/eslint-plugin-next';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 
-const eslintConfig = defineConfig([
-  ...nextVitals,
-  ...nextTs,
-  // Override default ignores of eslint-config-next.
-  globalIgnores([
-    // Default ignores of eslint-config-next:
-    ".next/**",
-    "out/**",
-    "build/**",
-    "next-env.d.ts",
-  ]),
-]);
+export default tseslint.config(
+  // 1. Ignore build artifacts and system folders
+  {
+    ignores: ['.next/*', 'node_modules/*', 'out/*', 'dist/*'],
+  },
 
-export default eslintConfig;
+  // 2. Core JavaScript and TypeScript configurations
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+
+  // 3. React, React Hooks, and Next.js setup
+  {
+    files: ['**/*.{ts,tsx,js,jsx}'],
+    plugins: {
+      react: reactPlugin,
+      'react-hooks': hooksPlugin,
+      '@next/next': nextPlugin,
+    },
+    languageOptions: {
+      parserOptions: {
+        ecmaFeatures: { jsx: true },
+      },
+    },
+    rules: {
+      // React Hooks rules
+      ...hooksPlugin.configs.recommended.rules,
+
+      // Next.js core rules
+      ...nextPlugin.configs.recommended.rules,
+      ...nextPlugin.configs['core-web-vitals'].rules,
+
+      // Custom rules adjustments
+      '@typescript-eslint/no-unused-vars': ['warn'],
+      'react/react-in-jsx-scope': 'off', // Not needed in Next.js
+    },
+  },
+
+  // 4. MUST BE LAST: Integrates Prettier and disables formatting conflicts
+  eslintPluginPrettierRecommended
+);
