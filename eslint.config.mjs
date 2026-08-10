@@ -8,7 +8,13 @@ import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 export default tseslint.config(
   // 1. Ignore build artifacts and system folders
   {
-    ignores: ['.next/*', 'node_modules/*', 'out/*', 'dist/*'],
+    ignores: [
+      '.next/*',
+      'node_modules/*',
+      'out/*',
+      'dist/*',
+      'prisma/generated/*',
+    ],
   },
 
   // 2. Core JavaScript and TypeScript configurations
