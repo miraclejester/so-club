@@ -12,7 +12,7 @@
     "format:check": "prettier --check .",
     "format:fix": "prettier --write .",
     "postinstall": "prisma generate",
-    "deploy:prisma": "dotenv -e .env.production.local -- npx prisma migrate deploy"
+    "deploy:prisma": "dotenv -e .env.production.local -- npx prisma migrate deploy",
     "docker:db": "docker compose up -d"
   },
   "type": "module",
