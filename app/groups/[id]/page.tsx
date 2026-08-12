@@ -3,7 +3,11 @@ import { notFound } from 'next/navigation';
 import {
     AuthorizationError,
     requireMembership,
+    roleIsAtLeast,
 } from '@/lib/authorizationControl';
+import { headers } from 'next/headers';
+import InvitePanel from '@/components/InvitePanel';
+import { createInvite } from '@/lib/invites';
 
 type GroupDetailPageProps = {
     params: Promise<{ id: string }>;
@@ -14,8 +18,9 @@ export default async function GroupDetailPage({
 }: GroupDetailPageProps) {
     const { id } = await params;
 
+    let membership;
     try {
-        await requireMembership(id);
+        membership = (await requireMembership(id)).membership;
     } catch (error) {
         if (error instanceof AuthorizationError) {
             notFound();
@@ -27,6 +32,9 @@ export default async function GroupDetailPage({
         where: { id },
         include: { memberships: { include: { user: true } } },
     });
+
+    const isAdmin = roleIsAtLeast(membership.role, 'ADMIN');
+    const origin = (await headers()).get('origin') ?? '';
 
     if (!group) {
         notFound();
@@ -41,6 +49,13 @@ export default async function GroupDetailPage({
             <p className="mt-4 text-sm text-gray-500">
                 {group.memberships.length} member(s)
             </p>
+
+            {isAdmin ? (
+                <InvitePanel
+                    action={createInvite.bind(null, id)}
+                    origin={origin}
+                />
+            ) : null}
         </main>
     );
 }

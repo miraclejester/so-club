@@ -19,16 +19,17 @@ enum Role {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  email         String @unique
-  username      String
-  emailVerified DateTime?
-  image         String?
-  createdAt     DateTime @default(now())
-  accounts      Account[]
-  sessions      Session[]
-  createdGroups Group[] @relation("GroupCreator")
-  memberships   Membership[]
+  id              String    @id @default(cuid())
+  email           String @unique
+  username        String
+  emailVerified   DateTime?
+  image           String?
+  createdAt       DateTime @default(now())
+  accounts        Account[]
+  sessions        Session[]
+  createdGroups   Group[] @relation("GroupCreator")
+  memberships     Membership[]
+  createdInvites  Invite[] @relation("InviteCreator")
 }
 
 model Group {
@@ -40,6 +41,7 @@ model Group {
   memberships   Membership[]
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  invites       Invite[]
 }
 
 model Membership {
@@ -52,6 +54,20 @@ model Membership {
   group         Group     @relation(fields: [groupId], references:[id], onDelete: Cascade)
   
   @@unique([userId, groupId])
+}
+
+model Invite {
+  id            String    @id @default(cuid())
+  token         String    @unique @default(cuid())
+  groupId       String    @unique
+  createdById   String
+  expiresAt     DateTime?
+  maxUses       Int?
+  useCount      Int       @default(0)
+  createdAt     DateTime  @default(now())
+  
+  group         Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  createdBy     User      @relation("InviteCreator", fields: [createdById], references: [id])
 }
 
 model Account {
