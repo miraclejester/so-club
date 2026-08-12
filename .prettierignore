@@ -1,3 +1,4 @@
 ﻿.agents/*
 **/*.json
 .prettierrc
+docker-compose.yml

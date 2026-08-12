@@ -1,5 +1,9 @@
 ﻿import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
+import {
+    AuthorizationError,
+    requireMembership,
+} from '@/lib/authorizationControl';
 
 type GroupDetailPageProps = {
     params: Promise<{ id: string }>;
@@ -9,6 +13,15 @@ export default async function GroupDetailPage({
     params,
 }: GroupDetailPageProps) {
     const { id } = await params;
+
+    try {
+        await requireMembership(id);
+    } catch (error) {
+        if (error instanceof AuthorizationError) {
+            notFound();
+        }
+        throw error;
+    }
 
     const group = await prisma.group.findUnique({
         where: { id },
