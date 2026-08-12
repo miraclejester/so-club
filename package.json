@@ -10,7 +10,8 @@
     "lint:fix": "eslint . --fix",
     "format:check": "prettier --check .",
     "format:fix": "prettier --write .",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "deploy:prisma": "npx dotenv -e .env.production.local -- npx prisma migrate deploy"
   },
   "type": "module",
   "dependencies": {
