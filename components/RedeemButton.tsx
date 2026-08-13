@@ -2,6 +2,7 @@
 
 import { ErrorState } from '@/lib/types';
 import { JSX, useActionState } from 'react';
+import { SubmitButton } from '@/components/SubmitButton';
 
 const initialState: ErrorState = { error: null };
 
@@ -10,13 +11,11 @@ type RedeemButtonProps = {
 };
 
 export function RedeemButton({ action }: RedeemButtonProps): JSX.Element {
-    const [state, formAction, pending] = useActionState(action, initialState);
+    const [state, formAction] = useActionState(action, initialState);
 
     return (
         <form action={formAction}>
-            <button type="submit" disabled={pending} className="rounded border px-3 py-1 disabled:opacity-50">
-                {pending ? 'Joining...' : 'Join group'}
-            </button>
+            <SubmitButton pendingText="Joining..."> Join group </SubmitButton>
             {state.error ? <p className="mt-2 text-sm text-red-600">{state.error}</p> : null}
         </form>
     );

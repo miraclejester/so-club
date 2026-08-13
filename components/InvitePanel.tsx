@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import { useActionState, useState } from 'react';
+import { SubmitButton } from '@/components/SubmitButton';
 
 type InvitePanelInviteState = {
     token: string | null;
@@ -15,7 +16,7 @@ type InvitePanelProps = {
 };
 
 export default function InvitePanel({ action, origin }: InvitePanelProps) {
-    const [state, formAction, pending] = useActionState(action, initialState);
+    const [state, formAction] = useActionState(action, initialState);
     const [copied, setCopied] = useState(false);
 
     const inviteUrl = state.token ? `${origin}/invite/${state.token}` : null;
@@ -23,9 +24,7 @@ export default function InvitePanel({ action, origin }: InvitePanelProps) {
     return (
         <div className="mt-6 border-t pt-4">
             <form action={formAction}>
-                <button type="submit" disabled={pending} className="rounded border px-3 py-1 disabled:opacity-50">
-                    {pending ? 'Generating...' : 'Create invite link'}
-                </button>
+                <SubmitButton pendingText="Generating...">Create invite link</SubmitButton>
             </form>
             {state.error ? <p className="mt-2 text-sm text-red-600">{state.error}</p> : null}
 

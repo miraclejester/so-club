@@ -2,11 +2,12 @@
 
 import { useActionState } from 'react';
 import { createGroup } from '@/lib/groups';
+import { SubmitButton } from '@/components/SubmitButton';
 
 const initialState = { error: null as string | null };
 
 export default function CreateGroupForm() {
-    const [state, formAction, pending] = useActionState(createGroup, initialState);
+    const [state, formAction] = useActionState(createGroup, initialState);
 
     return (
         <form action={formAction} className="flex max-w-md flex-col gap-4">
@@ -20,9 +21,7 @@ export default function CreateGroupForm() {
             </label>
             {state.error ? <p className="text-sm text-red-600">{state.error}</p> : null}
 
-            <button type="submit" disabled={pending} className="rounded border px-3 py-1 disabled:opacity-50">
-                {pending ? 'Creating...' : 'Create group'}
-            </button>
+            <SubmitButton pendingText="Creating...">Create group</SubmitButton>
         </form>
     );
 }
