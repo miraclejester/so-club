@@ -58,6 +58,9 @@ export default async function GroupDetailPage({ params }: GroupDetailPageProps) 
                 </ul>
             </section>
 
+            <Link href={`/groups/${id}/add`} className="text-sm text-gray-500 hover:underline">
+                + Add Movie
+            </Link>
             {isAdmin ? <InvitePanel action={createInvite.bind(null, id)} origin={origin} /> : null}
         </main>
     );
