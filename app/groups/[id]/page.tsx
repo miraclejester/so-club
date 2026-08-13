@@ -4,6 +4,7 @@ import { AuthorizationError, requireMembership, roleIsAtLeast } from '@/lib/auth
 import { headers } from 'next/headers';
 import InvitePanel from '@/components/InvitePanel';
 import { createInvite } from '@/lib/invites';
+import Link from 'next/link';
 
 type GroupDetailPageProps = {
     params: Promise<{ id: string }>;
@@ -12,33 +13,50 @@ type GroupDetailPageProps = {
 export default async function GroupDetailPage({ params }: GroupDetailPageProps) {
     const { id } = await params;
 
-    let membership;
-    try {
-        membership = (await requireMembership(id)).membership;
-    } catch (error) {
-        if (error instanceof AuthorizationError) {
+    const { membership } = await requireMembership(id).catch((e) => {
+        if (e instanceof AuthorizationError) {
             notFound();
         }
-        throw error;
-    }
+        throw e;
+    });
 
     const group = await prisma.group.findUnique({
         where: { id },
-        include: { memberships: { include: { user: true } } },
+        include: {
+            memberships: {
+                include: { user: true },
+                orderBy: [{ role: 'asc' }, { joinedAt: 'asc' }],
+            },
+        },
     });
-
-    const isAdmin = roleIsAtLeast(membership.role, 'ADMIN');
-    const origin = (await headers()).get('origin') ?? '';
 
     if (!group) {
         notFound();
     }
 
+    const isAdmin = roleIsAtLeast(membership.role, 'ADMIN');
+    const origin = (await headers()).get('origin') ?? '';
+
     return (
-        <main className="p-6">
-            <h1 className="text-xl font-semibold">{group.name}</h1>
+        <main className="max-auto max-w-2xl p-6">
+            <Link href="/groups" className="text-sm text-gray-500 hover:underline">
+                Back to your groups
+            </Link>
+
+            <h1 className="mt-2 text-xl font-semibold">{group.name}</h1>
             {group.description ? <p className="mt-2 text-gray-600">{group.description}</p> : null}
-            <p className="mt-4 text-sm text-gray-500">{group.memberships.length} member(s)</p>
+
+            <section className="mt-6">
+                <h2 className="text-sm font-medium text-gray-500">Members: {group.memberships.length}</h2>
+                <ul className="mt-2 divide-y rounded border">
+                    {group.memberships.map((m) => (
+                        <li key={m.id} className="flex items-center justify-between px-3 py-2">
+                            <span>{m.user.username ?? 'Unknown'}</span>
+                            <span className="text-xs uppercase text-gray-400">{m.role}</span>
+                        </li>
+                    ))}
+                </ul>
+            </section>
 
             {isAdmin ? <InvitePanel action={createInvite.bind(null, id)} origin={origin} /> : null}
         </main>
