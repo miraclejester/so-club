@@ -26,10 +26,7 @@ export function roleIsAtLeast(role: Role, min: Role): boolean {
     return ROLE_RANK[role] >= ROLE_RANK[min];
 }
 
-export async function requireMembership(
-    groupId: string,
-    minRole: Role = 'MEMBER'
-): Promise<MembershipContext> {
+export async function requireMembership(groupId: string, minRole: Role = 'MEMBER'): Promise<MembershipContext> {
     const user = await getCurrentUser();
     if (!user?.id) {
         redirect('/api/auth/signin');
@@ -44,9 +41,7 @@ export async function requireMembership(
     }
 
     if (!roleIsAtLeast(membership.role, minRole)) {
-        throw new AuthorizationError(
-            `This action requires the ${minRole} role`
-        );
+        throw new AuthorizationError(`This action requires the ${minRole} role`);
     }
 
     return {

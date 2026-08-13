@@ -12,11 +12,7 @@ vi.mock('next/navigation', () => ({
     }),
 }));
 
-import {
-    requireMembership,
-    AuthorizationError,
-    roleIsAtLeast,
-} from '@/lib/authorizationControl';
+import { requireMembership, AuthorizationError, roleIsAtLeast } from '@/lib/authorizationControl';
 import { getCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { Role } from '@/prisma/generated/prisma/enums';
@@ -42,9 +38,7 @@ describe('requireMembership', () => {
             username: 'u1',
         });
         vi.mocked(prisma.membership.findUnique).mockResolvedValue(null);
-        await expect(requireMembership('g1')).rejects.toBeInstanceOf(
-            AuthorizationError
-        );
+        await expect(requireMembership('g1')).rejects.toBeInstanceOf(AuthorizationError);
     });
 
     it('throws when the role is insufficient', async () => {
@@ -52,12 +46,8 @@ describe('requireMembership', () => {
             id: 'u1',
             username: 'u1',
         });
-        vi.mocked(prisma.membership.findUnique).mockResolvedValue(
-            membershipWithRole('MEMBER')
-        );
-        await expect(requireMembership('g1', 'ADMIN')).rejects.toBeInstanceOf(
-            AuthorizationError
-        );
+        vi.mocked(prisma.membership.findUnique).mockResolvedValue(membershipWithRole('MEMBER'));
+        await expect(requireMembership('g1', 'ADMIN')).rejects.toBeInstanceOf(AuthorizationError);
     });
 
     it('returns the membership when authorized', async () => {
@@ -65,9 +55,7 @@ describe('requireMembership', () => {
             id: 'u1',
             username: 'u1',
         });
-        vi.mocked(prisma.membership.findUnique).mockResolvedValue(
-            membershipWithRole('OWNER')
-        );
+        vi.mocked(prisma.membership.findUnique).mockResolvedValue(membershipWithRole('OWNER'));
         const result = await requireMembership('g1', 'ADMIN');
         expect(result.membership.role).toBe('OWNER');
         expect(result.userId).toBe('u1');
