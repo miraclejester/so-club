@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { AuthorizationError, requireMembership, roleIsAtLeast } from '@/lib/authorizationControl';
 import { headers } from 'next/headers';
 import InvitePanel from '@/components/InvitePanel';
-import { createInvite } from '@/lib/invites';
+import { createInvite } from '@/lib/groups/invites';
 import Link from 'next/link';
 
 type GroupDetailPageProps = {

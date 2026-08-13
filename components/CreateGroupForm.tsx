@@ -1,7 +1,7 @@
 ﻿'use client';
 
 import { useActionState } from 'react';
-import { createGroup } from '@/lib/groups';
+import { createGroup } from '@/lib/groups/groups';
 import { SubmitButton } from '@/components/SubmitButton';
 
 const initialState = { error: null as string | null };

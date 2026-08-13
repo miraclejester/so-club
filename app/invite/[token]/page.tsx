@@ -1,5 +1,5 @@
 ﻿import { JSX, ReactNode } from 'react';
-import { getInvite, type InviteWithDetails, redeemInvite } from '@/lib/invites';
+import { getInvite, type InviteWithDetails, redeemInvite } from '@/lib/groups/invites';
 import { getCurrentUser, LoggedInUser } from '@/lib/auth';
 import { RedeemButton } from '@/components/RedeemButton';
 import Link from 'next/link';
