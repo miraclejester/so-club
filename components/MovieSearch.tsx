@@ -2,11 +2,17 @@
 
 import { JSX, useEffect, useState } from 'react';
 import { NormalizedMediaItem } from '@/lib/media';
+import type { AddAction } from '@/lib/media/backlog';
+import AddToBacklogButton from '@/components/AddToBacklogButton';
 import Image from 'next/image';
 
 type Status = 'idle' | 'loading' | 'done' | 'error';
 
-export function MovieSearch(): JSX.Element {
+type MovieSearchProps = {
+    addAction: AddAction;
+};
+
+export default function MovieSearch({ addAction }: MovieSearchProps): JSX.Element {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState<NormalizedMediaItem[]>([]);
     const [status, setStatus] = useState<Status>('idle');
@@ -65,7 +71,7 @@ export function MovieSearch(): JSX.Element {
                 {status !== 'idle' && results.length > 0 ? (
                     <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                         {results.map((m) => (
-                            <ResultsCard key={`${m.source}-${m.externalId}`} item={m} />
+                            <ResultsCard key={`${m.source}-${m.externalId}`} item={m} addAction={addAction} />
                         ))}
                     </ul>
                 ) : null}
@@ -74,7 +80,12 @@ export function MovieSearch(): JSX.Element {
     );
 }
 
-function ResultsCard({ item }: { item: NormalizedMediaItem }): JSX.Element {
+type ResultsCardProps = {
+    item: NormalizedMediaItem;
+    addAction: AddAction;
+};
+
+function ResultsCard({ item, addAction }: ResultsCardProps): JSX.Element {
     const year = item.releaseDate?.slice(0, 4) ?? '--';
     return (
         <li className="rounded border p-2">
@@ -89,6 +100,7 @@ function ResultsCard({ item }: { item: NormalizedMediaItem }): JSX.Element {
                 {item.title}
             </p>
             <p className="text-xs text-gray-500">{year}</p>
+            <AddToBacklogButton source={item.source} externalId={item.externalId} action={addAction} />
         </li>
     );
 }

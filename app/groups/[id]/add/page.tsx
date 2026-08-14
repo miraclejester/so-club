@@ -2,7 +2,8 @@
 import { AuthorizationError, requireMembership } from '@/lib/authorizationControl';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { MovieSearch } from '@/components/MovieSearch';
+import MovieSearch from '@/components/MovieSearch';
+import { addToBacklog } from '@/lib/media/backlog';
 
 type AddMediaPageProps = {
     params: Promise<{ id: string }>;
@@ -25,7 +26,7 @@ export default async function AddMediaPage({ params }: AddMediaPageProps): Promi
             </Link>
             <h1 className="mt-2 text-xl font-semibold">Add a movie</h1>
             <div className="mt-4">
-                <MovieSearch />
+                <MovieSearch addAction={addToBacklog.bind(null, id)} />
             </div>
         </main>
     );
