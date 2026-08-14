@@ -7,4 +7,9 @@ export default defineConfig({
             '@': fileURLToPath(new URL('./', import.meta.url)),
         },
     },
+
+    test: {
+        clearMocks: true,
+        unstubGlobals: true,
+    },
 });

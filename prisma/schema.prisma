@@ -18,6 +18,16 @@ enum Role {
   MEMBER
 }
 
+enum MediaSource {
+  TMDB
+}
+
+enum MediaType {
+  MOVIE
+  BOOK
+  GAME
+}
+
 model User {
   id              String    @id @default(cuid())
   email           String @unique
@@ -68,6 +78,21 @@ model Invite {
   
   group         Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
   createdBy     User      @relation("InviteCreator", fields: [createdById], references: [id])
+}
+
+model MediaItem {
+  id                String @id @default(cuid())
+  source            MediaSource
+  externalId        String
+  type              MediaType
+  title             String
+  coverImage        String?
+  releaseDate       DateTime?
+  metadata          Json  @default("{}")
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
+  @@unique([source, externalId])
 }
 
 model Account {

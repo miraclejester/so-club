@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 vi.mock('@/lib/auth', () => ({
     getCurrentUser: vi.fn(),
@@ -17,8 +17,6 @@ import { getCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { Role } from '@/prisma/generated/prisma/enums';
 import { Membership } from '@/prisma/generated/prisma/client';
-
-beforeEach(() => vi.clearAllMocks());
 
 /** Only `role` is read by requireMembership, so the rest is left off. */
 const membershipWithRole = (role: Role) => ({ role }) as unknown as Membership;

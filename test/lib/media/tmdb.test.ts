@@ -1,4 +1,4 @@
-﻿import { describe, it, expect, vi, afterEach } from 'vitest';
+﻿import { describe, it, expect, vi } from 'vitest';
 import { TMDBProvider } from '@/lib/media/tmdb';
 
 const sample = {
@@ -23,7 +23,6 @@ const mockFetch = (status: number, body: unknown) =>
     } as Response);
 
 const provider = new TMDBProvider('test-token');
-afterEach(() => vi.restoreAllMocks());
 
 describe('TMDB provider', () => {
     it('properly normalizes a TMDB movie', async () => {
