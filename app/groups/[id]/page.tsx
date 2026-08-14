@@ -5,6 +5,7 @@ import { headers } from 'next/headers';
 import InvitePanel from '@/components/InvitePanel';
 import { createInvite } from '@/lib/groups/invites';
 import Link from 'next/link';
+import { BacklogList } from '@/components/BacklogList';
 
 type GroupDetailPageProps = {
     params: Promise<{ id: string }>;
@@ -34,6 +35,12 @@ export default async function GroupDetailPage({ params }: GroupDetailPageProps) 
         notFound();
     }
 
+    const backlog = await prisma.backlogItem.findMany({
+        where: { groupId: id },
+        include: { mediaItem: true, addedBy: true },
+        orderBy: { createdAt: 'desc' },
+    });
+
     const isAdmin = roleIsAtLeast(membership.role, 'ADMIN');
     const origin = (await headers()).get('origin') ?? '';
 
@@ -58,9 +65,15 @@ export default async function GroupDetailPage({ params }: GroupDetailPageProps) 
                 </ul>
             </section>
 
-            <Link href={`/groups/${id}/add`} className="text-sm text-gray-500 hover:underline">
-                + Add Movie
-            </Link>
+            <section className="mt-8">
+                <div className="flex items-center justify-between">
+                    <h2 className="text-sm font-medium text-gray-500">Backlog ({backlog.length})</h2>
+                    <Link href={`/groups/${id}/add`} className="rounded border px-3 py-1 text-sm">
+                        Add a movie
+                    </Link>
+                </div>
+                <BacklogList items={backlog} />
+            </section>
             {isAdmin ? <InvitePanel action={createInvite.bind(null, id)} origin={origin} /> : null}
         </main>
     );
