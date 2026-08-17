@@ -10,12 +10,15 @@ type Status = 'idle' | 'loading' | 'done' | 'error';
 
 type MovieSearchProps = {
     addAction: AddAction;
+    existingKeys: string[];
 };
 
-export default function MovieSearch({ addAction }: MovieSearchProps): JSX.Element {
+export default function MovieSearch({ addAction, existingKeys }: MovieSearchProps): JSX.Element {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState<NormalizedMediaItem[]>([]);
     const [status, setStatus] = useState<Status>('idle');
+
+    const existing = new Set(existingKeys);
 
     function handleChange(value: string): void {
         setQuery(value);
@@ -71,7 +74,12 @@ export default function MovieSearch({ addAction }: MovieSearchProps): JSX.Elemen
                 {status !== 'idle' && results.length > 0 ? (
                     <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                         {results.map((m) => (
-                            <ResultsCard key={`${m.source}-${m.externalId}`} item={m} addAction={addAction} />
+                            <ResultsCard
+                                key={`${m.source}-${m.externalId}`}
+                                item={m}
+                                addAction={addAction}
+                                alreadyInBacklog={existing.has(`${m.source}:${m.externalId}`)}
+                            />
                         ))}
                     </ul>
                 ) : null}
@@ -83,9 +91,10 @@ export default function MovieSearch({ addAction }: MovieSearchProps): JSX.Elemen
 type ResultsCardProps = {
     item: NormalizedMediaItem;
     addAction: AddAction;
+    alreadyInBacklog: boolean;
 };
 
-function ResultsCard({ item, addAction }: ResultsCardProps): JSX.Element {
+function ResultsCard({ item, addAction, alreadyInBacklog }: ResultsCardProps): JSX.Element {
     const year = item.releaseDate?.slice(0, 4) ?? '--';
     return (
         <li className="rounded border p-2">
@@ -100,7 +109,12 @@ function ResultsCard({ item, addAction }: ResultsCardProps): JSX.Element {
                 {item.title}
             </p>
             <p className="text-xs text-gray-500">{year}</p>
-            <AddToBacklogButton source={item.source} externalId={item.externalId} action={addAction} />
+            <AddToBacklogButton
+                source={item.source}
+                externalId={item.externalId}
+                action={addAction}
+                alreadyInBacklog={alreadyInBacklog}
+            />
         </li>
     );
 }

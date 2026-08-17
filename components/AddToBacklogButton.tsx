@@ -8,9 +8,15 @@ type AddToBacklogButtonProps = {
     source: MediaSource;
     externalId: string;
     action: AddAction;
+    alreadyInBacklog: boolean;
 };
 
-export default function AddToBacklogButton({ source, externalId, action }: AddToBacklogButtonProps): JSX.Element {
+export default function AddToBacklogButton({
+    source,
+    externalId,
+    action,
+    alreadyInBacklog,
+}: AddToBacklogButtonProps): JSX.Element {
     const [pending, startTransition] = useTransition();
     const [result, setResult] = useState<AddResult | null>(null);
 
@@ -20,7 +26,7 @@ export default function AddToBacklogButton({ source, externalId, action }: AddTo
         });
     }
 
-    const inBacklog = result?.status === 'added' || result?.status === 'duplicate';
+    const inBacklog = alreadyInBacklog || result?.status === 'added' || result?.status === 'duplicate';
 
     return (
         <div className="mt-1">
