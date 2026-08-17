@@ -6,6 +6,7 @@ import InvitePanel from '@/components/InvitePanel';
 import { createInvite } from '@/lib/groups/invites';
 import Link from 'next/link';
 import { BacklogList } from '@/components/BacklogList';
+import { buttonVariants } from '@/components/ui/button';
 
 type GroupDetailPageProps = {
     params: Promise<{ id: string }>;
@@ -68,7 +69,7 @@ export default async function GroupDetailPage({ params }: GroupDetailPageProps) 
             <section className="mt-8">
                 <div className="flex items-center justify-between">
                     <h2 className="text-sm font-medium text-gray-500">Backlog ({backlog.length})</h2>
-                    <Link href={`/groups/${id}/add`} className="rounded border px-3 py-1 text-sm">
+                    <Link href={`/groups/${id}/add`} className={buttonVariants({ variant: 'outline', size: 'sm' })}>
                         Add a movie
                     </Link>
                 </div>

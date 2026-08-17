@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import { SIGN_IN_URL } from '@/lib/globals';
+import { buttonVariants } from '@/components/ui/button';
 
 export default async function GroupsPage() {
     const user = await getCurrentUser();
@@ -24,7 +25,7 @@ export default async function GroupsPage() {
         <>
             <div className="flex items-center justify-between">
                 <h1 className="text-xl font-semibold">Your Groups</h1>
-                <Link href="/groups/new" className="rounded border px-3 py-1 text-sm">
+                <Link href="/groups/new" className={buttonVariants({ variant: 'outline', size: 'sm' })}>
                     Create group
                 </Link>
             </div>
