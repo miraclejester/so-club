@@ -1,11 +1,14 @@
 ﻿import NextAuth from 'next-auth';
 import Github from 'next-auth/providers/github';
+import Google from 'next-auth/providers/google';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { prisma } from '@/lib/prisma';
+import Resend from 'next-auth/providers/resend';
 
 export type LoggedInUser = {
     id: string;
     username: string;
+    image?: string;
 };
 
 const githubProvider = Github({
@@ -19,10 +22,21 @@ const githubProvider = Github({
     },
 });
 
+const googleProvider = Google({
+    profile(profile) {
+        return {
+            id: profile.sub,
+            email: profile.email,
+            image: profile.picture,
+            username: profile.family_name ?? 'unknown_user',
+        };
+    },
+});
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
     adapter: PrismaAdapter(prisma),
     session: { strategy: 'database' },
-    providers: [githubProvider],
+    providers: [githubProvider, googleProvider],
     callbacks: {
         session({ session, user }) {
             session.user.id = user.id;
