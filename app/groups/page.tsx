@@ -20,7 +20,7 @@ export default async function GroupsPage() {
     });
 
     return (
-        <main className="mx-auto max-w-2xl p-6">
+        <>
             <div className="flex items-center justify-between">
                 <h1 className="text-xl font-semibold">Your Groups</h1>
                 <Link href="/groups/new" className="rounded border px-3 py-1 text-sm">
@@ -58,6 +58,6 @@ export default async function GroupsPage() {
                     ))}
                 </ul>
             )}
-        </main>
+        </>
     );
 }

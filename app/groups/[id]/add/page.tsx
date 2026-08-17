@@ -20,7 +20,7 @@ export default async function AddMediaPage({ params }: AddMediaPageProps): Promi
     });
 
     return (
-        <main className="mx-auto, max-w-2xl p-6">
+        <>
             <Link href={`/groups/${id}`} className="text-sm text-gray-500 hover:underline">
                 Back to group
             </Link>
@@ -28,6 +28,6 @@ export default async function AddMediaPage({ params }: AddMediaPageProps): Promi
             <div className="mt-4">
                 <MovieSearch addAction={addToBacklog.bind(null, id)} />
             </div>
-        </main>
+        </>
     );
 }

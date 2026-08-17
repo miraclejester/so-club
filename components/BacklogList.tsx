@@ -58,7 +58,6 @@ export function BacklogList({ items }: BacklogListProps): JSX.Element {
                     </li>
                 );
             })}
-            ;
         </ul>
     );
 }

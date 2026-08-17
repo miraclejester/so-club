@@ -45,7 +45,7 @@ export default async function GroupDetailPage({ params }: GroupDetailPageProps) 
     const origin = (await headers()).get('origin') ?? '';
 
     return (
-        <main className="max-auto max-w-2xl p-6">
+        <>
             <Link href="/groups" className="text-sm text-gray-500 hover:underline">
                 Back to your groups
             </Link>
@@ -75,6 +75,6 @@ export default async function GroupDetailPage({ params }: GroupDetailPageProps) 
                 <BacklogList items={backlog} />
             </section>
             {isAdmin ? <InvitePanel action={createInvite.bind(null, id)} origin={origin} /> : null}
-        </main>
+        </>
     );
 }

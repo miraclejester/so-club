@@ -19,7 +19,7 @@ export default function SignInPage(): JSX.Element {
     }
 
     return (
-        <main className="mx-auto flex min-h-svh max-w-sm flex-col justify-center px-4">
+        <>
             <Card className="p-6">
                 <h1 className="text-lg font-semibold">Sign In to SoClub</h1>
 
@@ -45,6 +45,6 @@ export default function SignInPage(): JSX.Element {
                     </form>
                 </div>
             </Card>
-        </main>
+        </>
     );
 }
