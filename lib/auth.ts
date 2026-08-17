@@ -20,6 +20,7 @@ const githubProvider = Github({
             username: profile.login,
         };
     },
+    allowDangerousEmailAccountLinking: true
 });
 
 const googleProvider = Google({
@@ -31,6 +32,7 @@ const googleProvider = Google({
             username: profile.family_name ?? 'unknown_user',
         };
     },
+    allowDangerousEmailAccountLinking: true
 });
 
 export const { handlers, auth, signIn, signOut } = NextAuth({

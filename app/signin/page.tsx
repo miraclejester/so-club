@@ -37,15 +37,13 @@ export default async function SignInPage({ searchParams }: SignInProps): Promise
         });
     }
 
-    console.log(error);
-
     return (
         <>
             <Card className="p-6">
                 <h1 className="text-lg font-semibold">Sign In to SoClub</h1>
 
                 {errorMessage ? (
-                    <p className="mt-2 text-sm text-red-600">Could not sign you in. Please try again later </p>
+                    <p className="mt-2 text-sm text-red-600">{errorMessage}</p>
                 ) : null}
 
                 <form className="mt-4 flex flex-col gap-2" action={sendMagicLink}>
