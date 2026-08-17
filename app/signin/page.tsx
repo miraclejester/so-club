@@ -4,15 +4,24 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { JSX } from 'react';
 
+const ERROR_MESSAGES: Record<string, string> = {
+    OAuthAccountNotLinked:
+        'That email is already registered with a different sign-in method. Please sign-in the way' +
+        ' you did the first time',
+};
+
 type SignInProps = {
-    params: Promise<{
+    searchParams: Promise<{
         callbackUrl?: string;
         error?: string;
     }>;
 };
 
-export default async function SignInPage({ params }: SignInProps): Promise<JSX.Element> {
-    const { callbackUrl, error } = await params;
+export default async function SignInPage({ searchParams }: SignInProps): Promise<JSX.Element> {
+    const { callbackUrl, error } = await searchParams;
+
+    const errorMessage = error ? (ERROR_MESSAGES[error] ?? 'Could not sign you in. Please try again later') : null;
+
     const redirectUrl = callbackUrl ?? '/groups';
 
     async function goToSignIn(providerId: string) {
@@ -28,12 +37,14 @@ export default async function SignInPage({ params }: SignInProps): Promise<JSX.E
         });
     }
 
+    console.log(error);
+
     return (
         <>
             <Card className="p-6">
                 <h1 className="text-lg font-semibold">Sign In to SoClub</h1>
 
-                {error ? (
+                {errorMessage ? (
                     <p className="mt-2 text-sm text-red-600">Could not sign you in. Please try again later </p>
                 ) : null}
 
