@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { Role } from '@/prisma/generated/prisma/enums';
 import { Membership } from '@/prisma/generated/prisma/client';
 import { redirect } from 'next/navigation';
+import { SIGN_IN_URL } from '@/lib/globals';
 
 const ROLE_RANK: Record<Role, number> = {
     MEMBER: 1,
@@ -29,7 +30,7 @@ export function roleIsAtLeast(role: Role, min: Role): boolean {
 export async function requireMembership(groupId: string, minRole: Role = 'MEMBER'): Promise<MembershipContext> {
     const user = await getCurrentUser();
     if (!user?.id) {
-        redirect('/api/auth/signin');
+        redirect(SIGN_IN_URL);
     }
 
     const membership = await prisma.membership.findUnique({

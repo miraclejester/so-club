@@ -2,11 +2,12 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
 import { buttonVariants } from '@/components/ui/button';
+import { GROUPS_URL } from '@/lib/globals';
 
 export default async function Home() {
     const user = await getCurrentUser();
     if (user?.id) {
-        redirect('/groups');
+        redirect(GROUPS_URL);
     }
 
     return (

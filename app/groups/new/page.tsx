@@ -1,11 +1,12 @@
 ﻿import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import CreateGroupForm from '@/components/CreateGroupForm';
+import { SIGN_IN_URL } from '@/lib/globals';
 
 export default async function NewGroupPage() {
     const session = await auth();
     if (!session) {
-        redirect('api/auth/signin');
+        redirect(SIGN_IN_URL);
     }
 
     return (

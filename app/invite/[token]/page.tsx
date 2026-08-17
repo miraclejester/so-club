@@ -40,7 +40,7 @@ export default async function InvitePage({ params }: InvitePageProps): Promise<J
                 {signedIn ? (
                     <RedeemButton action={redeemInvite.bind(null, token)} />
                 ) : (
-                    <Link href={`api/auth/signin?callbackUrl=/invite/${token}`} className="rounded border px-3 py-1">
+                    <Link href={`/signin?callbackUrl=/invite/${token}`} className="rounded border px-3 py-1">
                         Sign in to join
                     </Link>
                 )}

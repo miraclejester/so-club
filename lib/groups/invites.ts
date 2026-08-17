@@ -7,6 +7,7 @@ import { ErrorState } from '@/lib/types';
 import { getCurrentUser, type LoggedInUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { Invite, Group } from '@/prisma/generated/prisma/client';
+import { GROUPS_URL, SIGN_IN_URL } from '@/lib/globals';
 
 type CreateInviteState = ErrorState & { token: string | null };
 export type InviteWithDetails = Invite & { group: Group; expired: boolean; exhausted: boolean };
@@ -47,7 +48,7 @@ export async function createInvite(groupId: string): Promise<CreateInviteState> 
 export async function redeemInvite(token: string): Promise<ErrorState> {
     const user: LoggedInUser | null = await getCurrentUser();
     if (!user?.id) {
-        redirect(`api/auth/signin?callbackUrl=/invite/${token}`);
+        redirect(`${SIGN_IN_URL}?callbackUrl=/invite/${token}`);
     }
     const userId = user.id;
 
@@ -64,7 +65,7 @@ export async function redeemInvite(token: string): Promise<ErrorState> {
         return { error: 'This invite link has reached its usage limit' };
     }
 
-    const groupUrl = `/groups/${invite.groupId}`;
+    const groupUrl = `${GROUPS_URL}/${invite.groupId}`;
 
     // Already a member of the group
     const existing = await prisma.membership.findUnique({

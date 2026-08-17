@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { getCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { ErrorState } from '@/lib/types';
+import { GROUPS_URL, SIGN_IN_URL } from '@/lib/globals';
 
 const CreateGroupSchema = z.object({
     name: z.string().trim().min(1, 'Group name is required.').max(100),
@@ -15,7 +16,7 @@ const CreateGroupSchema = z.object({
 export async function createGroup(_prev: ErrorState, formData: FormData): Promise<ErrorState> {
     const user = await getCurrentUser();
     if (!user?.id) {
-        redirect('/api/auth/signin');
+        redirect(SIGN_IN_URL);
     }
 
     const parsed = CreateGroupSchema.safeParse({
@@ -48,5 +49,5 @@ export async function createGroup(_prev: ErrorState, formData: FormData): Promis
     }
 
     revalidatePath('/groups');
-    redirect(`/groups/${group.id}`);
+    redirect(`${GROUPS_URL}/${group.id}`);
 }
