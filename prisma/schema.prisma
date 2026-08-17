@@ -38,7 +38,7 @@ enum BacklogStatus {
 model User {
   id                String    @id @default(cuid())
   email             String @unique
-  username          String
+  username          String?
   emailVerified     DateTime?
   image             String?
   createdAt         DateTime @default(now())

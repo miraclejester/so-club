@@ -36,7 +36,7 @@ const googleProvider = Google({
 export const { handlers, auth, signIn, signOut } = NextAuth({
     adapter: PrismaAdapter(prisma),
     session: { strategy: 'database' },
-    providers: [githubProvider, googleProvider],
+    providers: [githubProvider, googleProvider, Resend({ from: 'send@so-club.com' })],
     callbacks: {
         session({ session, user }) {
             session.user.id = user.id;
