@@ -3,6 +3,9 @@ import type { BacklogItem, MediaItem, User, BacklogStatus, Role } from '@/prisma
 import { JSX } from 'react';
 import { roleIsAtLeast } from '@/lib/authorizationControl';
 import RemoveFromBacklogButton from '@/components/RemoveFromBacklogButton';
+import { buttonVariants } from '@/components/ui/button';
+import Link from 'next/link';
+import { GROUPS_URL } from '@/lib/globals';
 
 type BacklogEntry = BacklogItem & { mediaItem: MediaItem; addedBy: User };
 
@@ -59,6 +62,16 @@ export function BacklogList({ items, currentUserId, viewerRole }: BacklogListPro
                         <p className="mt-1 truncate text-xs text-gray-400">
                             Added by {item.addedBy.username ?? 'unknown user'}
                         </p>
+
+                        {item.status === 'BACKLOG' ? (
+                            <Link
+                                href={`${GROUPS_URL}/${item.groupId}/schedule/${item.id}`}
+                                className={buttonVariants({ variant: 'outline', size: 'sm' })}
+                            >
+                                Schedule
+                            </Link>
+                        ) : null}
+
                         {item.addedById === currentUserId || roleIsAtLeast(viewerRole, 'ADMIN') ? (
                             <RemoveFromBacklogButton backlogItemId={item.id} />
                         ) : null}
