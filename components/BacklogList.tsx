@@ -1,6 +1,8 @@
 ﻿import Image from 'next/image';
-import type { BacklogItem, MediaItem, User, BacklogStatus } from '@/prisma/generated/prisma/client';
+import type { BacklogItem, MediaItem, User, BacklogStatus, Role } from '@/prisma/generated/prisma/client';
 import { JSX } from 'react';
+import { roleIsAtLeast } from '@/lib/authorizationControl';
+import RemoveFromBacklogButton from '@/components/RemoveFromBacklogButton';
 
 type BacklogEntry = BacklogItem & { mediaItem: MediaItem; addedBy: User };
 
@@ -13,9 +15,11 @@ const STATUS_LABELS: Record<BacklogStatus, string> = {
 
 type BacklogListProps = {
     items: BacklogEntry[];
+    currentUserId: string;
+    viewerRole: Role;
 };
 
-export function BacklogList({ items }: BacklogListProps): JSX.Element {
+export function BacklogList({ items, currentUserId, viewerRole }: BacklogListProps): JSX.Element {
     if (items.length === 0) {
         return (
             <p className="mt-4 text-sm text-gray-500">
@@ -55,6 +59,9 @@ export function BacklogList({ items }: BacklogListProps): JSX.Element {
                         <p className="mt-1 truncate text-xs text-gray-400">
                             Added by {item.addedBy.username ?? 'unknown user'}
                         </p>
+                        {item.addedById === currentUserId || roleIsAtLeast(viewerRole, 'ADMIN') ? (
+                            <RemoveFromBacklogButton backlogItemId={item.id} />
+                        ) : null}
                     </li>
                 );
             })}

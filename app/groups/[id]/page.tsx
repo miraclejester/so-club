@@ -15,7 +15,7 @@ type GroupDetailPageProps = {
 export default async function GroupDetailPage({ params }: GroupDetailPageProps) {
     const { id } = await params;
 
-    const { membership } = await requireMembership(id).catch((e) => {
+    const { membership, userId } = await requireMembership(id).catch((e) => {
         if (e instanceof AuthorizationError) {
             notFound();
         }
@@ -73,7 +73,7 @@ export default async function GroupDetailPage({ params }: GroupDetailPageProps) 
                         Add a movie
                     </Link>
                 </div>
-                <BacklogList items={backlog} />
+                <BacklogList items={backlog} currentUserId={userId} viewerRole={membership.role} />
             </section>
             {isAdmin ? <InvitePanel action={createInvite.bind(null, id)} origin={origin} /> : null}
         </>

@@ -1,13 +1,15 @@
 ﻿'use server';
 
 import { revalidatePath } from 'next/cache';
-import { requireMembership, AuthorizationError } from '@/lib/authorizationControl';
+import { requireMembership, AuthorizationError, roleIsAtLeast } from '@/lib/authorizationControl';
 import { prisma } from '@/lib/prisma';
 import { snapshotMediaItem } from '@/lib/media/catalog';
-import { Prisma } from '@/prisma/generated/prisma/client';
+import { Prisma, Role } from '@/prisma/generated/prisma/client';
 import type { MediaSource } from '@/lib/media';
+import { GROUPS_URL } from '@/lib/globals';
 
 export type AddResult = { status: 'added' | 'duplicate' | 'error'; message: string };
+export type RemoveResult = { status: 'removed' | 'error'; message?: string };
 export type AddAction = (source: MediaSource, externalId: string) => Promise<AddResult>;
 
 export async function addToBacklog(groupId: string, source: MediaSource, externalId: string): Promise<AddResult> {
@@ -45,4 +47,43 @@ export async function addToBacklog(groupId: string, source: MediaSource, externa
 
     revalidatePath(`/groups/${groupId}`);
     return { status: 'added', message: 'Added to backlog' };
+}
+
+export async function removeFromBacklog(backlogItemId: string): Promise<RemoveResult> {
+    const item = await prisma.backlogItem.findUnique({
+        where: { id: backlogItemId },
+        select: { id: true, groupId: true, addedById: true },
+    });
+
+    if (!item) {
+        return { status: 'removed' };
+    }
+
+    let userId: string;
+    let role: Role;
+
+    try {
+        const auth = await requireMembership(item.groupId);
+        userId = auth.userId;
+        role = auth.membership.role;
+    } catch (e) {
+        if (e instanceof AuthorizationError) {
+            return { status: 'error', message: 'You are not a member of this group.' };
+        }
+        throw e;
+    }
+
+    const canRemove = item.addedById === userId || roleIsAtLeast(role, 'ADMIN');
+    if (!canRemove) {
+        return { status: 'error', message: 'Only the person who added this item or an admin can remove it' };
+    }
+
+    try {
+        await prisma.backlogItem.delete({ where: { id: backlogItemId } });
+    } catch {
+        return { status: 'error', message: 'Could not remove the item. Please try again later' };
+    }
+
+    revalidatePath(`${GROUPS_URL}/${item.groupId}`);
+    return { status: 'removed' };
 }
