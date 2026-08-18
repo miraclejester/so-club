@@ -48,6 +48,7 @@ model User {
   memberships       Membership[]
   createdInvites    Invite[] @relation("InviteCreator")
   addedBacklogItems BacklogItem[] @relation("BacklogAddedBy")
+  createdSessions   WatchSession[] @relation("SessionCreator")
 }
 
 model Group {
@@ -61,6 +62,7 @@ model Group {
   updatedAt     DateTime @updatedAt
   invites       Invite[]
   backlogItems  BacklogItem[]
+  sessions      WatchSession[]
 }
 
 model Membership {
@@ -101,6 +103,7 @@ model MediaItem {
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   backlogItems      BacklogItem[]
+  sessions          WatchSession[]
   
   @@unique([source, externalId])
 }
@@ -120,6 +123,24 @@ model BacklogItem {
   addedBy           User      @relation("BacklogAddedBy", fields: [addedById], references: [id])
   
   @@unique([groupId, mediaItemId])
+}
+
+model WatchSession {
+  id                String @id @default(cuid())
+  scheduledFor      DateTime
+  location          String?
+  notes             String?
+  createdById       String
+  groupId           String
+  mediaItemId       String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  group             Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  mediaItem         MediaItem @relation(fields: [mediaItemId], references: [id])
+  createdBy         User  @relation("SessionCreator", fields: [createdById], references: [id])
+  
+  @@index ([groupId, scheduledFor])
 }
 
 model Account {
