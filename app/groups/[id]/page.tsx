@@ -7,6 +7,7 @@ import { createInvite } from '@/lib/groups/invites';
 import Link from 'next/link';
 import { BacklogList } from '@/components/BacklogList';
 import { buttonVariants } from '@/components/ui/button';
+import UpcomingSessions from '@/components/UpcomingSessions';
 
 type GroupDetailPageProps = {
     params: Promise<{ id: string }>;
@@ -42,6 +43,16 @@ export default async function GroupDetailPage({ params }: GroupDetailPageProps) 
         orderBy: { createdAt: 'desc' },
     });
 
+    const upcoming = await prisma.watchSession.findMany({
+        where: { groupId: id, scheduledFor: { gte: new Date() } },
+        orderBy: { scheduledFor: 'asc' },
+        include: {
+            mediaItem: { select: { title: true } },
+            rsvps: { where: { userId }, select: { status: true } },
+            _count: { select: { rsvps: { where: { status: 'GOING' } } } },
+        },
+    });
+
     const isAdmin = roleIsAtLeast(membership.role, 'ADMIN');
     const origin = (await headers()).get('origin') ?? '';
 
@@ -64,6 +75,11 @@ export default async function GroupDetailPage({ params }: GroupDetailPageProps) 
                         </li>
                     ))}
                 </ul>
+            </section>
+
+            <section className="mt-8">
+                <h2 className="text-sm font-medium text-muted-foreground">Upcoming</h2>
+                <UpcomingSessions sessions={upcoming} />
             </section>
 
             <section className="mt-8">
