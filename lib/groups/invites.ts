@@ -1,34 +1,26 @@
 ﻿'use server';
 
-import { AuthorizationError, requireMembership } from '@/lib/authorizationControl';
+import { checkMembership } from '@/lib/authorizationControl';
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-import { ErrorState } from '@/lib/types';
-import { getCurrentUser, type LoggedInUser } from '@/lib/auth';
+import { requireUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { Invite, Group, RsvpStatus } from '@/prisma/generated/prisma/client';
-import { GROUPS_URL, SIGN_IN_URL } from '@/lib/globals';
+import { GROUPS_URL } from '@/lib/globals';
 import { isInviteExhausted, isInviteExpired } from '@/lib/groups/inviteQueries';
+import { ActionResult, ok, fail, logAndFail } from '@/lib/actions/result';
 
 const VALID_RSVP_STATUSES = ['GOING', 'MAYBE', 'NOT_GOING'];
 
-type CreateInviteState = ErrorState & { token: string | null };
+type CreateInviteState = ActionResult<{ token: string | null }>;
 export type InviteWithDetails = Invite & { group: Group; expired: boolean; exhausted: boolean };
 
 export async function createInvite(groupId: string): Promise<CreateInviteState> {
-    let userId;
-    try {
-        const context = await requireMembership(groupId, 'ADMIN');
-        userId = context.userId;
-    } catch (e) {
-        if (e instanceof AuthorizationError) {
-            return {
-                token: null,
-                error: 'Only group admins can create invites',
-            };
-        }
-        throw e;
+    const check = await checkMembership(groupId, 'ADMIN');
+    if (!check.ok) {
+        return fail(check.error);
     }
+    const userId = check.userId;
 
     try {
         const invite = await prisma.invite.upsert({
@@ -37,42 +29,34 @@ export async function createInvite(groupId: string): Promise<CreateInviteState> 
             create: { groupId, createdById: userId },
         });
 
-        revalidatePath(`/groups/${groupId}/`);
-        return { token: invite.token, error: null };
+        revalidatePath(`${GROUPS_URL}/${groupId}`);
+        return ok({ token: invite.token });
     } catch (e) {
-        console.error(e);
-        return {
-            token: null,
-            error: 'Could not create invite. Please try again later',
-        };
+        return logAndFail('createInvite', e, 'Could not create invite. Please try again later');
     }
 }
 
-export async function redeemInvite(token: string): Promise<ErrorState> {
-    const user: LoggedInUser | null = await getCurrentUser();
-    if (!user?.id) {
-        redirect(`${SIGN_IN_URL}?callbackUrl=/invite/${token}`);
-    }
-    const userId = user.id;
+export async function redeemInvite(token: string): Promise<ActionResult> {
+    const { id } = await requireUser(`/invite/${token}`);
 
     const invite = await prisma.invite.findUnique({ where: { token } });
     if (!invite) {
-        return { error: 'This invite link is invalid' };
+        return fail('This invite link is invalid');
     }
 
     if (isInviteExpired(invite)) {
-        return { error: 'This invite link has expired' };
+        return fail('This invite link has expired');
     }
 
     if (isInviteExhausted(invite)) {
-        return { error: 'This invite link has reached its usage limit' };
+        fail('This invite link has reached its usage limit');
     }
 
     const groupUrl = `${GROUPS_URL}/${invite.groupId}`;
 
     // Already a member of the group
     const existing = await prisma.membership.findUnique({
-        where: { userId_groupId: { userId, groupId: invite.groupId } },
+        where: { userId_groupId: { userId: id, groupId: invite.groupId } },
     });
     if (existing) {
         redirect(groupUrl);
@@ -81,7 +65,7 @@ export async function redeemInvite(token: string): Promise<ErrorState> {
     try {
         await prisma.$transaction([
             prisma.membership.create({
-                data: { userId, groupId: invite.groupId, role: 'MEMBER' },
+                data: { userId: id, groupId: invite.groupId, role: 'MEMBER' },
             }),
             prisma.invite.update({
                 where: { token },
@@ -93,16 +77,16 @@ export async function redeemInvite(token: string): Promise<ErrorState> {
         if (e instanceof Error && 'code' in e && (e as { code?: string }).code === 'P2002') {
             redirect(groupUrl);
         }
-        console.error(e);
-        return { error: 'Could not join the group. Please try again later' };
+        return logAndFail('redeemInvite', e, 'Could not join the group. Please try again later');
     }
 
+    revalidatePath(GROUPS_URL);
     redirect(groupUrl);
 }
 
-export async function setRsvp(sessionId: string, status: RsvpStatus): Promise<ErrorState> {
+export async function setRsvp(sessionId: string, status: RsvpStatus): Promise<ActionResult> {
     if (!VALID_RSVP_STATUSES.includes(status)) {
-        return { error: 'Invalid rsvp status' };
+        return fail('Invalid rsvp status');
     }
 
     const session = await prisma.watchSession.findUnique({
@@ -110,21 +94,14 @@ export async function setRsvp(sessionId: string, status: RsvpStatus): Promise<Er
         select: { id: true, groupId: true },
     });
     if (!session) {
-        return { error: 'That session no longer exists' };
+        return fail('That session no longer exists');
     }
 
-    let userId: string = '';
-    try {
-        ({ userId } = await requireMembership(session.groupId));
-    } catch (e) {
-        if (e instanceof AuthorizationError) {
-            return { error: 'You are not a member of this group' };
-        }
+    const check = await checkMembership(session.groupId);
+    if (!check.ok) {
+        return fail(check.error);
     }
-
-    if (!userId) {
-        return { error: 'Error obtaining user id' };
-    }
+    const userId = check.userId;
 
     try {
         await prisma.rsvp.upsert({
@@ -132,10 +109,10 @@ export async function setRsvp(sessionId: string, status: RsvpStatus): Promise<Er
             update: { status },
             create: { watchSessionId: sessionId, userId, status },
         });
-    } catch {
-        return { error: 'Could not save your response. Try again later' };
+    } catch (e) {
+        return logAndFail('setRsvp', e, 'Could not save your response. Try again later');
     }
 
     revalidatePath(`${GROUPS_URL}/${session.groupId}/sessions/${sessionId}`);
-    return { error: null };
+    return ok();
 }

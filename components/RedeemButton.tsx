@@ -1,13 +1,14 @@
 ﻿'use client';
 
-import { ErrorState } from '@/lib/types';
 import { JSX, useActionState } from 'react';
 import { SubmitButton } from '@/components/SubmitButton';
+import { ActionResult } from '@/lib/actions/result';
+import FormError from './FormError';
 
-const initialState: ErrorState = { error: null };
+const initialState: ActionResult = { ok: true, data: undefined };
 
 type RedeemButtonProps = {
-    action: (prev: ErrorState, formData: FormData) => Promise<ErrorState>;
+    action: (prev: ActionResult, formData: FormData) => Promise<ActionResult>;
 };
 
 export function RedeemButton({ action }: RedeemButtonProps): JSX.Element {
@@ -16,7 +17,7 @@ export function RedeemButton({ action }: RedeemButtonProps): JSX.Element {
     return (
         <form action={formAction}>
             <SubmitButton pendingText="Joining..."> Join group </SubmitButton>
-            {state.error ? <p className="mt-2 text-sm text-red-600">{state.error}</p> : null}
+            {state.ok ? null : <FormError>{state.error}</FormError>}
         </form>
     );
 }

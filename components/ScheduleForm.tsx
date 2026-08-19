@@ -4,12 +4,13 @@ import { ChangeEvent, JSX, useActionState, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { localToUTC } from '@/lib/utils';
-import { ErrorState } from '@/lib/types';
+import { ActionResult } from '@/lib/actions/result';
+import FormError from './FormError';
 
-const initialState: ErrorState = { error: null };
+const initialState: ActionResult = { ok: true, data: undefined };
 
 type ScheduleFormProps = {
-    action: (prev: ErrorState, formData: FormData) => Promise<ErrorState>;
+    action: (prev: ActionResult, formData: FormData) => Promise<ActionResult>;
 };
 
 export default function ScheduleForm({ action }: ScheduleFormProps): JSX.Element {
@@ -40,7 +41,7 @@ export default function ScheduleForm({ action }: ScheduleFormProps): JSX.Element
                 <textarea name="notes" rows={3} maxLength={1000} className="rounded-md border px-3 py-2 text-sm" />
             </label>
 
-            {state.error ? <p className="text-sm text-red-600">{state.error}</p> : null}
+            {state.ok ? null : <FormError>{state.error}</FormError>}
 
             <Button type="submit" disabled={pending || !iso}>
                 {pending ? 'Scheduling...' : 'Schedule session'}

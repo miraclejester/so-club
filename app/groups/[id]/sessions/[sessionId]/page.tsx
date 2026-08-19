@@ -1,4 +1,4 @@
-﻿import { requireMembership, AuthorizationError } from '@/lib/authorizationControl';
+﻿import { requireMembershipOrNotFound } from '@/lib/authorizationControl';
 import { JSX } from 'react';
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
@@ -29,12 +29,7 @@ const OPTIONS: RsvpOption[] = [
 export default async function SessionPage({ params }: SessionPageProps): Promise<JSX.Element> {
     const { id, sessionId } = await params;
 
-    const { userId } = await requireMembership(id).catch((e) => {
-        if (e instanceof AuthorizationError) {
-            notFound();
-        }
-        throw e;
-    });
+    const { userId } = await requireMembershipOrNotFound(id);
 
     const session = await prisma.watchSession.findFirst({
         where: { id: sessionId, groupId: id },

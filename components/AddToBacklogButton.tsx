@@ -4,6 +4,7 @@ import { JSX, useState, useTransition } from 'react';
 import type { MediaSource } from '@/lib/media';
 import type { AddAction, AddResult } from '@/lib/media/backlog';
 import { Button } from '@/components/ui/button';
+import FormError from './FormError';
 
 type AddToBacklogButtonProps = {
     source: MediaSource;
@@ -27,7 +28,7 @@ export default function AddToBacklogButton({
         });
     }
 
-    const inBacklog = alreadyInBacklog || result?.status === 'added' || result?.status === 'duplicate';
+    const inBacklog = alreadyInBacklog || result?.ok;
 
     return (
         <div className="mt-1">
@@ -40,7 +41,7 @@ export default function AddToBacklogButton({
             >
                 {pending ? 'Adding...' : inBacklog ? 'In backlog' : 'Add to backlog'}
             </Button>
-            {result?.status === 'error' ? <p className="mt-1 text-xs text-red-600">{result.message}</p> : null}
+            {result && !result.ok ? <FormError>{result.error}</FormError> : null}
         </div>
     );
 }

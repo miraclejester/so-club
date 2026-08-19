@@ -2,32 +2,27 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { requireMembership, AuthorizationError } from '@/lib/authorizationControl';
+import { checkMembership } from '@/lib/authorizationControl';
 import { prisma } from '@/lib/prisma';
-import { ErrorState } from '@/lib/types';
 import { GROUPS_URL } from '@/lib/globals';
 import { ScheduleSessionsSchema } from '@/lib/validation';
+import { ActionResult, fail, logAndFail } from '@/lib/actions/result';
 
-export async function scheduleWatchSession(backlogItemId: string, formData: FormData): Promise<ErrorState> {
+export async function scheduleWatchSession(backlogItemId: string, formData: FormData): Promise<ActionResult> {
     const backlogItem = await prisma.backlogItem.findUnique({
         where: { id: backlogItemId },
         select: { id: true, groupId: true, mediaItemId: true },
     });
 
     if (!backlogItem) {
-        return { error: 'That item is not in any backlog' };
+        return fail('That item is not in any backlog');
     }
 
-    let userId: string;
-
-    try {
-        ({ userId } = await requireMembership(backlogItem.groupId));
-    } catch (e) {
-        if (e instanceof AuthorizationError) {
-            return { error: 'You are not a member of this group' };
-        }
-        throw e;
+    const check = await checkMembership(backlogItem.groupId);
+    if (!check.ok) {
+        return fail(check.error);
     }
+    const userId = check.userId;
 
     const parsed = ScheduleSessionsSchema.safeParse({
         scheduledFor: formData.get('scheduledFor'),
@@ -36,7 +31,7 @@ export async function scheduleWatchSession(backlogItemId: string, formData: Form
     });
 
     if (!parsed.success) {
-        return { error: parsed.error.issues[0].message };
+        return fail(parsed.error.issues[0].message);
     }
     const { scheduledFor, location, notes } = parsed.data;
 
@@ -59,8 +54,8 @@ export async function scheduleWatchSession(backlogItemId: string, formData: Form
             }),
         ]);
         createdId = created.id;
-    } catch {
-        return { error: 'Could not schedule the session. Please try again' };
+    } catch (e) {
+        return logAndFail('scheduleWatchSession', e, 'Could not schedule the session. Please try again');
     }
 
     revalidatePath(`${GROUPS_URL}/${backlogItem.groupId}`);

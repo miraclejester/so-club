@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 
 vi.mock('@/lib/auth', () => ({
-    getCurrentUser: vi.fn(),
+    requireUser: vi.fn(),
 }));
 vi.mock('@/lib/prisma', () => ({
     prisma: { membership: { findUnique: vi.fn() } },
@@ -13,7 +13,7 @@ vi.mock('next/navigation', () => ({
 }));
 
 import { requireMembership, AuthorizationError, roleIsAtLeast } from '@/lib/authorizationControl';
-import { getCurrentUser } from '@/lib/auth';
+import {requireUser} from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { Role } from '@/prisma/generated/prisma/enums';
 import { Membership } from '@/prisma/generated/prisma/client';
@@ -31,7 +31,7 @@ describe('roleIsAtLeast', () => {
 
 describe('requireMembership', () => {
     it('throws for a non-member', async () => {
-        vi.mocked(getCurrentUser).mockResolvedValue({
+        vi.mocked(requireUser).mockResolvedValue({
             id: 'u1',
             username: 'u1',
         });
@@ -40,7 +40,7 @@ describe('requireMembership', () => {
     });
 
     it('throws when the role is insufficient', async () => {
-        vi.mocked(getCurrentUser).mockResolvedValue({
+        vi.mocked(requireUser).mockResolvedValue({
             id: 'u1',
             username: 'u1',
         });
@@ -49,7 +49,7 @@ describe('requireMembership', () => {
     });
 
     it('returns the membership when authorized', async () => {
-        vi.mocked(getCurrentUser).mockResolvedValue({
+        vi.mocked(requireUser).mockResolvedValue({
             id: 'u1',
             username: 'u1',
         });

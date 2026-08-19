@@ -3,8 +3,10 @@
 import { useActionState } from 'react';
 import { createGroup } from '@/lib/groups/groups';
 import { SubmitButton } from '@/components/SubmitButton';
+import FormError from '@/components/FormError';
+import { ActionResult } from '@/lib/actions/result';
 
-const initialState = { error: null as string | null };
+const initialState: ActionResult = { ok: true, data: undefined };
 
 export default function CreateGroupForm() {
     const [state, formAction] = useActionState(createGroup, initialState);
@@ -19,7 +21,7 @@ export default function CreateGroupForm() {
                 <span>Description (optional)</span>
                 <textarea name="description" rows={3} maxLength={500} className="rounded border px-2 py-1" />
             </label>
-            {state.error ? <p className="text-sm text-red-600">{state.error}</p> : null}
+            {state.ok ? null : <FormError>{state.error}</FormError>}
 
             <SubmitButton pendingText="Creating...">Create group</SubmitButton>
         </form>

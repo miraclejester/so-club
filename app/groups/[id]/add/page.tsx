@@ -1,6 +1,5 @@
 ﻿import { JSX } from 'react';
-import { AuthorizationError, requireMembership } from '@/lib/authorizationControl';
-import { notFound } from 'next/navigation';
+import { requireMembershipOrNotFound } from '@/lib/authorizationControl';
 import Link from 'next/link';
 import MovieSearch from '@/components/MovieSearch';
 import { addToBacklog } from '@/lib/media/backlog';
@@ -12,13 +11,7 @@ type AddMediaPageProps = {
 
 export default async function AddMediaPage({ params }: AddMediaPageProps): Promise<JSX.Element> {
     const { id } = await params;
-
-    await requireMembership(id).catch((e) => {
-        if (e instanceof AuthorizationError) {
-            notFound();
-        }
-        throw e;
-    });
+    await requireMembershipOrNotFound(id);
 
     const backlog = await prisma.backlogItem.findMany({
         where: { groupId: id },

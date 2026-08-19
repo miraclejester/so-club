@@ -2,16 +2,15 @@
 
 import { useActionState, useState } from 'react';
 import { SubmitButton } from '@/components/SubmitButton';
+import { ActionResult } from '@/lib/actions/result';
+import FormError from '@/components/FormError';
 
-type InvitePanelInviteState = {
-    token: string | null;
-    error: string | null;
-};
+type InvitePanelResult = ActionResult<{ token: string | null }>;
 
-const initialState: InvitePanelInviteState = { token: null, error: null };
+const initialState: InvitePanelResult = { ok: true, data: { token: null } };
 
 type InvitePanelProps = {
-    action: (prev: InvitePanelInviteState, formData: FormData) => Promise<InvitePanelInviteState>;
+    action: (prev: InvitePanelResult, formData: FormData) => Promise<InvitePanelResult>;
     origin: string;
 };
 
@@ -19,14 +18,14 @@ export default function InvitePanel({ action, origin }: InvitePanelProps) {
     const [state, formAction] = useActionState(action, initialState);
     const [copied, setCopied] = useState(false);
 
-    const inviteUrl = state.token ? `${origin}/invite/${state.token}` : null;
+    const inviteUrl = state.ok ? `${origin}/invite/${state.data.token}` : null;
 
     return (
         <div className="mt-6 border-t pt-4">
             <form action={formAction}>
                 <SubmitButton pendingText="Generating...">Create invite link</SubmitButton>
             </form>
-            {state.error ? <p className="mt-2 text-sm text-red-600">{state.error}</p> : null}
+            {state.ok ? null : <FormError>{state.error}</FormError>}
 
             {inviteUrl ? (
                 <div className="mt-3 flex items-center gap-2">

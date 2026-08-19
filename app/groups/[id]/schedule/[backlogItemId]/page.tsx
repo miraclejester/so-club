@@ -1,4 +1,4 @@
-﻿import { requireMembership, AuthorizationError } from '@/lib/authorizationControl';
+﻿import { requireMembershipOrNotFound } from '@/lib/authorizationControl';
 import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
@@ -6,7 +6,7 @@ import { scheduleWatchSession } from '@/lib/groups/watchSessions';
 import ScheduleForm from '@/components/ScheduleForm';
 import { JSX } from 'react';
 import { GROUPS_URL } from '@/lib/globals';
-import { ErrorState } from '@/lib/types';
+import { ActionResult } from '@/lib/actions/result';
 
 type SchedulePageProps = {
     params: Promise<{
@@ -18,12 +18,7 @@ type SchedulePageProps = {
 export default async function SchedulePage({ params }: SchedulePageProps): Promise<JSX.Element> {
     const { id, backlogItemId } = await params;
 
-    await requireMembership(id).catch((e) => {
-        if (e instanceof AuthorizationError) {
-            notFound();
-        }
-        throw e;
-    });
+    await requireMembershipOrNotFound(id);
 
     const backlogItem = await prisma.backlogItem.findFirst({
         where: { id: backlogItemId, groupId: id },
@@ -33,7 +28,7 @@ export default async function SchedulePage({ params }: SchedulePageProps): Promi
         notFound();
     }
 
-    async function scheduleAction(_prev: ErrorState, formData: FormData): Promise<ErrorState> {
+    async function scheduleAction(_prev: ActionResult, formData: FormData): Promise<ActionResult> {
         'use server';
 
         return scheduleWatchSession(backlogItemId, formData);

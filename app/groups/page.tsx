@@ -1,15 +1,11 @@
-﻿import { getCurrentUser } from '@/lib/auth';
-import { redirect } from 'next/navigation';
+﻿import { requireUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
-import { SIGN_IN_URL } from '@/lib/globals';
+import { GROUPS_URL } from '@/lib/globals';
 import { buttonVariants } from '@/components/ui/button';
 
 export default async function GroupsPage() {
-    const user = await getCurrentUser();
-    if (!user?.id) {
-        redirect(`${SIGN_IN_URL}?callbackUrl=/groups`);
-    }
+    const user = await requireUser(GROUPS_URL);
 
     const memberships = await prisma.membership.findMany({
         where: { userId: user.id },

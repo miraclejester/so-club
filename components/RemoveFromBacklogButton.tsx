@@ -3,7 +3,8 @@
 import { JSX, useState, useTransition } from 'react';
 import { removeFromBacklog } from '@/lib/media/backlog';
 import { Button } from '@/components/ui/button';
-import { ErrorState } from '@/lib/types';
+import { ActionResult, ok, fail } from '@/lib/actions/result';
+import FormError from './FormError';
 
 type RemoveFromBacklogButtonProps = {
     backlogItemId: string;
@@ -12,20 +13,20 @@ type RemoveFromBacklogButtonProps = {
 export default function RemoveFromBacklogButton({ backlogItemId }: RemoveFromBacklogButtonProps): JSX.Element {
     const [pending, startTransition] = useTransition();
     const [confirming, setConfirming] = useState(false);
-    const [error, setError] = useState<ErrorState>({ error: null });
+    const [result, setResult] = useState<ActionResult>(ok());
 
     function handleRemove() {
         startTransition(async () => {
             const result = await removeFromBacklog(backlogItemId);
-            if (result.status === 'error') {
-                setError({ error: result.message ?? 'Could not remove item' });
+            if (!result.ok) {
+                setResult(fail(result.error));
                 setConfirming(false);
             }
         });
     }
 
     function startRemovalConfirmation() {
-        setError({ error: null });
+        setResult(ok());
         setConfirming(true);
     }
 
@@ -47,7 +48,7 @@ export default function RemoveFromBacklogButton({ backlogItemId }: RemoveFromBac
             <Button size="sm" variant="ghost" onClick={startRemovalConfirmation}>
                 Remove
             </Button>
-            {error?.error ? <p className="text-xs text-red-600">{error.error}</p> : null}
+            {result.ok ? null : <FormError>{result.error}</FormError>}
         </div>
     );
 }

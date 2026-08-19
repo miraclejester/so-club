@@ -1,11 +1,10 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
-import { ErrorState } from '@/lib/types';
 import { getProvider, NormalizedMediaItem, ProviderError } from '@/lib/media';
 import { SearchQuerySchema } from '@/lib/validation';
 import { rateLimit } from '@/lib/rateLimit';
 
-type SearchResponseBody = ErrorState | NormalizedMediaItem[];
+type SearchResponseBody = { error: string } | NormalizedMediaItem[];
 
 export async function GET(req: NextRequest): Promise<NextResponse<SearchResponseBody>> {
     const user = await getCurrentUser();

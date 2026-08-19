@@ -1,6 +1,6 @@
 ﻿import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
-import { AuthorizationError, requireMembership, roleIsAtLeast } from '@/lib/authorizationControl';
+import { requireMembershipOrNotFound, roleIsAtLeast } from '@/lib/authorizationControl';
 import { headers } from 'next/headers';
 import InvitePanel from '@/components/InvitePanel';
 import { createInvite } from '@/lib/groups/invites';
@@ -15,15 +15,9 @@ type GroupDetailPageProps = {
 
 export default async function GroupDetailPage({ params }: GroupDetailPageProps) {
     const { id } = await params;
+    const { membership, userId } = await requireMembershipOrNotFound(id);
 
-    const { membership, userId } = await requireMembership(id).catch((e) => {
-        if (e instanceof AuthorizationError) {
-            notFound();
-        }
-        throw e;
-    });
-
-    const group = await prisma.group.findUnique({
+    const groupPromise = prisma.group.findUnique({
         where: { id },
         include: {
             memberships: {
@@ -33,17 +27,13 @@ export default async function GroupDetailPage({ params }: GroupDetailPageProps) 
         },
     });
 
-    if (!group) {
-        notFound();
-    }
-
-    const backlog = await prisma.backlogItem.findMany({
+    const backlogPromise = prisma.backlogItem.findMany({
         where: { groupId: id },
         include: { mediaItem: true, addedBy: true },
         orderBy: { createdAt: 'desc' },
     });
 
-    const upcoming = await prisma.watchSession.findMany({
+    const upcomingPromise = prisma.watchSession.findMany({
         where: { groupId: id, scheduledFor: { gte: new Date() } },
         orderBy: { scheduledFor: 'asc' },
         include: {
@@ -52,6 +42,12 @@ export default async function GroupDetailPage({ params }: GroupDetailPageProps) 
             _count: { select: { rsvps: { where: { status: 'GOING' } } } },
         },
     });
+
+    const [group, backlog, upcoming] = await Promise.all([groupPromise, backlogPromise, upcomingPromise]);
+
+    if (!group) {
+        notFound();
+    }
 
     const isAdmin = roleIsAtLeast(membership.role, 'ADMIN');
     const origin = (await headers()).get('origin') ?? '';

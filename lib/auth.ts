@@ -4,11 +4,13 @@ import Google from 'next-auth/providers/google';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { prisma } from '@/lib/prisma';
 import Resend from 'next-auth/providers/resend';
+import { SIGN_IN_URL } from '@/lib/globals';
+import { redirect } from 'next/navigation';
 
 export type LoggedInUser = {
     id: string;
-    username: string;
-    image?: string;
+    username: string | null;
+    image?: string | null;
 };
 
 const githubProvider = Github({
@@ -43,6 +45,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     callbacks: {
         session({ session, user }) {
             session.user.id = user.id;
+            session.user.username = user.username;
             return session;
         },
     },
@@ -50,5 +53,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 export async function getCurrentUser(): Promise<LoggedInUser | null> {
     const session = await auth();
-    return (session?.user as LoggedInUser) ?? null;
+    return session?.user ?? null;
+}
+
+export async function requireUser(callbackUrl?: string): Promise<LoggedInUser> {
+    const user = await getCurrentUser();
+    if (!user?.id) {
+        redirect(callbackUrl ? `${SIGN_IN_URL}?callbackUrl=${encodeURIComponent(callbackUrl)}` : SIGN_IN_URL);
+    }
+    return user;
 }

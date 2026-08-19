@@ -3,21 +3,18 @@
 import { z } from 'zod';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
-import { getCurrentUser } from '@/lib/auth';
+import { requireUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { ErrorState } from '@/lib/types';
-import { GROUPS_URL, SIGN_IN_URL } from '@/lib/globals';
+import { GROUPS_URL } from '@/lib/globals';
+import { ActionResult, fail, logAndFail } from '@/lib/actions/result';
 
 const CreateGroupSchema = z.object({
     name: z.string().trim().min(1, 'Group name is required.').max(100),
     description: z.string().trim().max(500).optional(),
 });
 
-export async function createGroup(_prev: ErrorState, formData: FormData): Promise<ErrorState> {
-    const user = await getCurrentUser();
-    if (!user?.id) {
-        redirect(SIGN_IN_URL);
-    }
+export async function createGroup(_prev: ActionResult, formData: FormData): Promise<ActionResult> {
+    const user = await requireUser();
 
     const parsed = CreateGroupSchema.safeParse({
         name: formData.get('name'),
@@ -25,7 +22,7 @@ export async function createGroup(_prev: ErrorState, formData: FormData): Promis
     });
 
     if (!parsed.success) {
-        return { error: parsed.error.issues[0].message };
+        return fail(parsed.error.issues[0].message);
     }
 
     let group;
@@ -44,8 +41,8 @@ export async function createGroup(_prev: ErrorState, formData: FormData): Promis
                 },
             },
         });
-    } catch {
-        return { error: 'Could not create group. Please try again later.' };
+    } catch (e) {
+        return logAndFail('createGroup', e, 'Could not create group. Please try again later.');
     }
 
     revalidatePath('/groups');

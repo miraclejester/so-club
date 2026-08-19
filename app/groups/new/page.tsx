@@ -1,13 +1,9 @@
-﻿import { auth } from '@/lib/auth';
-import { redirect } from 'next/navigation';
+﻿import { requireUser } from '@/lib/auth';
 import CreateGroupForm from '@/components/CreateGroupForm';
-import { SIGN_IN_URL } from '@/lib/globals';
+import { GROUPS_URL } from '@/lib/globals';
 
 export default async function NewGroupPage() {
-    const session = await auth();
-    if (!session) {
-        redirect(SIGN_IN_URL);
-    }
+    await requireUser(`${GROUPS_URL}/new`);
 
     return (
         <main className="p-6">
