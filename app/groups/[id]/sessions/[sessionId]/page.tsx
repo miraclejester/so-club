@@ -58,7 +58,7 @@ export default async function SessionPage({ params }: SessionPageProps): Promise
             </Link>
             <h1 className="mt-2 text-xl font-semibold">{session.mediaItem.title}</h1>
             <p className="mt-1 text-muted-foreground">
-                <LocalDateTime iso={session.scheduledFor.toISOString()} />
+                <LocalDateTime iso={session.scheduledFor.toISOString()} dateStyle="full" timeStyle="short" />
             </p>
             <p className="mt-1 text-sm">{session.location ?? 'Location Unknown'}</p>
             {session.notes ? <p className="mt-2 text-sm text-muted-foreground">{session.notes}</p> : null}

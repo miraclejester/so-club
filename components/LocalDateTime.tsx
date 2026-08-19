@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { JSX, useEffect, useState } from 'react';
+import { JSX, useSyncExternalStore } from 'react';
 
 type Style = 'full' | 'long' | 'medium' | 'short';
 
@@ -10,16 +10,18 @@ type LocalDateTimeProps = {
     timeStyle?: Style;
 };
 
-// TODO Temporary. App-wide date treatment coming later
+const subscribe = () => () => {};
+
 export default function LocalDateTime({
     iso,
     dateStyle = 'full',
     timeStyle = 'short',
 }: LocalDateTimeProps): JSX.Element {
-    const [text, setText] = useState('');
+    const text = useSyncExternalStore(
+        subscribe,
+        () => new Date(iso).toLocaleString(undefined, { dateStyle, timeStyle }),
+        () => new Date(iso).toISOString().slice(0, 10)
+    );
 
-    useEffect(() => {
-        setText(new Date(iso).toLocaleString(undefined, { dateStyle, timeStyle }));
-    }, [iso]);
-    return <span suppressHydrationWarning>{text ?? '...'}</span>;
+    return <time dateTime={iso}>{text}</time>;
 }
