@@ -87,7 +87,7 @@ model Membership {
 model Invite {
   id            String    @id @default(cuid())
   token         String    @unique @default(cuid())
-  groupId       String
+  groupId       String    @unique
   createdById   String
   expiresAt     DateTime?
   revokedAt     DateTime?
@@ -97,8 +97,6 @@ model Invite {
   
   group         Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
   createdBy     User      @relation("InviteCreator", fields: [createdById], references: [id])
-  
-  @@index([groupId])
 }
 
 model MediaItem {
