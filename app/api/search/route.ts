@@ -2,6 +2,8 @@
 import { getCurrentUser } from '@/lib/auth';
 import { ErrorState } from '@/lib/types';
 import { getProvider, NormalizedMediaItem, ProviderError } from '@/lib/media';
+import { SearchQuerySchema } from '@/lib/validation';
+import { rateLimit } from '@/lib/rateLimit';
 
 type SearchResponseBody = ErrorState | NormalizedMediaItem[];
 
@@ -11,10 +13,14 @@ export async function GET(req: NextRequest): Promise<NextResponse<SearchResponse
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    if (!rateLimit(`search:${user.id}`, 30, 60000)) {
+        return NextResponse.json({ error: 'Too many searches. Please slow down' }, { status: 429 });
+    }
+
     const q = req.nextUrl.searchParams.get('q')?.trim() ?? '';
 
     // Search is too short
-    if (q.length < 2) {
+    if (!SearchQuerySchema.safeParse(q)) {
         return NextResponse.json([]);
     }
 

@@ -36,8 +36,8 @@ export default async function SessionPage({ params }: SessionPageProps): Promise
         throw e;
     });
 
-    const session = await prisma.watchSession.findUnique({
-        where: { id: sessionId },
+    const session = await prisma.watchSession.findFirst({
+        where: { id: sessionId, groupId: id },
         include: {
             mediaItem: true,
             createdBy: true,
@@ -45,7 +45,7 @@ export default async function SessionPage({ params }: SessionPageProps): Promise
         },
     });
 
-    if (!session || session.groupId !== id) {
+    if (!session) {
         notFound();
     }
 

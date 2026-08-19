@@ -1,11 +1,12 @@
 ﻿import type { MediaProvider, MediaSource } from './types';
 import { TMDBProvider } from '@/lib/media/tmdb';
+import { env } from '@/lib/env';
 
 let registry: Record<MediaSource, MediaProvider> | null = null;
 
 function build(): Record<MediaSource, MediaProvider> {
     return {
-        TMDB: new TMDBProvider(process.env.TMDB_ACCESS_TOKEN ?? ''),
+        TMDB: new TMDBProvider(env().TMDB_ACCESS_TOKEN ?? ''),
     };
 }
 

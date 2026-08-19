@@ -71,7 +71,7 @@ export class TMDBProvider implements MediaProvider {
     }
 
     async getByExternalId(externalId: string): Promise<NormalizedMediaItem | null> {
-        const movie = await this.get<TMDBMovie>(`/movie/${externalId}`);
+        const movie = await this.get<TMDBMovie>(`/movie/${encodeURIComponent(externalId)}`);
         return movie ? this.normalize(movie) : null;
     }
 

@@ -1,8 +1,9 @@
 ﻿import { JSX } from 'react';
-import { getInvite, type InviteWithDetails, redeemInvite } from '@/lib/groups/invites';
+import { type InviteWithDetails, redeemInvite } from '@/lib/groups/invites';
 import { getCurrentUser, LoggedInUser } from '@/lib/auth';
 import { RedeemButton } from '@/components/RedeemButton';
 import Link from 'next/link';
+import { getInvite } from '@/lib/groups/inviteQueries';
 
 type InvitePageProps = {
     params: Promise<{ token: string }>;

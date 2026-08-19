@@ -8,6 +8,7 @@ import { getCurrentUser, type LoggedInUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { Invite, Group, RsvpStatus } from '@/prisma/generated/prisma/client';
 import { GROUPS_URL, SIGN_IN_URL } from '@/lib/globals';
+import { isInviteExhausted, isInviteExpired } from '@/lib/groups/inviteQueries';
 
 const VALID_RSVP_STATUSES = ['GOING', 'MAYBE', 'NOT_GOING'];
 
@@ -99,23 +100,6 @@ export async function redeemInvite(token: string): Promise<ErrorState> {
     redirect(groupUrl);
 }
 
-export async function getInvite(token: string): Promise<InviteWithDetails | null> {
-    const inviteWithGroup = await prisma.invite.findUnique({
-        where: { token },
-        include: { group: true },
-    });
-
-    if (inviteWithGroup === null) {
-        return null;
-    }
-
-    return {
-        ...inviteWithGroup,
-        expired: isInviteExpired(inviteWithGroup),
-        exhausted: isInviteExhausted(inviteWithGroup),
-    };
-}
-
 export async function setRsvp(sessionId: string, status: RsvpStatus): Promise<ErrorState> {
     if (!VALID_RSVP_STATUSES.includes(status)) {
         return { error: 'Invalid rsvp status' };
@@ -154,12 +138,4 @@ export async function setRsvp(sessionId: string, status: RsvpStatus): Promise<Er
 
     revalidatePath(`${GROUPS_URL}/${session.groupId}/sessions/${sessionId}`);
     return { error: null };
-}
-
-function isInviteExpired(invite: Invite): boolean {
-    return invite.expiresAt !== null && invite.expiresAt < new Date();
-}
-
-function isInviteExhausted(invite: Invite): boolean {
-    return invite.maxUses !== null && invite.useCount >= invite.maxUses;
 }

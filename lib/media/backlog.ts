@@ -7,6 +7,7 @@ import { snapshotMediaItem } from '@/lib/media/catalog';
 import { Prisma, Role } from '@/prisma/generated/prisma/client';
 import type { MediaSource } from '@/lib/media';
 import { GROUPS_URL } from '@/lib/globals';
+import { MediaSourceSchema, TmdbExternalIdSchema } from '@/lib/validation';
 
 export type AddResult = { status: 'added' | 'duplicate' | 'error'; message: string };
 export type RemoveResult = { status: 'removed' | 'error'; message?: string };
@@ -23,6 +24,13 @@ export async function addToBacklog(groupId: string, source: MediaSource, externa
             return { status: 'error', message: 'You are not a member of this group.' };
         }
         throw e;
+    }
+
+    const parsedSource = MediaSourceSchema.safeParse(source);
+    const parsedId = TmdbExternalIdSchema.safeParse(externalId);
+
+    if (!parsedSource.success || !parsedId.success) {
+        return { status: 'error', message: 'That title could not be added' };
     }
 
     // Snapshot
@@ -79,7 +87,7 @@ export async function removeFromBacklog(backlogItemId: string): Promise<RemoveRe
     }
 
     try {
-        await prisma.backlogItem.delete({ where: { id: backlogItemId } });
+        await prisma.backlogItem.deleteMany({ where: { id: backlogItemId, groupId: item.groupId } });
     } catch {
         return { status: 'error', message: 'Could not remove the item. Please try again later' };
     }

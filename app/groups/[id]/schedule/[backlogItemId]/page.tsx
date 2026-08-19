@@ -25,11 +25,11 @@ export default async function SchedulePage({ params }: SchedulePageProps): Promi
         throw e;
     });
 
-    const backlogItem = await prisma.backlogItem.findUnique({
-        where: { id: backlogItemId },
+    const backlogItem = await prisma.backlogItem.findFirst({
+        where: { id: backlogItemId, groupId: id },
         include: { mediaItem: true },
     });
-    if (!backlogItem || backlogItem.groupId !== id) {
+    if (!backlogItem) {
         notFound();
     }
 
