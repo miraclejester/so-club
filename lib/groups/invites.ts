@@ -6,8 +6,10 @@ import { revalidatePath } from 'next/cache';
 import { ErrorState } from '@/lib/types';
 import { getCurrentUser, type LoggedInUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
-import { Invite, Group } from '@/prisma/generated/prisma/client';
+import { Invite, Group, RsvpStatus } from '@/prisma/generated/prisma/client';
 import { GROUPS_URL, SIGN_IN_URL } from '@/lib/globals';
+
+const VALID_RSVP_STATUSES = ['GOING', 'MAYBE', 'NOT_GOING'];
 
 type CreateInviteState = ErrorState & { token: string | null };
 export type InviteWithDetails = Invite & { group: Group; expired: boolean; exhausted: boolean };
@@ -112,6 +114,46 @@ export async function getInvite(token: string): Promise<InviteWithDetails | null
         expired: isInviteExpired(inviteWithGroup),
         exhausted: isInviteExhausted(inviteWithGroup),
     };
+}
+
+export async function setRsvp(sessionId: string, status: RsvpStatus): Promise<ErrorState> {
+    if (!VALID_RSVP_STATUSES.includes(status)) {
+        return { error: 'Invalid rsvp status' };
+    }
+
+    const session = await prisma.watchSession.findUnique({
+        where: { id: sessionId },
+        select: { id: true, groupId: true },
+    });
+    if (!session) {
+        return { error: 'That session no longer exists' };
+    }
+
+    let userId: string = '';
+    try {
+        ({ userId } = await requireMembership(session.groupId));
+    } catch (e) {
+        if (e instanceof AuthorizationError) {
+            return { error: 'You are not a member of this group' };
+        }
+    }
+
+    if (!userId) {
+        return { error: 'Error obtaining user id' };
+    }
+
+    try {
+        await prisma.rsvp.upsert({
+            where: { watchSessionId_userId: { watchSessionId: sessionId, userId } },
+            update: { status },
+            create: { watchSessionId: sessionId, userId, status },
+        });
+    } catch {
+        return { error: 'Could not save your response. Try again later' };
+    }
+
+    revalidatePath(`${GROUPS_URL}/${session.groupId}/sessions/${sessionId}`);
+    return { error: null };
 }
 
 function isInviteExpired(invite: Invite): boolean {

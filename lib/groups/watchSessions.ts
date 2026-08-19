@@ -40,8 +40,9 @@ export async function scheduleWatchSession(backlogItemId: string, formData: Form
     const location = ((formData.get('location') as string) ?? '').trim() || null;
     const notes = ((formData.get('notes') as string) ?? '').trim() || null;
 
+    let createdId: string = '';
     try {
-        await prisma.$transaction([
+        const [created] = await prisma.$transaction([
             prisma.watchSession.create({
                 data: {
                     scheduledFor: when,
@@ -57,10 +58,12 @@ export async function scheduleWatchSession(backlogItemId: string, formData: Form
                 data: { status: 'SCHEDULED' },
             }),
         ]);
+        createdId = created.id;
     } catch {
         return { error: 'Could not schedule the session. Please try again' };
     }
 
+    console.log(createdId);
     revalidatePath(`${GROUPS_URL}/${backlogItem.groupId}`);
-    redirect(`${GROUPS_URL}/${backlogItem.groupId}`);
+    redirect(`${GROUPS_URL}/${backlogItem.groupId}/sessions/${createdId}`);
 }

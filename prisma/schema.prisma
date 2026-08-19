@@ -35,6 +35,12 @@ enum BacklogStatus {
   FINISHED
 }
 
+enum RsvpStatus {
+  GOING
+  MAYBE
+  NOT_GOING
+}
+
 model User {
   id                String    @id @default(cuid())
   email             String @unique
@@ -49,6 +55,7 @@ model User {
   createdInvites    Invite[] @relation("InviteCreator")
   addedBacklogItems BacklogItem[] @relation("BacklogAddedBy")
   createdSessions   WatchSession[] @relation("SessionCreator")
+  rsvps             Rsvp[]
 }
 
 model Group {
@@ -139,8 +146,23 @@ model WatchSession {
   group             Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
   mediaItem         MediaItem @relation(fields: [mediaItemId], references: [id])
   createdBy         User  @relation("SessionCreator", fields: [createdById], references: [id])
+  rsvps             Rsvp[]
   
   @@index ([groupId, scheduledFor])
+}
+
+model Rsvp {
+  id                String @id @default(cuid())
+  status            RsvpStatus
+  watchSessionId    String
+  userId            String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  watchSession      WatchSession @relation(fields: [watchSessionId], references: [id], onDelete: Cascade)
+  user              User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([watchSessionId, userId])
 }
 
 model Account {
