@@ -13,7 +13,7 @@ vi.mock('next/navigation', () => ({
 }));
 
 import { requireMembership, AuthorizationError, roleIsAtLeast } from '@/lib/authorizationControl';
-import {requireUser} from '@/lib/auth';
+import { requireUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { Role } from '@/prisma/generated/prisma/enums';
 import { Membership } from '@/prisma/generated/prisma/client';

@@ -18,7 +18,7 @@ export default function InvitePanel({ action, origin }: InvitePanelProps) {
     const [state, formAction] = useActionState(action, initialState);
     const [copied, setCopied] = useState(false);
 
-    const inviteUrl = state.ok ? `${origin}/invite/${state.data.token}` : null;
+    const inviteUrl = state.ok && state.data.token ? `${origin}/invite/${state.data.token}` : null;
 
     return (
         <div className="mt-6 border-t pt-4">
