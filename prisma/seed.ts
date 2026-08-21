@@ -47,7 +47,7 @@ async function main() {
     // --- Invite with a fixed token so YOU can join the populated group ---
     const inviteToken = 'dev-seed-invite';
     await prisma.invite.upsert({
-        where: { groupId: group.id },
+        where: { token: inviteToken },
         update: {},
         create: { groupId: group.id, token: inviteToken, createdById: alice.id },
     });

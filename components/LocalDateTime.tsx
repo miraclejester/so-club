@@ -1,6 +1,7 @@
 ﻿'use client';
 
-import { JSX, useSyncExternalStore } from 'react';
+import { JSX } from 'react';
+import { useClientValue } from '@/lib/hooks';
 
 type Style = 'full' | 'long' | 'medium' | 'short';
 
@@ -10,15 +11,12 @@ type LocalDateTimeProps = {
     timeStyle?: Style;
 };
 
-const subscribe = () => () => {};
-
 export default function LocalDateTime({
     iso,
     dateStyle = 'full',
     timeStyle = 'short',
 }: LocalDateTimeProps): JSX.Element {
-    const text = useSyncExternalStore(
-        subscribe,
+    const text = useClientValue(
         () => new Date(iso).toLocaleString(undefined, { dateStyle, timeStyle }),
         () => new Date(iso).toISOString().slice(0, 10)
     );

@@ -22,7 +22,7 @@ export default async function InvitePage({ params }: InvitePageProps): Promise<J
         );
     }
 
-    if (invite.expired || invite.exhausted) {
+    if (!invite.active) {
         return (
             <>
                 <p>This invite link is no longer active</p>

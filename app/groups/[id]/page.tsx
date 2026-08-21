@@ -1,13 +1,14 @@
 ﻿import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { requireMembershipOrNotFound, roleIsAtLeast } from '@/lib/authorizationControl';
-import { headers } from 'next/headers';
 import InvitePanel from '@/components/InvitePanel';
-import { createInvite } from '@/lib/groups/invites';
+import { createInvite, revokeInvite } from '@/lib/groups/invites';
 import Link from 'next/link';
 import { BacklogList } from '@/components/BacklogList';
 import { buttonVariants } from '@/components/ui/button';
 import UpcomingSessions from '@/components/UpcomingSessions';
+import { getActiveInvites } from '@/lib/groups/inviteQueries';
+import { Invite } from '@/prisma/generated/prisma/client';
 
 type GroupDetailPageProps = {
     params: Promise<{ id: string }>;
@@ -16,6 +17,7 @@ type GroupDetailPageProps = {
 export default async function GroupDetailPage({ params }: GroupDetailPageProps) {
     const { id } = await params;
     const { membership, userId } = await requireMembershipOrNotFound(id);
+    const isAdmin = roleIsAtLeast(membership.role, 'ADMIN');
 
     const groupPromise = prisma.group.findUnique({
         where: { id },
@@ -43,14 +45,20 @@ export default async function GroupDetailPage({ params }: GroupDetailPageProps) 
         },
     });
 
-    const [group, backlog, upcoming] = await Promise.all([groupPromise, backlogPromise, upcomingPromise]);
+    const invitePromise: Promise<Invite[]> = isAdmin ? getActiveInvites(id) : Promise.resolve([]);
+
+    const [group, backlog, upcoming, invites] = await Promise.all([
+        groupPromise,
+        backlogPromise,
+        upcomingPromise,
+        invitePromise,
+    ]);
 
     if (!group) {
         notFound();
     }
 
-    const isAdmin = roleIsAtLeast(membership.role, 'ADMIN');
-    const origin = (await headers()).get('origin') ?? '';
+    const activeInvite: Invite | null = invites.length === 0 ? null : invites[0];
 
     return (
         <>
@@ -87,7 +95,13 @@ export default async function GroupDetailPage({ params }: GroupDetailPageProps) 
                 </div>
                 <BacklogList items={backlog} currentUserId={userId} viewerRole={membership.role} />
             </section>
-            {isAdmin ? <InvitePanel action={createInvite.bind(null, id)} origin={origin} /> : null}
+            {isAdmin ? (
+                <InvitePanel
+                    action={createInvite.bind(null, id)}
+                    revokeAction={revokeInvite.bind(null, activeInvite?.id ?? '')}
+                    invite={activeInvite}
+                />
+            ) : null}
         </>
     );
 }

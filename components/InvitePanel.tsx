@@ -2,30 +2,53 @@
 
 import { useActionState, useState } from 'react';
 import { SubmitButton } from '@/components/SubmitButton';
-import { ActionResult } from '@/lib/actions/result';
+import { ActionResult, ok } from '@/lib/actions/result';
 import FormError from '@/components/FormError';
-
-type InvitePanelResult = ActionResult<{ token: string | null }>;
-
-const initialState: InvitePanelResult = { ok: true, data: { token: null } };
+import { Invite } from '@/prisma/generated/prisma/client';
+import LocalDateTime from '@/components/LocalDateTime';
+import { useClientValue } from '@/lib/hooks';
 
 type InvitePanelProps = {
-    action: (prev: InvitePanelResult, formData: FormData) => Promise<InvitePanelResult>;
-    origin: string;
+    action: (prev: ActionResult, formData: FormData) => Promise<ActionResult>;
+    revokeAction: (prev: ActionResult, formData: FormData) => Promise<ActionResult>;
+    invite: Invite | null;
 };
 
-export default function InvitePanel({ action, origin }: InvitePanelProps) {
-    const [state, formAction] = useActionState(action, initialState);
+export default function InvitePanel({ action, revokeAction, invite }: InvitePanelProps) {
+    const [state, formAction] = useActionState(action, ok());
+    const [revokeState, revokeFormAction] = useActionState(revokeAction, ok());
     const [copied, setCopied] = useState(false);
 
-    const inviteUrl = state.ok && state.data.token ? `${origin}/invite/${state.data.token}` : null;
+    const origin: string = useClientValue(
+        () => window.location.origin,
+        () => ''
+    );
+
+    const token = invite?.token ?? null;
+    const inviteUrl = token ? `${origin}/invite/${token}` : null;
 
     return (
         <div className="mt-6 border-t pt-4">
             <form action={formAction}>
-                <SubmitButton pendingText="Generating...">Create invite link</SubmitButton>
+                <SubmitButton pendingText="Generating...">
+                    {invite !== null ? 'Generate new link' : 'Create invite link'}
+                </SubmitButton>
             </form>
             {state.ok ? null : <FormError>{state.error}</FormError>}
+            {invite !== null ? (
+                <>
+                    <form className="mt-1" action={revokeFormAction}>
+                        <SubmitButton pendingText="Revoking...">Revoke invitation</SubmitButton>
+                    </form>
+                    {revokeState.ok ? null : <FormError>{revokeState.error}</FormError>}
+                    <div className="mt-1">
+                        <span>
+                            Expiry Date:{' '}
+                            {invite.expiresAt ? <LocalDateTime iso={invite.expiresAt.toISOString()} /> : `Never`}
+                        </span>
+                    </div>
+                </>
+            ) : null}
 
             {inviteUrl ? (
                 <div className="mt-3 flex items-center gap-2">

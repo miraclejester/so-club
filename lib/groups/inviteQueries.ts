@@ -1,6 +1,7 @@
-﻿import { InviteWithDetails } from '@/lib/groups/invites';
-import { prisma } from '@/lib/prisma';
-import { Invite } from '@/prisma/generated/prisma/client';
+﻿import { prisma } from '@/lib/prisma';
+import { Group, Invite } from '@/prisma/generated/prisma/client';
+
+export type InviteWithDetails = Invite & { group: Group; active: boolean };
 
 export async function getInvite(token: string): Promise<InviteWithDetails | null> {
     const inviteWithGroup = await prisma.invite.findUnique({
@@ -14,15 +15,29 @@ export async function getInvite(token: string): Promise<InviteWithDetails | null
 
     return {
         ...inviteWithGroup,
-        expired: isInviteExpired(inviteWithGroup),
-        exhausted: isInviteExhausted(inviteWithGroup),
+        active: isInviteActive(inviteWithGroup),
     };
 }
 
-export function isInviteExpired(invite: Invite): boolean {
-    return invite.expiresAt !== null && invite.expiresAt < new Date();
+export async function getActiveInvites(groupId: string): Promise<Invite[]> {
+    return prisma.invite.findMany({
+        where: {
+            groupId,
+            revokedAt: null,
+            OR: [{ expiresAt: null }, { expiresAt: { gte: new Date() } }],
+            AND: [
+                {
+                    OR: [{ maxUses: null }, { maxUses: { gt: prisma.invite.fields.useCount } }],
+                },
+            ],
+        },
+        orderBy: { createdAt: 'desc' },
+    });
 }
 
-export function isInviteExhausted(invite: Invite): boolean {
-    return invite.maxUses !== null && invite.useCount >= invite.maxUses;
+export function isInviteActive(invite: Invite): boolean {
+    const revoked: boolean = invite.revokedAt !== null;
+    const expired: boolean = invite.expiresAt !== null && invite.expiresAt < new Date();
+    const exhausted: boolean = invite.maxUses !== null && invite.useCount >= invite.maxUses;
+    return !(revoked || expired || exhausted);
 }
