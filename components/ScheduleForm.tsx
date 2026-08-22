@@ -16,7 +16,7 @@ type ScheduleFormProps = {
     action: (prev: ActionResult, formData: FormData) => Promise<ActionResult>;
 };
 
-export default function ScheduleForm({ action }: ScheduleFormProps) {
+export function ScheduleForm({ action }: ScheduleFormProps) {
     const [state, formAction, pending] = useActionState(action, initialState);
     const [local, setLocal] = useState('');
 

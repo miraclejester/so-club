@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
 import { buttonVariants } from '@/components/ui/button';
 import { GROUPS_URL } from '@/lib/globals';
+import { Card } from '@/components/ui/card';
 
 export default async function Home() {
     const user = await getCurrentUser();
@@ -31,10 +32,10 @@ export default async function Home() {
                     ['Build a backlog', 'Search movies and queue up what to watch'],
                     ['Schedule and rate', 'Plan sessions, then rate them together'],
                 ].map(([title, body]) => (
-                    <div key={title} className="rounded-lg border p-4">
+                    <Card key={title} className="p-4">
                         <h3 className="font-medium">{title}</h3>
                         <p className="mt-1 text-sm text-muted-foreground">{body}</p>
-                    </div>
+                    </Card>
                 ))}
             </div>
 

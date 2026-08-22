@@ -1,15 +1,12 @@
-﻿import { JSX } from 'react';
-import { requireMembershipOrNotFound } from '@/lib/authorizationControl';
-import Link from 'next/link';
-import MovieSearch from '@/components/MovieSearch';
+﻿import { requireMembershipOrNotFound } from '@/lib/authorizationControl';
+import { MovieSearch } from '@/components/MovieSearch';
 import { addToBacklog } from '@/lib/media/backlog';
 import { prisma } from '@/lib/prisma';
+import { Backlink } from '@/components/Backlink';
+import { GROUPS_URL } from '@/lib/globals';
+import { PageHeading } from '@/components/PageHeading';
 
-type AddMediaPageProps = {
-    params: Promise<{ id: string }>;
-};
-
-export default async function AddMediaPage({ params }: AddMediaPageProps): Promise<JSX.Element> {
+export default async function AddMediaPage({ params }: PageProps<'/groups/[id]/add'>) {
     const { id } = await params;
     await requireMembershipOrNotFound(id);
 
@@ -22,10 +19,8 @@ export default async function AddMediaPage({ params }: AddMediaPageProps): Promi
 
     return (
         <>
-            <Link href={`/groups/${id}`} className="text-sm text-gray-500 hover:underline">
-                Back to group
-            </Link>
-            <h1 className="mt-2 text-xl font-semibold">Add a movie</h1>
+            <Backlink href={`${GROUPS_URL}/${id}`}>Back to group</Backlink>
+            <PageHeading>Add a movie</PageHeading>
             <div className="mt-4">
                 <MovieSearch addAction={addToBacklog.bind(null, id)} existingKeys={[...existingKeys]} />
             </div>

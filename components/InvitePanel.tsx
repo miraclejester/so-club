@@ -4,9 +4,11 @@ import { useActionState, useState } from 'react';
 import { SubmitButton } from '@/components/SubmitButton';
 import { ActionResult, ok } from '@/lib/actions/result';
 import { Invite } from '@/prisma/generated/prisma/client';
-import LocalDateTime from '@/components/LocalDateTime';
+import { LocalDateTime } from '@/components/LocalDateTime';
 import { useClientValue } from '@/lib/hooks';
 import { FormError } from '@/components/ui/form-error';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 type InvitePanelProps = {
     action: (prev: ActionResult, formData: FormData) => Promise<ActionResult>;
@@ -14,7 +16,7 @@ type InvitePanelProps = {
     invite: Invite | null;
 };
 
-export default function InvitePanel({ action, revokeAction, invite }: InvitePanelProps) {
+export function InvitePanel({ action, revokeAction, invite }: InvitePanelProps) {
     const [state, formAction] = useActionState(action, ok());
     const [revokeState, revokeFormAction] = useActionState(revokeAction, ok());
     const [copied, setCopied] = useState(false);
@@ -52,8 +54,8 @@ export default function InvitePanel({ action, revokeAction, invite }: InvitePane
 
             {inviteUrl ? (
                 <div className="mt-3 flex items-center gap-2">
-                    <input readOnly value={inviteUrl} className="w-full rounded border px-2 py-1 text-sm" />
-                    <button
+                    <Input readOnly value={inviteUrl} className="w-full rounded border px-2 py-1 text-sm" />
+                    <Button
                         onClick={() => {
                             navigator.clipboard.writeText(inviteUrl);
                             setCopied(true);
@@ -62,7 +64,7 @@ export default function InvitePanel({ action, revokeAction, invite }: InvitePane
                         className="rounded border px-2 py-1 text-sm"
                     >
                         {copied ? 'Copied!' : 'Copy'}
-                    </button>
+                    </Button>
                 </div>
             ) : null}
         </div>

@@ -1,44 +1,45 @@
 ﻿'use client';
 
-import { JSX, useTransition } from 'react';
-import { setRsvp } from '@/lib/groups/invites';
+import { useState, useTransition } from 'react';
 import { Button } from '@/components/ui/button';
-import type { RsvpStatus } from '@/prisma/generated/prisma/client';
-import { RsvpOption } from '@/app/groups/[id]/sessions/[sessionId]/page';
+import type { RsvpStatus } from '@/prisma/generated/prisma/enums';
+import { setRsvp } from '@/lib/groups/rsvp';
+import { RSVP_OPTIONS } from '@/lib/groups/data';
+import { ActionResult, ok } from '@/lib/actions/result';
+import { FormError } from '@/components/ui/form-error';
 
 type RsvpControlsProps = {
     sessionId: string;
     currentStatus: RsvpStatus | null;
 };
 
-const OPTIONS: RsvpOption[] = [
-    { value: 'GOING', label: 'Going' },
-    { value: 'MAYBE', label: 'Maybe' },
-    { value: 'NOT_GOING', label: "Can't Go" },
-];
-
-export default function RsvpControls({ sessionId, currentStatus }: RsvpControlsProps): JSX.Element {
+export function RsvpControls({ sessionId, currentStatus }: RsvpControlsProps) {
     const [pending, startTransition] = useTransition();
+    const [result, setResult] = useState<ActionResult>(ok());
 
     function onOptionClicked(value: RsvpStatus) {
+        setResult(ok());
         startTransition(async () => {
-            await setRsvp(sessionId, value);
+            setResult(await setRsvp(sessionId, value));
         });
     }
 
     return (
-        <div className="flex gap-2">
-            {OPTIONS.map((opt) => (
-                <Button
-                    key={opt.value}
-                    size="sm"
-                    variant={currentStatus === opt.value ? 'default' : 'outline'}
-                    disabled={pending}
-                    onClick={() => onOptionClicked(opt.value)}
-                >
-                    {opt.label}
-                </Button>
-            ))}
-        </div>
+        <>
+            <div className="flex gap-2">
+                {RSVP_OPTIONS.map((opt) => (
+                    <Button
+                        key={opt.value}
+                        size="sm"
+                        variant={currentStatus === opt.value ? 'default' : 'outline'}
+                        disabled={pending}
+                        onClick={() => onOptionClicked(opt.value)}
+                    >
+                        {opt.label}
+                    </Button>
+                ))}
+            </div>
+            {result.ok ? null : <FormError className="mt-2">{result.error}</FormError>}
+        </>
     );
 }

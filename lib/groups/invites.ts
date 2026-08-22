@@ -5,12 +5,10 @@ import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { requireUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
-import { Invite, RsvpStatus } from '@/prisma/generated/prisma/client';
+import { Invite } from '@/prisma/generated/prisma/client';
 import { GROUPS_URL } from '@/lib/globals';
 import { ActionResult, ok, fail, logAndFail } from '@/lib/actions/result';
 import { isInviteActive } from '@/lib/groups/inviteQueries';
-
-const VALID_RSVP_STATUSES = ['GOING', 'MAYBE', 'NOT_GOING'];
 
 class InviteUnavailableError extends Error {}
 
@@ -145,37 +143,4 @@ export async function redeemInvite(token: string): Promise<ActionResult> {
 
     revalidatePath(GROUPS_URL);
     redirect(groupUrl);
-}
-
-export async function setRsvp(sessionId: string, status: RsvpStatus): Promise<ActionResult> {
-    if (!VALID_RSVP_STATUSES.includes(status)) {
-        return fail('Invalid rsvp status');
-    }
-
-    const session = await prisma.watchSession.findUnique({
-        where: { id: sessionId },
-        select: { id: true, groupId: true },
-    });
-    if (!session) {
-        return fail('That session no longer exists');
-    }
-
-    const check = await checkMembership(session.groupId);
-    if (!check.ok) {
-        return fail(check.error);
-    }
-    const userId = check.userId;
-
-    try {
-        await prisma.rsvp.upsert({
-            where: { watchSessionId_userId: { watchSessionId: sessionId, userId } },
-            update: { status },
-            create: { watchSessionId: sessionId, userId, status },
-        });
-    } catch (e) {
-        return logAndFail('setRsvp', e, 'Could not save your response. Try again later');
-    }
-
-    revalidatePath(`${GROUPS_URL}/${session.groupId}/sessions/${sessionId}`);
-    return ok();
 }

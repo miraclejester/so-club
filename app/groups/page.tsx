@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import { GROUPS_URL } from '@/lib/globals';
 import { buttonVariants } from '@/components/ui/button';
+import { PageHeading } from '@/components/PageHeading';
+import { Card } from '@/components/ui/card';
 
 export default async function GroupsPage() {
     const user = await requireUser(GROUPS_URL);
@@ -20,7 +22,7 @@ export default async function GroupsPage() {
     return (
         <>
             <div className="flex items-center justify-between">
-                <h1 className="text-xl font-semibold">Your Groups</h1>
+                <PageHeading className="text-xl font-semibold">Your Groups</PageHeading>
                 <Link href="/groups/new" className={buttonVariants({ variant: 'outline', size: 'sm' })}>
                     Create group
                 </Link>
@@ -37,20 +39,19 @@ export default async function GroupsPage() {
                 <ul className="mt-6 space-y-2">
                     {memberships.map((m) => (
                         <li key={m.group.id}>
-                            <Link
-                                href={`/groups/${m.group.id}`}
-                                className="block rounded border px-4 py-3 hover:bg-gray-50"
-                            >
-                                <div className="flex items-center justify-between">
-                                    <span className="font-medium">{m.group.name}</span>
-                                    <span className="text-xs uppercase text-gray-400">{m.role}</span>
-                                </div>
-                                {m.group.description ? (
-                                    <p className="mt-1 text-sm text-gray-600">{m.group.description}</p>
-                                ) : null}
-                                <p className="mt-1 text-xs text-gray-400">
-                                    {m.group._count.memberships} member{m.group._count.memberships === 1 ? '' : 's'}
-                                </p>
+                            <Link href={`/groups/${m.group.id}`}>
+                                <Card className="px-4 py-3 gap-1 hover:bg-gray-50">
+                                    <div className="flex items-center justify-between">
+                                        <span className="font-medium">{m.group.name}</span>
+                                        <span className="text-xs uppercase text-gray-400">{m.role}</span>
+                                    </div>
+                                    {m.group.description ? (
+                                        <p className="mt-1 text-sm text-gray-600">{m.group.description}</p>
+                                    ) : null}
+                                    <p className="mt-1 text-xs text-gray-400">
+                                        {m.group._count.memberships} member{m.group._count.memberships === 1 ? '' : 's'}
+                                    </p>
+                                </Card>
                             </Link>
                         </li>
                     ))}

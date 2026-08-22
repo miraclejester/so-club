@@ -12,7 +12,7 @@ import { Field, FieldControl, FieldError, FieldLabel } from '@/components/ui/fie
 
 const initialState: ActionResult = { ok: true, data: undefined };
 
-export default function CreateGroupForm() {
+export function CreateGroupForm() {
     const [state, formAction] = useActionState(createGroup, initialState);
 
     return (

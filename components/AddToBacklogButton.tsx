@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { JSX, useState, useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import type { MediaSource } from '@/lib/media';
 import type { AddAction, AddResult } from '@/lib/media/backlog';
 import { Button } from '@/components/ui/button';
@@ -13,12 +13,7 @@ type AddToBacklogButtonProps = {
     alreadyInBacklog: boolean;
 };
 
-export default function AddToBacklogButton({
-    source,
-    externalId,
-    action,
-    alreadyInBacklog,
-}: AddToBacklogButtonProps): JSX.Element {
+export function AddToBacklogButton({ source, externalId, action, alreadyInBacklog }: AddToBacklogButtonProps) {
     const [pending, startTransition] = useTransition();
     const [result, setResult] = useState<AddResult | null>(null);
 

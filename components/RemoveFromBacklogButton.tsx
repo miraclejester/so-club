@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { JSX, useState, useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { removeFromBacklog } from '@/lib/media/backlog';
 import { Button } from '@/components/ui/button';
 import { ActionResult, ok, fail } from '@/lib/actions/result';
@@ -10,7 +10,7 @@ type RemoveFromBacklogButtonProps = {
     backlogItemId: string;
 };
 
-export default function RemoveFromBacklogButton({ backlogItemId }: RemoveFromBacklogButtonProps): JSX.Element {
+export function RemoveFromBacklogButton({ backlogItemId }: RemoveFromBacklogButtonProps) {
     const [pending, startTransition] = useTransition();
     const [confirming, setConfirming] = useState(false);
     const [result, setResult] = useState<ActionResult>(ok());

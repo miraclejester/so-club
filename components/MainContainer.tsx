@@ -1,10 +1,10 @@
-﻿import React, { JSX } from 'react';
+﻿import { ReactNode } from 'react';
 
 type MainContainerProps = {
-    children: React.ReactNode;
+    children: ReactNode;
     className?: string;
 };
 
-export default function MainContainer({ children, className = '' }: MainContainerProps): JSX.Element {
+export function MainContainer({ children, className = '' }: MainContainerProps) {
     return <div className={`mx-auto w-full max-w-3xl px-4 ${className}`}>{children}</div>;
 }

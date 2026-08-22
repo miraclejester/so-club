@@ -1,21 +1,14 @@
 ﻿import { requireMembershipOrNotFound } from '@/lib/authorizationControl';
 import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
 import { scheduleWatchSession } from '@/lib/groups/watchSessions';
-import ScheduleForm from '@/components/ScheduleForm';
-import { JSX } from 'react';
+import { ScheduleForm } from '@/components/ScheduleForm';
 import { GROUPS_URL } from '@/lib/globals';
 import { ActionResult } from '@/lib/actions/result';
+import { Backlink } from '@/components/Backlink';
+import { PageHeading } from '@/components/PageHeading';
 
-type SchedulePageProps = {
-    params: Promise<{
-        id: string;
-        backlogItemId: string;
-    }>;
-};
-
-export default async function SchedulePage({ params }: SchedulePageProps): Promise<JSX.Element> {
+export default async function SchedulePage({ params }: PageProps<'/groups/[id]/schedule/[backlogItemId]'>) {
     const { id, backlogItemId } = await params;
 
     await requireMembershipOrNotFound(id);
@@ -36,10 +29,8 @@ export default async function SchedulePage({ params }: SchedulePageProps): Promi
 
     return (
         <>
-            <Link href={`${GROUPS_URL}/${id}`} className="text-sm text-muted-foreground hover:underline">
-                Back to group
-            </Link>
-            <h1 className="mt-2 text-xl font-semibold">Schedule a session</h1>
+            <Backlink href={`${GROUPS_URL}/${id}`}>Back to group</Backlink>
+            <PageHeading>Schedule a session</PageHeading>
             <p className="mt-1 text-muted-foreground">{backlogItem.mediaItem.title}</p>
             <div className="mt-4">
                 <ScheduleForm action={scheduleAction} />

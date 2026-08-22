@@ -1,6 +1,5 @@
 ﻿'use client';
 
-import { JSX } from 'react';
 import { useClientValue } from '@/lib/hooks';
 
 type Style = 'full' | 'long' | 'medium' | 'short';
@@ -11,15 +10,15 @@ type LocalDateTimeProps = {
     timeStyle?: Style;
 };
 
-export default function LocalDateTime({
-    iso,
-    dateStyle = 'full',
-    timeStyle = 'short',
-}: LocalDateTimeProps): JSX.Element {
+export function LocalDateTime({ iso, dateStyle = 'full', timeStyle = 'short' }: LocalDateTimeProps) {
     const text = useClientValue(
         () => new Date(iso).toLocaleString(undefined, { dateStyle, timeStyle }),
-        () => new Date(iso).toISOString().slice(0, 10)
+        () => new Date(iso).toLocaleString(undefined, { timeZone: 'UTC', dateStyle, timeStyle })
     );
 
-    return <time dateTime={iso}>{text}</time>;
+    return (
+        <time suppressHydrationWarning dateTime={iso}>
+            {text}
+        </time>
+    );
 }

@@ -1,15 +1,12 @@
-﻿import { JSX } from 'react';
-import { redeemInvite } from '@/lib/groups/invites';
+﻿import { redeemInvite } from '@/lib/groups/invites';
 import { getCurrentUser, LoggedInUser } from '@/lib/auth';
 import { RedeemButton } from '@/components/RedeemButton';
 import Link from 'next/link';
 import { getInvite, InviteWithDetails } from '@/lib/groups/inviteQueries';
+import { PageHeading } from '@/components/PageHeading';
+import { buttonVariants } from '@/components/ui/button';
 
-type InvitePageProps = {
-    params: Promise<{ token: string }>;
-};
-
-export default async function InvitePage({ params }: InvitePageProps): Promise<JSX.Element> {
+export default async function InvitePage({ params }: PageProps<'/invite/[token]'>) {
     const { token } = await params;
 
     const invite: InviteWithDetails | null = await getInvite(token);
@@ -35,13 +32,13 @@ export default async function InvitePage({ params }: InvitePageProps): Promise<J
 
     return (
         <>
-            <h1 className="text-xl font-semibold">Join "{invite.group.name}"</h1>
+            <PageHeading className="text-xl font-semibold">Join "{invite.group.name}"</PageHeading>
             {invite.group.description ? <p className="mt-2 text-gray-600">{invite.group.description}</p> : null}
             <div className="mt-4">
                 {signedIn ? (
                     <RedeemButton action={redeemInvite.bind(null, token)} />
                 ) : (
-                    <Link href={`/signin?callbackUrl=/invite/${token}`} className="rounded border px-3 py-1">
+                    <Link href={`/signin?callbackUrl=/invite/${token}`} className={buttonVariants({ size: 'lg' })}>
                         Sign in to join
                     </Link>
                 )}

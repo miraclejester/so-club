@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { JSX, useActionState } from 'react';
+import { useActionState } from 'react';
 import { SubmitButton } from '@/components/SubmitButton';
 import { ActionResult } from '@/lib/actions/result';
 import { FormError } from '@/components/ui/form-error';
@@ -11,7 +11,7 @@ type RedeemButtonProps = {
     action: (prev: ActionResult, formData: FormData) => Promise<ActionResult>;
 };
 
-export function RedeemButton({ action }: RedeemButtonProps): JSX.Element {
+export function RedeemButton({ action }: RedeemButtonProps) {
     const [state, formAction] = useActionState(action, initialState);
 
     return (

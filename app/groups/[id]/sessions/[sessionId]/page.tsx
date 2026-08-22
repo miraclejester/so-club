@@ -1,32 +1,14 @@
 ﻿import { requireMembershipOrNotFound } from '@/lib/authorizationControl';
-import { JSX } from 'react';
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { GROUPS_URL } from '@/lib/globals';
-import Link from 'next/link';
-import LocalDateTime from '@/components/LocalDateTime';
-import type { RsvpStatus } from '@/prisma/generated/prisma/enums';
-import RsvpControls from '@/components/RsvpControls';
+import { LocalDateTime } from '@/components/LocalDateTime';
+import { RsvpControls } from '@/components/RsvpControls';
+import { Backlink } from '@/components/Backlink';
+import { PageHeading } from '@/components/PageHeading';
+import { RSVP_OPTIONS } from '@/lib/groups/data';
 
-type SessionPageProps = {
-    params: Promise<{
-        id: string;
-        sessionId: string;
-    }>;
-};
-
-export type RsvpOption = {
-    value: RsvpStatus;
-    label: string;
-};
-
-const OPTIONS: RsvpOption[] = [
-    { value: 'GOING', label: 'Going' },
-    { value: 'MAYBE', label: 'Maybe' },
-    { value: 'NOT_GOING', label: "Can't Go" },
-];
-
-export default async function SessionPage({ params }: SessionPageProps): Promise<JSX.Element> {
+export default async function SessionPage({ params }: PageProps<'/groups/[id]/sessions/[sessionId]'>) {
     const { id, sessionId } = await params;
 
     const { userId } = await requireMembershipOrNotFound(id);
@@ -48,10 +30,8 @@ export default async function SessionPage({ params }: SessionPageProps): Promise
 
     return (
         <>
-            <Link href={`${GROUPS_URL}/${id}`} className="text-sm text-muted-foreground hover:underline">
-                Back to group
-            </Link>
-            <h1 className="mt-2 text-xl font-semibold">{session.mediaItem.title}</h1>
+            <Backlink href={`${GROUPS_URL}/${id}`}>Back to group</Backlink>
+            <PageHeading>{session.mediaItem.title}</PageHeading>
             <p className="mt-1 text-muted-foreground">
                 <LocalDateTime iso={session.scheduledFor.toISOString()} dateStyle="full" timeStyle="short" />
             </p>
@@ -66,7 +46,7 @@ export default async function SessionPage({ params }: SessionPageProps): Promise
             </section>
 
             <section className="mt-8 space-y-4">
-                {OPTIONS.map(({ value, label }) => {
+                {RSVP_OPTIONS.map(({ value, label }) => {
                     const people = session.rsvps.filter((r) => r.status === value);
                     return (
                         <div key={value}>

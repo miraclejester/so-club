@@ -2,8 +2,8 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { JSX } from 'react';
 import { FormError } from '@/components/ui/form-error';
+import { PageHeading } from '@/components/PageHeading';
 
 const ERROR_MESSAGES: Record<string, string> = {
     OAuthAccountNotLinked:
@@ -11,19 +11,14 @@ const ERROR_MESSAGES: Record<string, string> = {
         ' you did the first time',
 };
 
-type SignInProps = {
-    searchParams: Promise<{
-        callbackUrl?: string;
-        error?: string;
-    }>;
-};
-
-export default async function SignInPage({ searchParams }: SignInProps): Promise<JSX.Element> {
+export default async function SignInPage({ searchParams }: PageProps<'/signin'>) {
     const { callbackUrl, error } = await searchParams;
 
-    const errorMessage = error ? (ERROR_MESSAGES[error] ?? 'Could not sign you in. Please try again later') : null;
+    const errorMessage = error
+        ? (ERROR_MESSAGES[error as string] ?? 'Could not sign you in. Please try again later')
+        : null;
 
-    const redirectUrl = callbackUrl ?? '/groups';
+    const redirectUrl = (callbackUrl as string) ?? '/groups';
 
     async function goToSignIn(providerId: string) {
         'use server';
@@ -41,7 +36,7 @@ export default async function SignInPage({ searchParams }: SignInProps): Promise
     return (
         <>
             <Card className="p-6">
-                <h1 className="text-lg font-semibold">Sign In to SoClub</h1>
+                <PageHeading className="text-lg font-semibold">Sign In to SoClub</PageHeading>
 
                 {errorMessage ? <FormError className="mt-2">{errorMessage}</FormError> : null}
 

@@ -2,10 +2,9 @@
 import { getCurrentUser, signOut } from '@/lib/auth';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import MainContainer from '@/components/MainContainer';
-import { JSX } from 'react';
+import { MainContainer } from '@/components/MainContainer';
 
-export async function AppNav(): Promise<JSX.Element> {
+export async function AppNav() {
     const user = await getCurrentUser();
 
     return (

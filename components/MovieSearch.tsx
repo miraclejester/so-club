@@ -1,11 +1,13 @@
 ﻿'use client';
 
-import { JSX, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NormalizedMediaItem } from '@/lib/media';
 import type { AddAction } from '@/lib/media/backlog';
-import AddToBacklogButton from '@/components/AddToBacklogButton';
-import Image from 'next/image';
+import { AddToBacklogButton } from '@/components/AddToBacklogButton';
 import { FormError } from '@/components/ui/form-error';
+import { MediaCard } from '@/components/MediaCard';
+import { Input } from '@/components/ui/input';
+import { formatYear } from '@/lib/utils';
 
 type Status = 'idle' | 'loading' | 'done' | 'error';
 
@@ -14,7 +16,7 @@ type MovieSearchProps = {
     existingKeys: string[];
 };
 
-export default function MovieSearch({ addAction, existingKeys }: MovieSearchProps): JSX.Element {
+export function MovieSearch({ addAction, existingKeys }: MovieSearchProps) {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState<NormalizedMediaItem[]>([]);
     const [status, setStatus] = useState<Status>('idle');
@@ -59,7 +61,7 @@ export default function MovieSearch({ addAction, existingKeys }: MovieSearchProp
 
     return (
         <div>
-            <input
+            <Input
                 type="search"
                 value={query}
                 onChange={(e) => handleChange(e.target.value)}
@@ -75,47 +77,23 @@ export default function MovieSearch({ addAction, existingKeys }: MovieSearchProp
                 {status !== 'idle' && results.length > 0 ? (
                     <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                         {results.map((m) => (
-                            <ResultsCard
+                            <MediaCard
                                 key={`${m.source}-${m.externalId}`}
-                                item={m}
-                                addAction={addAction}
-                                alreadyInBacklog={existing.has(`${m.source}:${m.externalId}`)}
-                            />
+                                title={m.title}
+                                coverImage={m.coverImage}
+                                year={formatYear(m.releaseDate)}
+                            >
+                                <AddToBacklogButton
+                                    source={m.source}
+                                    externalId={m.externalId}
+                                    action={addAction}
+                                    alreadyInBacklog={existing.has(`${m.source}:${m.externalId}`)}
+                                />
+                            </MediaCard>
                         ))}
                     </ul>
                 ) : null}
             </div>
         </div>
-    );
-}
-
-type ResultsCardProps = {
-    item: NormalizedMediaItem;
-    addAction: AddAction;
-    alreadyInBacklog: boolean;
-};
-
-function ResultsCard({ item, addAction, alreadyInBacklog }: ResultsCardProps): JSX.Element {
-    const year = item.releaseDate?.slice(0, 4) ?? '--';
-    return (
-        <li className="rounded border p-2">
-            <div className="relative aspect-2/3 w-full overflow-hidden rounded bg-gray-100">
-                {item.coverImage ? (
-                    <Image src={item.coverImage} alt={item.title} fill className="object-cover" sizes="150px" />
-                ) : (
-                    <div className="flex h-full items-center justify-center text-xs text-gray-400">No poster</div>
-                )}
-            </div>
-            <p className="mt-1 truncate text-sm font-medium" title={item.title}>
-                {item.title}
-            </p>
-            <p className="text-xs text-gray-500">{year}</p>
-            <AddToBacklogButton
-                source={item.source}
-                externalId={item.externalId}
-                action={addAction}
-                alreadyInBacklog={alreadyInBacklog}
-            />
-        </li>
     );
 }

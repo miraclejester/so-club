@@ -1,20 +1,19 @@
 ﻿import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { requireMembershipOrNotFound, roleIsAtLeast } from '@/lib/authorizationControl';
-import InvitePanel from '@/components/InvitePanel';
+import { InvitePanel } from '@/components/InvitePanel';
 import { createInvite, revokeInvite } from '@/lib/groups/invites';
 import Link from 'next/link';
 import { BacklogList } from '@/components/BacklogList';
 import { buttonVariants } from '@/components/ui/button';
-import UpcomingSessions from '@/components/UpcomingSessions';
+import { UpcomingSessions } from '@/components/UpcomingSessions';
 import { getActiveInvites } from '@/lib/groups/inviteQueries';
 import { Invite } from '@/prisma/generated/prisma/client';
+import { Backlink } from '@/components/Backlink';
+import { GROUPS_URL } from '@/lib/globals';
+import { PageHeading } from '@/components/PageHeading';
 
-type GroupDetailPageProps = {
-    params: Promise<{ id: string }>;
-};
-
-export default async function GroupDetailPage({ params }: GroupDetailPageProps) {
+export default async function GroupDetailPage({ params }: PageProps<'/groups/[id]'>) {
     const { id } = await params;
     const { membership, userId } = await requireMembershipOrNotFound(id);
     const isAdmin = roleIsAtLeast(membership.role, 'ADMIN');
@@ -62,20 +61,18 @@ export default async function GroupDetailPage({ params }: GroupDetailPageProps) 
 
     return (
         <>
-            <Link href="/groups" className="text-sm text-gray-500 hover:underline">
-                Back to your groups
-            </Link>
+            <Backlink href={`${GROUPS_URL}`}>Back to your groups</Backlink>
 
-            <h1 className="mt-2 text-xl font-semibold">{group.name}</h1>
-            {group.description ? <p className="mt-2 text-gray-600">{group.description}</p> : null}
+            <PageHeading>{group.name}</PageHeading>
+            {group.description ? <p className="mt-2 text-muted-foreground">{group.description}</p> : null}
 
             <section className="mt-6">
-                <h2 className="text-sm font-medium text-gray-500">Members: {group.memberships.length}</h2>
+                <h2 className="text-sm font-medium text-muted-foreground">Members: {group.memberships.length}</h2>
                 <ul className="mt-2 divide-y rounded border">
                     {group.memberships.map((m) => (
                         <li key={m.id} className="flex items-center justify-between px-3 py-2">
                             <span>{m.user.username ?? 'Unknown'}</span>
-                            <span className="text-xs uppercase text-gray-400">{m.role}</span>
+                            <span className="text-xs uppercase text-muted-foreground">{m.role}</span>
                         </li>
                     ))}
                 </ul>
@@ -88,7 +85,7 @@ export default async function GroupDetailPage({ params }: GroupDetailPageProps) 
 
             <section className="mt-8">
                 <div className="flex items-center justify-between">
-                    <h2 className="text-sm font-medium text-gray-500">Backlog ({backlog.length})</h2>
+                    <h2 className="text-sm font-medium text-muted-foreground">Backlog ({backlog.length})</h2>
                     <Link href={`/groups/${id}/add`} className={buttonVariants({ variant: 'outline', size: 'sm' })}>
                         Add a movie
                     </Link>
