@@ -1,11 +1,14 @@
 ﻿'use client';
 
-import { ChangeEvent, JSX, useActionState, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { ChangeEvent, useActionState, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { localToUTC } from '@/lib/utils';
 import { ActionResult } from '@/lib/actions/result';
-import FormError from './FormError';
+import { FormError } from '@/components/ui/form-error';
+import { Form } from '@base-ui/react/form';
+import { Field, FieldControl, FieldLabel } from '@/components/ui/field';
+import { Textarea } from '@/components/ui/textarea';
+import { SubmitButton } from '@/components/SubmitButton';
 
 const initialState: ActionResult = { ok: true, data: undefined };
 
@@ -13,7 +16,7 @@ type ScheduleFormProps = {
     action: (prev: ActionResult, formData: FormData) => Promise<ActionResult>;
 };
 
-export default function ScheduleForm({ action }: ScheduleFormProps): JSX.Element {
+export default function ScheduleForm({ action }: ScheduleFormProps) {
     const [state, formAction, pending] = useActionState(action, initialState);
     const [local, setLocal] = useState('');
 
@@ -24,28 +27,34 @@ export default function ScheduleForm({ action }: ScheduleFormProps): JSX.Element
     }
 
     return (
-        <form action={formAction} className="flex max-w-md flex-col gap-4">
-            <label className="flex flex-col gap-1">
-                <span className="text-sm font-medium">When</span>
-                <Input type="datetime-local" value={local} onChange={handleLocalTimeChange} required />
-            </label>
+        <Form action={formAction} className="flex max-w-lg flex-col gap-4">
+            <Field>
+                <FieldLabel>
+                    <span className="text-sm font-medium">When</span>
+                    <Input type="datetime-local" value={local} onChange={handleLocalTimeChange} required />
+                </FieldLabel>
+            </Field>
             <input type="hidden" name="scheduledFor" value={iso} />
 
-            <label className="flex flex-col gap-1">
-                <span className="text-sm font-medium">Location or link (optional)</span>
-                <Input name="location" placeholder={"Someone's place or a stream/discord link"} />
-            </label>
+            <Field name="location">
+                <FieldLabel>
+                    <span className="text-sm font-medium">Location or link (optional)</span>
+                    <Input name="location" placeholder={"Someone's place or a stream/discord link"} />
+                </FieldLabel>
+            </Field>
 
-            <label className="flex flex-col gap-1">
-                <span className="text-sm font-medium">Notes (optional)</span>
-                <textarea name="notes" rows={3} maxLength={1000} className="rounded-md border px-3 py-2 text-sm" />
-            </label>
+            <Field name="notes">
+                <FieldLabel>
+                    <span className="text-sm font-medium">Notes (optional)</span>
+                    <FieldControl maxLength={1000} render={<Textarea rows={3} />} />
+                </FieldLabel>
+            </Field>
 
             {state.ok ? null : <FormError>{state.error}</FormError>}
 
-            <Button type="submit" disabled={pending || !iso}>
-                {pending ? 'Scheduling...' : 'Schedule session'}
-            </Button>
-        </form>
+            <SubmitButton pendingText="Scheduling..." disabled={pending || !iso}>
+                Schedule session
+            </SubmitButton>
+        </Form>
     );
 }

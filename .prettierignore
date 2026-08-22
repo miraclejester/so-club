@@ -2,3 +2,7 @@
 **/*.json
 .prettierrc
 docker-compose.yml
+AGENTS.md
+CLAUDE.md
+README.md
+app/globals.css

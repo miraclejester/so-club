@@ -3,10 +3,10 @@
 import { useActionState, useState } from 'react';
 import { SubmitButton } from '@/components/SubmitButton';
 import { ActionResult, ok } from '@/lib/actions/result';
-import FormError from '@/components/FormError';
 import { Invite } from '@/prisma/generated/prisma/client';
 import LocalDateTime from '@/components/LocalDateTime';
 import { useClientValue } from '@/lib/hooks';
+import { FormError } from '@/components/ui/form-error';
 
 type InvitePanelProps = {
     action: (prev: ActionResult, formData: FormData) => Promise<ActionResult>;

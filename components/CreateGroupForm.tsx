@@ -3,8 +3,12 @@
 import { useActionState } from 'react';
 import { createGroup } from '@/lib/groups/groups';
 import { SubmitButton } from '@/components/SubmitButton';
-import FormError from '@/components/FormError';
+import { Input } from '@/components/ui/input';
 import { ActionResult } from '@/lib/actions/result';
+import { Form } from '@base-ui/react/form';
+import { Textarea } from '@/components/ui/textarea';
+import { FormError } from '@/components/ui/form-error';
+import { Field, FieldControl, FieldError, FieldLabel } from '@/components/ui/field';
 
 const initialState: ActionResult = { ok: true, data: undefined };
 
@@ -12,18 +16,21 @@ export default function CreateGroupForm() {
     const [state, formAction] = useActionState(createGroup, initialState);
 
     return (
-        <form action={formAction} className="flex max-w-md flex-col gap-4">
-            <label className="flex flex-col gap-1">
-                <span>Group name</span>
-                <input name="name" required maxLength={100} className="rounded border px-2 py-1" />
-            </label>
-            <label className="flex flex-col gap-1">
-                <span>Description (optional)</span>
-                <textarea name="description" rows={3} maxLength={500} className="rounded border px-2 py-1" />
-            </label>
-            {state.ok ? null : <FormError>{state.error}</FormError>}
+        <Form action={formAction} className="flex max-w-md flex-col gap-4">
+            <Field name="name">
+                <FieldLabel>Group name</FieldLabel>
+                <Input required maxLength={100} />
+                <FieldError />
+            </Field>
 
+            <Field name="description">
+                <FieldLabel>Description (optional)</FieldLabel>
+                <FieldControl maxLength={500} render={<Textarea rows={3} />} />
+                <FieldError />
+            </Field>
+
+            {state.ok ? null : <FormError>{state.error}</FormError>}
             <SubmitButton pendingText="Creating...">Create group</SubmitButton>
-        </form>
+        </Form>
     );
 }

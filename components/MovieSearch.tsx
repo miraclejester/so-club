@@ -5,6 +5,7 @@ import { NormalizedMediaItem } from '@/lib/media';
 import type { AddAction } from '@/lib/media/backlog';
 import AddToBacklogButton from '@/components/AddToBacklogButton';
 import Image from 'next/image';
+import { FormError } from '@/components/ui/form-error';
 
 type Status = 'idle' | 'loading' | 'done' | 'error';
 
@@ -67,7 +68,7 @@ export default function MovieSearch({ addAction, existingKeys }: MovieSearchProp
             />
             <div className="mt-4">
                 {status === 'loading' ? <p className="text-sm text-gray-500">Searching...</p> : null}
-                {status === 'error' ? <p className="text-sm text-red-600">Something went wrong. Try again.</p> : null}
+                {status === 'error' ? <FormError>Something went wrong. Try again.</FormError> : null}
                 {status === 'done' && results.length === 0 ? (
                     <p className="text-sm text-gray-500">No movies found for "{`${query.trim()}`}".</p>
                 ) : null}

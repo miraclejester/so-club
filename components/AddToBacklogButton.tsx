@@ -4,7 +4,7 @@ import { JSX, useState, useTransition } from 'react';
 import type { MediaSource } from '@/lib/media';
 import type { AddAction, AddResult } from '@/lib/media/backlog';
 import { Button } from '@/components/ui/button';
-import FormError from './FormError';
+import { FormError } from '@/components/ui/form-error';
 
 type AddToBacklogButtonProps = {
     source: MediaSource;

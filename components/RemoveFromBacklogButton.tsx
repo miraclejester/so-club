@@ -4,7 +4,7 @@ import { JSX, useState, useTransition } from 'react';
 import { removeFromBacklog } from '@/lib/media/backlog';
 import { Button } from '@/components/ui/button';
 import { ActionResult, ok, fail } from '@/lib/actions/result';
-import FormError from './FormError';
+import { FormError } from '@/components/ui/form-error';
 
 type RemoveFromBacklogButtonProps = {
     backlogItemId: string;

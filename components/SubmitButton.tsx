@@ -12,7 +12,7 @@ export function SubmitButton({ children, pendingText, ...props }: SubmitButtonPr
     const { pending } = useFormStatus();
 
     return (
-        <Button type="submit" disabled={pending} {...props}>
+        <Button type="submit" disabled={pending || props.disabled} {...props}>
             {pending ? (pendingText ?? children) : children}
         </Button>
     );

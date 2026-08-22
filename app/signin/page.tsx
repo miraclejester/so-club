@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { JSX } from 'react';
+import { FormError } from '@/components/ui/form-error';
 
 const ERROR_MESSAGES: Record<string, string> = {
     OAuthAccountNotLinked:
@@ -42,7 +43,7 @@ export default async function SignInPage({ searchParams }: SignInProps): Promise
             <Card className="p-6">
                 <h1 className="text-lg font-semibold">Sign In to SoClub</h1>
 
-                {errorMessage ? <p className="mt-2 text-sm text-red-600">{errorMessage}</p> : null}
+                {errorMessage ? <FormError className="mt-2">{errorMessage}</FormError> : null}
 
                 <form className="mt-4 flex flex-col gap-2" action={sendMagicLink}>
                     <Input name="email" type="email" placeholder="you@example.com" required />
