@@ -6,7 +6,8 @@ import { revalidatePath } from 'next/cache';
 import { requireUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { GROUPS_URL } from '@/lib/globals';
-import { ActionResult, fail, logAndFail } from '@/lib/actions/result';
+import type { ActionResult } from '@/lib/actions/result';
+import { fail, logAndFail } from '@/lib/actions/result';
 
 const CreateGroupSchema = z.object({
     name: z.string().trim().min(1, 'Group name is required.').max(100),

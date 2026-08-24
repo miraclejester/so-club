@@ -8,7 +8,7 @@ import { BacklogList } from '@/components/BacklogList';
 import { buttonVariants } from '@/components/ui/button';
 import { UpcomingSessions } from '@/components/UpcomingSessions';
 import { getActiveInvites } from '@/lib/groups/inviteQueries';
-import { Invite } from '@/prisma/generated/prisma/client';
+import type { Invite } from '@/prisma/generated/prisma/client';
 import { Backlink } from '@/components/Backlink';
 import { GROUPS_URL } from '@/lib/globals';
 import { PageHeading } from '@/components/PageHeading';

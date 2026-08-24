@@ -13,11 +13,25 @@ export default tseslint.config(
 
     // 2. Core JavaScript and TypeScript configurations
     js.configs.recommended,
-    ...tseslint.configs.recommended,
+    {
+        files: ['**/*.{ts,tsx}'],
+        extends: [...tseslint.configs.recommendedTypeChecked],
+        languageOptions: {
+            parserOptions: {
+                projectService: true,
+                tsconfigRootDir: import.meta.dirname,
+            },
+        },
+    },
+
+    {
+        files: ['**/*.{js,mjs,cjs,jsx}'],
+        extends: [tseslint.configs.disableTypeChecked],
+    },
 
     // 3. React, React Hooks, and Next.js setup
     {
-        files: ['**/*.{ts,tsx,js,jsx}'],
+        files: ['**/*.{ts,tsx}'],
         plugins: {
             react: reactPlugin,
             'react-hooks': hooksPlugin,
@@ -39,6 +53,23 @@ export default tseslint.config(
             // Custom rules adjustments
             '@typescript-eslint/no-unused-vars': ['warn'],
             'react/react-in-jsx-scope': 'off', // Not needed in Next.js
+            '@typescript-eslint/no-floating-promises': 'error', // unawaited server actions
+            '@typescript-eslint/no-misused-promises': 'error',
+            '@typescript-eslint/consistent-type-imports': 'error',
+            '@typescript-eslint/no-explicit-any': 'error',
+            '@typescript-eslint/require-await': 'error',
+            'react/no-unescaped-entities': 'error',
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: ['@/app/*'],
+                            message: 'Components must not import from app/ — move shared types into lib/.',
+                        },
+                    ],
+                },
+            ],
         },
     },
 

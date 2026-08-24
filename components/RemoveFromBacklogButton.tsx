@@ -3,7 +3,8 @@
 import { useState, useTransition } from 'react';
 import { removeFromBacklog } from '@/lib/media/backlog';
 import { Button } from '@/components/ui/button';
-import { ActionResult, ok, fail } from '@/lib/actions/result';
+import type { ActionResult } from '@/lib/actions/result';
+import { ok, fail } from '@/lib/actions/result';
 import { FormError } from '@/components/ui/form-error';
 
 type RemoveFromBacklogButtonProps = {

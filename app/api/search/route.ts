@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
-import { getProvider, NormalizedMediaItem, ProviderError } from '@/lib/media';
+import { getProvider, type NormalizedMediaItem, ProviderError } from '@/lib/media';
 import { SearchQuerySchema } from '@/lib/validation';
 import { rateLimit } from '@/lib/rateLimit';
 

@@ -7,10 +7,10 @@ const nextConfig: NextConfig = {
             { protocol: 'https', hostname: 'image.tmdb.org' },
         ],
     },
-    async headers() {
+    headers() {
         return [
             {
-                source: '/:path',
+                source: '/:path*',
                 headers: [
                     { key: 'X-Content-Type-Options', value: 'nosniff' },
                     { key: 'X-Frame-Options', value: 'DENY' },

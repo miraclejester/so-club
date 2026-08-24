@@ -26,7 +26,7 @@ export function BacklogList({ items, currentUserId, viewerRole }: BacklogListPro
     if (items.length === 0) {
         return (
             <p className="mt-4 text-sm text-gray-500">
-                Nothing in the backlog yet. Use "Add a movie" to find something to watch
+                Nothing in the backlog yet. Use &quot;Add a movie&quot; to find something to watch
             </p>
         );
     }

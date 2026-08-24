@@ -1,15 +1,19 @@
 import { describe, it, expect, vi } from 'vitest';
 
+const { findUnique, create } = vi.hoisted(() => ({
+    findUnique: vi.fn(),
+    create: vi.fn<(args: Prisma.MediaItemCreateArgs) => Promise<MediaItem>>(),
+}));
+
 vi.mock('@/lib/prisma', () => ({
-    prisma: { mediaItem: { findUnique: vi.fn(), create: vi.fn(), findUniqueOrThrow: vi.fn() } },
+    prisma: { mediaItem: { findUnique, create, findUniqueOrThrow: vi.fn() } },
 }));
 
 vi.mock('@/lib/media/index', () => ({ getProvider: vi.fn() }));
 
-import { prisma } from '@/lib/prisma';
 import { getProvider, type MediaProvider, type NormalizedMediaItem } from '@/lib/media';
 import { snapshotMediaItem } from '@/lib/media/catalog';
-import type { MediaItem } from '@/prisma/generated/prisma/client';
+import type { MediaItem, Prisma } from '@/prisma/generated/prisma/client';
 
 function makeMediaItem(overrides: Partial<MediaItem> = {}): MediaItem {
     return {
@@ -47,26 +51,29 @@ const normalized = {
 
 describe('snapshotMediaItem', () => {
     it('reuses an existing item if it exists', async () => {
-        vi.mocked(prisma.mediaItem.findUnique).mockResolvedValue(makeMediaItem({ id: 'm1' }));
-        const provider = { getByExternalId: vi.fn() };
-        vi.mocked(getProvider).mockReturnValue(makeProvider(null));
+        findUnique.mockResolvedValue(makeMediaItem({ id: 'm1' }));
+        const provider = {
+            ...makeProvider(null),
+            getByExternalId: vi.fn(),
+        };
+        vi.mocked(getProvider).mockReturnValue(provider);
 
         const result = await snapshotMediaItem('TMDB', '413413');
 
         expect(result).toMatchObject({ id: 'm1' });
         expect(provider.getByExternalId).not.toHaveBeenCalled();
-        expect(prisma.mediaItem.create).not.toHaveBeenCalled();
+        expect(create).not.toHaveBeenCalled();
     });
 
     it('fetches and creates on first encounter', async () => {
-        vi.mocked(prisma.mediaItem.findUnique).mockResolvedValue(null);
+        findUnique.mockResolvedValue(null);
         vi.mocked(getProvider).mockReturnValue(makeProvider(normalized));
-        vi.mocked(prisma.mediaItem.create).mockResolvedValue(makeMediaItem({ id: 'm2' }));
+        create.mockResolvedValue(makeMediaItem({ id: 'm2' }));
 
         await snapshotMediaItem('TMDB', '413413');
 
-        const arg = vi.mocked(prisma.mediaItem.create).mock.calls[0][0];
+        const arg = create.mock.calls[0][0];
         expect(arg.data.releaseDate).toBeInstanceOf(Date);
-        expect(prisma.mediaItem.create).toHaveBeenCalledOnce();
+        expect(create).toHaveBeenCalledOnce();
     });
 });

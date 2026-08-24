@@ -1,9 +1,10 @@
 'use client';
 
-import { ChangeEvent, useActionState, useState } from 'react';
+import type { ChangeEvent } from 'react';
+import { useActionState, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { localToUTC } from '@/lib/utils';
-import { ActionResult } from '@/lib/actions/result';
+import type { ActionResult } from '@/lib/actions/result';
 import { FormError } from '@/components/ui/form-error';
 import { Form } from '@base-ui/react/form';
 import { Field, FieldControl, FieldLabel } from '@/components/ui/field';

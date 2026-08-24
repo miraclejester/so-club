@@ -1,4 +1,5 @@
-import { MediaProvider, NormalizedMediaItem, ProviderError } from '@/lib/media/types';
+import type { MediaProvider, NormalizedMediaItem } from '@/lib/media/types';
+import { ProviderError } from '@/lib/media/types';
 
 const TMDB_BASE = 'https://api.themoviedb.org/3';
 const IMAGE_BASE = 'https://image.tmdb.org/t/p/w500';

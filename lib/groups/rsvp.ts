@@ -1,7 +1,8 @@
 'use server';
 
-import { RsvpStatus } from '@/prisma/generated/prisma/enums';
-import { ActionResult, fail, logAndFail, ok } from '../actions/result';
+import type { RsvpStatus } from '@/prisma/generated/prisma/enums';
+import type { ActionResult } from '../actions/result';
+import { fail, logAndFail, ok } from '../actions/result';
 import { prisma } from '@/lib/prisma';
 import { checkMembership } from '@/lib/authorizationControl';
 import { revalidatePath } from 'next/cache';

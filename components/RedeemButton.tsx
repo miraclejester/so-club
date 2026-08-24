@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { SubmitButton } from '@/components/SubmitButton';
-import { ActionResult } from '@/lib/actions/result';
+import type { ActionResult } from '@/lib/actions/result';
 import { FormError } from '@/components/ui/form-error';
 
 const initialState: ActionResult = { ok: true, data: undefined };

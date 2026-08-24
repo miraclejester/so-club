@@ -2,8 +2,9 @@
 
 import { useActionState, useState } from 'react';
 import { SubmitButton } from '@/components/SubmitButton';
-import { ActionResult, ok } from '@/lib/actions/result';
-import { Invite } from '@/prisma/generated/prisma/client';
+import type { ActionResult } from '@/lib/actions/result';
+import { ok } from '@/lib/actions/result';
+import type { Invite } from '@/prisma/generated/prisma/client';
 import { LocalDateTime } from '@/components/LocalDateTime';
 import { useClientValue } from '@/hooks/useClientValue';
 import { FormError } from '@/components/ui/form-error';
@@ -20,6 +21,12 @@ export function InvitePanel({ action, revokeAction, invite }: InvitePanelProps) 
     const [state, formAction] = useActionState(action, ok());
     const [revokeState, revokeFormAction] = useActionState(revokeAction, ok());
     const [copied, setCopied] = useState(false);
+
+    async function copyLink(inviteUrl: string) {
+        await navigator.clipboard.writeText(inviteUrl);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+    }
 
     const origin: string = useClientValue(
         () => window.location.origin,
@@ -57,9 +64,7 @@ export function InvitePanel({ action, revokeAction, invite }: InvitePanelProps) 
                     <Input readOnly value={inviteUrl} className="w-full rounded border px-2 py-1 text-sm" />
                     <Button
                         onClick={() => {
-                            navigator.clipboard.writeText(inviteUrl);
-                            setCopied(true);
-                            setTimeout(() => setCopied(false), 1500);
+                            void copyLink(inviteUrl);
                         }}
                         className="rounded border px-2 py-1 text-sm"
                     >

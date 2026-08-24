@@ -19,8 +19,8 @@ const mockFetch = (status: number, body: unknown) =>
     vi.fn().mockResolvedValue({
         ok: status >= 200 && status < 300,
         status,
-        json: async () => body,
-    } as Response);
+        json: async () => await body,
+    });
 
 const provider = new TMDBProvider('test-token');
 

@@ -8,7 +8,8 @@ import { Prisma } from '@/prisma/generated/prisma/client';
 import type { MediaSource } from '@/lib/media';
 import { GROUPS_URL } from '@/lib/globals';
 import { MediaSourceSchema, TmdbExternalIdSchema } from '@/lib/validation';
-import { ActionResult, ok, fail, logAndFail } from '@/lib/actions/result';
+import type { ActionResult } from '@/lib/actions/result';
+import { ok, fail, logAndFail } from '@/lib/actions/result';
 
 export type AddResult = ActionResult<{ added: boolean }>;
 export type AddAction = (source: MediaSource, externalId: string) => Promise<AddResult>;

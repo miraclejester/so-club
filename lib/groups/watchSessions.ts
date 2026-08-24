@@ -6,7 +6,8 @@ import { checkMembership } from '@/lib/authorizationControl';
 import { prisma } from '@/lib/prisma';
 import { GROUPS_URL } from '@/lib/globals';
 import { ScheduleSessionsSchema } from '@/lib/validation';
-import { ActionResult, fail, logAndFail } from '@/lib/actions/result';
+import type { ActionResult } from '@/lib/actions/result';
+import { fail, logAndFail } from '@/lib/actions/result';
 
 export async function scheduleWatchSession(backlogItemId: string, formData: FormData): Promise<ActionResult> {
     const backlogItem = await prisma.backlogItem.findUnique({

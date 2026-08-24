@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { NormalizedMediaItem } from '@/lib/media';
+import type { NormalizedMediaItem } from '@/lib/media';
 import type { AddAction } from '@/lib/media/backlog';
 import { AddToBacklogButton } from '@/components/AddToBacklogButton';
 import { FormError } from '@/components/ui/form-error';
@@ -28,6 +28,24 @@ export function MovieSearch({ addAction, existingKeys }: MovieSearchProps) {
         setStatus(value.trim().length < 2 ? 'idle' : 'loading');
     }
 
+    async function searchTimerFunc(controller: AbortController, q: string): Promise<void> {
+        try {
+            const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`, {
+                signal: controller.signal,
+            });
+            if (!res.ok) {
+                setStatus('error');
+                return;
+            }
+            setResults((await res.json()) as NormalizedMediaItem[]);
+            setStatus('done');
+        } catch (e) {
+            if ((e as Error).name !== 'AbortError') {
+                setStatus('error');
+            }
+        }
+    }
+
     useEffect(() => {
         const q = query.trim();
         if (q.length < 2) {
@@ -35,22 +53,8 @@ export function MovieSearch({ addAction, existingKeys }: MovieSearchProps) {
         }
 
         const controller = new AbortController();
-        const timer = setTimeout(async () => {
-            try {
-                const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`, {
-                    signal: controller.signal,
-                });
-                if (!res.ok) {
-                    setStatus('error');
-                    return;
-                }
-                setResults((await res.json()) as NormalizedMediaItem[]);
-                setStatus('done');
-            } catch (e) {
-                if ((e as Error).name !== 'AbortError') {
-                    setStatus('error');
-                }
-            }
+        const timer = setTimeout(() => {
+            void searchTimerFunc(controller, q);
         }, 300);
 
         return () => {
@@ -72,7 +76,7 @@ export function MovieSearch({ addAction, existingKeys }: MovieSearchProps) {
                 {status === 'loading' ? <p className="text-sm text-gray-500">Searching...</p> : null}
                 {status === 'error' ? <FormError>Something went wrong. Try again.</FormError> : null}
                 {status === 'done' && results.length === 0 ? (
-                    <p className="text-sm text-gray-500">No movies found for "{`${query.trim()}`}".</p>
+                    <p className="text-sm text-gray-500">No movies found for &quot;{`${query.trim()}`}&quot;.</p>
                 ) : null}
                 {status !== 'idle' && results.length > 0 ? (
                     <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">

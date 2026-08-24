@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { scheduleWatchSession } from '@/lib/groups/watchSessions';
 import { ScheduleForm } from '@/components/ScheduleForm';
 import { GROUPS_URL } from '@/lib/globals';
-import { ActionResult } from '@/lib/actions/result';
+import type { ActionResult } from '@/lib/actions/result';
 import { Backlink } from '@/components/Backlink';
 import { PageHeading } from '@/components/PageHeading';
 

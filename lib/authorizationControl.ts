@@ -1,7 +1,7 @@
 import { requireUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { Role } from '@/prisma/generated/prisma/enums';
-import { Membership } from '@/prisma/generated/prisma/client';
+import type { Role } from '@/prisma/generated/prisma/enums';
+import type { Membership } from '@/prisma/generated/prisma/client';
 import { notFound } from 'next/navigation';
 
 const ROLE_RANK: Record<Role, number> = {

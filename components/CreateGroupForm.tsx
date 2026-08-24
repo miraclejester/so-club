@@ -4,7 +4,7 @@ import { useActionState } from 'react';
 import { createGroup } from '@/lib/groups/groups';
 import { SubmitButton } from '@/components/SubmitButton';
 import { Input } from '@/components/ui/input';
-import { ActionResult } from '@/lib/actions/result';
+import type { ActionResult } from '@/lib/actions/result';
 import { Form } from '@base-ui/react/form';
 import { Textarea } from '@/components/ui/textarea';
 import { FormError } from '@/components/ui/form-error';

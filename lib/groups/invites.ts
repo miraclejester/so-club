@@ -5,9 +5,10 @@ import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { requireUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
-import { Invite } from '@/prisma/generated/prisma/client';
+import type { Invite } from '@/prisma/generated/prisma/client';
 import { GROUPS_URL } from '@/lib/globals';
-import { ActionResult, ok, fail, logAndFail } from '@/lib/actions/result';
+import type { ActionResult } from '@/lib/actions/result';
+import { ok, fail, logAndFail } from '@/lib/actions/result';
 import { isInviteActive } from '@/lib/groups/inviteQueries';
 
 class InviteUnavailableError extends Error {}

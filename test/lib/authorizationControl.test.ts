@@ -1,10 +1,12 @@
 import { describe, it, expect, vi } from 'vitest';
 
+const { findUnique } = vi.hoisted(() => ({ findUnique: vi.fn() }));
+
 vi.mock('@/lib/auth', () => ({
     requireUser: vi.fn(),
 }));
 vi.mock('@/lib/prisma', () => ({
-    prisma: { membership: { findUnique: vi.fn() } },
+    prisma: { membership: { findUnique } },
 }));
 vi.mock('next/navigation', () => ({
     redirect: vi.fn(() => {
@@ -14,9 +16,8 @@ vi.mock('next/navigation', () => ({
 
 import { requireMembership, AuthorizationError, roleIsAtLeast } from '@/lib/authorizationControl';
 import { requireUser } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
-import { Role } from '@/prisma/generated/prisma/enums';
-import { Membership } from '@/prisma/generated/prisma/client';
+import type { Role } from '@/prisma/generated/prisma/enums';
+import type { Membership } from '@/prisma/generated/prisma/client';
 
 /** Only `role` is read by requireMembership, so the rest is left off. */
 const membershipWithRole = (role: Role) => ({ role }) as unknown as Membership;
@@ -35,7 +36,7 @@ describe('requireMembership', () => {
             id: 'u1',
             username: 'u1',
         });
-        vi.mocked(prisma.membership.findUnique).mockResolvedValue(null);
+        findUnique.mockResolvedValue(null);
         await expect(requireMembership('g1')).rejects.toBeInstanceOf(AuthorizationError);
     });
 
@@ -44,7 +45,7 @@ describe('requireMembership', () => {
             id: 'u1',
             username: 'u1',
         });
-        vi.mocked(prisma.membership.findUnique).mockResolvedValue(membershipWithRole('MEMBER'));
+        findUnique.mockResolvedValue(membershipWithRole('MEMBER'));
         await expect(requireMembership('g1', 'ADMIN')).rejects.toBeInstanceOf(AuthorizationError);
     });
 
@@ -53,7 +54,7 @@ describe('requireMembership', () => {
             id: 'u1',
             username: 'u1',
         });
-        vi.mocked(prisma.membership.findUnique).mockResolvedValue(membershipWithRole('OWNER'));
+        findUnique.mockResolvedValue(membershipWithRole('OWNER'));
         const result = await requireMembership('g1', 'ADMIN');
         expect(result.membership.role).toBe('OWNER');
         expect(result.userId).toBe('u1');

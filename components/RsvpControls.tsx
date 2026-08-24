@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import type { RsvpStatus } from '@/prisma/generated/prisma/enums';
 import { setRsvp } from '@/lib/groups/rsvp';
 import { RSVP_OPTIONS } from '@/lib/groups/data';
-import { ActionResult, ok } from '@/lib/actions/result';
+import type { ActionResult } from '@/lib/actions/result';
+import { ok } from '@/lib/actions/result';
 import { FormError } from '@/components/ui/form-error';
 
 type RsvpControlsProps = {
