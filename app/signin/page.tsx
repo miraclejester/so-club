@@ -34,34 +34,32 @@ export default async function SignInPage({ searchParams }: PageProps<'/signin'>)
     }
 
     return (
-        <>
-            <Card className="p-6">
-                <PageHeading className="text-lg font-semibold">Sign In to SoClub</PageHeading>
+        <Card className="p-6">
+            <PageHeading className="text-lg font-semibold">Sign In to SoClub</PageHeading>
 
-                {errorMessage ? <FormError className="mt-2">{errorMessage}</FormError> : null}
+            {errorMessage ? <FormError className="mt-2">{errorMessage}</FormError> : null}
 
-                <form className="mt-4 flex flex-col gap-2" action={sendMagicLink}>
-                    <Input name="email" type="email" placeholder="you@example.com" required />
-                    <Button type="submit" className="w-full">
-                        Send magic link
+            <form className="mt-4 flex flex-col gap-2" action={sendMagicLink}>
+                <Input name="email" type="email" placeholder="you@example.com" required />
+                <Button type="submit" className="w-full">
+                    Send magic link
+                </Button>
+            </form>
+
+            <div className="my-4 text-center text-xs text-muted-foreground">or</div>
+
+            <div className="mt-4 flex flex-col gap-2">
+                <form action={goToSignIn.bind(null, 'github')}>
+                    <Button type="submit" className="w-full" variant="outline">
+                        Continue with Github
                     </Button>
                 </form>
-
-                <div className="my-4 text-center text-xs text-muted-foreground">or</div>
-
-                <div className="mt-4 flex flex-col gap-2">
-                    <form action={goToSignIn.bind(null, 'github')}>
-                        <Button type="submit" className="w-full" variant="outline">
-                            Continue with Github
-                        </Button>
-                    </form>
-                    <form action={goToSignIn.bind(null, 'google')}>
-                        <Button type="submit" className="w-full" variant="outline">
-                            Continue with Google
-                        </Button>
-                    </form>
-                </div>
-            </Card>
-        </>
+                <form action={goToSignIn.bind(null, 'google')}>
+                    <Button type="submit" className="w-full" variant="outline">
+                        Continue with Google
+                    </Button>
+                </form>
+            </div>
+        </Card>
     );
 }

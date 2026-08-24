@@ -16,7 +16,7 @@ export function RedeemButton({ action }: RedeemButtonProps) {
 
     return (
         <form action={formAction}>
-            <SubmitButton pendingText="Joining..."> Join group </SubmitButton>
+            <SubmitButton pendingText="Joining...">Join group</SubmitButton>
             {state.ok ? null : <FormError>{state.error}</FormError>}
         </form>
     );

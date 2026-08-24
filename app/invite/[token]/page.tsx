@@ -12,18 +12,13 @@ export default async function InvitePage({ params }: PageProps<'/invite/[token]'
     const invite: InviteWithDetails | null = await getInvite(token);
     if (!invite) {
         return (
-            <>
-                {' '}
-                <p>This invite link is invalid or has been removed</p>
-            </>
+            <p>This invite link is invalid or has been removed</p>
         );
     }
 
     if (!invite.active) {
         return (
-            <>
-                <p>This invite link is no longer active</p>
-            </>
+            <p>This invite link is no longer active</p>
         );
     }
 

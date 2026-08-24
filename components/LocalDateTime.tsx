@@ -1,6 +1,6 @@
 'use client';
 
-import { useClientValue } from '@/lib/hooks';
+import { useClientValue } from '@/hooks/useClientValue';
 
 type Style = 'full' | 'long' | 'medium' | 'short';
 

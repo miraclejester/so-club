@@ -28,7 +28,7 @@ export default async function GroupsPage() {
                 </Link>
             </div>
             {memberships.length === 0 ? (
-                <p className="mt-6, text-gray-600">
+                <p className="mt-6 text-gray-600">
                     You're not in any groups yet.{' '}
                     <Link href="/groups/new" className="underline">
                         Create one
