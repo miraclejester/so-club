@@ -1,4 +1,4 @@
-﻿import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 vi.mock('@/lib/prisma', () => ({
     prisma: { mediaItem: { findUnique: vi.fn(), create: vi.fn(), findUniqueOrThrow: vi.fn() } },

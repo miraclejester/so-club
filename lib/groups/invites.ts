@@ -1,4 +1,4 @@
-﻿'use server';
+'use server';
 
 import { checkMembership } from '@/lib/authorizationControl';
 import { prisma } from '@/lib/prisma';

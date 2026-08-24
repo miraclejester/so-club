@@ -1,4 +1,4 @@
-﻿import type { RsvpStatus } from '@/prisma/generated/prisma/enums';
+import type { RsvpStatus } from '@/prisma/generated/prisma/enums';
 import Link from 'next/link';
 import { GROUPS_URL } from '@/lib/globals';
 import { Badge } from '@/components/ui/badge';

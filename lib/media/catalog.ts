@@ -1,4 +1,4 @@
-﻿import { prisma } from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import { Prisma, type MediaItem } from '@/prisma/generated/prisma/client';
 import type { MediaSource } from './types';
 import { getProvider } from '@/lib/media/index';

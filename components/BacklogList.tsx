@@ -1,4 +1,4 @@
-﻿import type { BacklogItem, MediaItem, User, BacklogStatus, Role } from '@/prisma/generated/prisma/client';
+import type { BacklogItem, MediaItem, User, BacklogStatus, Role } from '@/prisma/generated/prisma/client';
 import { roleIsAtLeast } from '@/lib/authorizationControl';
 import { RemoveFromBacklogButton } from '@/components/RemoveFromBacklogButton';
 import { buttonVariants } from '@/components/ui/button';

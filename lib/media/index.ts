@@ -1,4 +1,4 @@
-﻿import type { MediaProvider, MediaSource } from './types';
+import type { MediaProvider, MediaSource } from './types';
 import { TMDBProvider } from '@/lib/media/tmdb';
 import { env } from '@/lib/env';
 

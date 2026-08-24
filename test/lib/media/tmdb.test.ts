@@ -1,4 +1,4 @@
-﻿import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { TMDBProvider } from '@/lib/media/tmdb';
 
 const sample = {

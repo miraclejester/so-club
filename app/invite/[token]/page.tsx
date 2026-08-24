@@ -1,4 +1,4 @@
-﻿import { redeemInvite } from '@/lib/groups/invites';
+import { redeemInvite } from '@/lib/groups/invites';
 import { getCurrentUser, LoggedInUser } from '@/lib/auth';
 import { RedeemButton } from '@/components/RedeemButton';
 import Link from 'next/link';

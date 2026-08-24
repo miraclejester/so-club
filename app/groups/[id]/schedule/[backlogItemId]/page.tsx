@@ -1,4 +1,4 @@
-﻿import { requireMembershipOrNotFound } from '@/lib/authorizationControl';
+import { requireMembershipOrNotFound } from '@/lib/authorizationControl';
 import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { scheduleWatchSession } from '@/lib/groups/watchSessions';

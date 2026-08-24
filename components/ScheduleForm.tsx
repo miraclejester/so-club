@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { ChangeEvent, useActionState, useState } from 'react';
 import { Input } from '@/components/ui/input';

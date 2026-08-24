@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useClientValue } from '@/lib/hooks';
 

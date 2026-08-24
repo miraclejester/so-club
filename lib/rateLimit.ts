@@ -1,4 +1,4 @@
-﻿type Bucket = { count: number; resetAt: number };
+type Bucket = { count: number; resetAt: number };
 const buckets = new Map<string, Bucket>();
 
 // Per-process only. Replace with shared storage if the app ever runs on multiple instances

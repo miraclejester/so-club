@@ -1,4 +1,4 @@
-﻿import 'dotenv/config';
+import 'dotenv/config';
 import { prisma } from '@/lib/prisma';
 import { snapshotMediaItem } from '@/lib/media/catalog';
 import type { MediaItem, BacklogStatus } from '@/prisma/generated/prisma/client';

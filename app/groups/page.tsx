@@ -1,4 +1,4 @@
-﻿import { requireUser } from '@/lib/auth';
+import { requireUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import { GROUPS_URL } from '@/lib/globals';

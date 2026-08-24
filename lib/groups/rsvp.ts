@@ -1,4 +1,4 @@
-﻿'use server';
+'use server';
 
 import { RsvpStatus } from '@/prisma/generated/prisma/enums';
 import { ActionResult, fail, logAndFail, ok } from '../actions/result';

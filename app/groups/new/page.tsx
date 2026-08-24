@@ -1,4 +1,4 @@
-﻿import { requireUser } from '@/lib/auth';
+import { requireUser } from '@/lib/auth';
 import { CreateGroupForm } from '@/components/CreateGroupForm';
 import { GROUPS_URL } from '@/lib/globals';
 import { PageHeading } from '@/components/PageHeading';

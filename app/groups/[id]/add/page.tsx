@@ -1,4 +1,4 @@
-﻿import { requireMembershipOrNotFound } from '@/lib/authorizationControl';
+import { requireMembershipOrNotFound } from '@/lib/authorizationControl';
 import { MovieSearch } from '@/components/MovieSearch';
 import { addToBacklog } from '@/lib/media/backlog';
 import { prisma } from '@/lib/prisma';

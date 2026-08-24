@@ -1,4 +1,4 @@
-﻿import { z } from 'zod';
+import { z } from 'zod';
 import { RsvpStatus } from '@/prisma/generated/prisma/enums';
 
 export const MediaSourceSchema = z.enum(['TMDB']);

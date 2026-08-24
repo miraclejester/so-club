@@ -1,4 +1,4 @@
-﻿export type MediaSource = 'TMDB'; // More sources later
+export type MediaSource = 'TMDB'; // More sources later
 export type MediaType = 'MOVIE' | 'BOOK' | 'GAME';
 
 export interface NormalizedMediaItem {
