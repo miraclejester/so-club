@@ -9,9 +9,10 @@ import { FormError } from '@/components/ui/form-error';
 
 type RemoveFromBacklogButtonProps = {
     backlogItemId: string;
+    isScheduled: boolean;
 };
 
-export function RemoveFromBacklogButton({ backlogItemId }: RemoveFromBacklogButtonProps) {
+export function RemoveFromBacklogButton({ backlogItemId, isScheduled }: RemoveFromBacklogButtonProps) {
     const [pending, startTransition] = useTransition();
     const [confirming, setConfirming] = useState(false);
     const [result, setResult] = useState<ActionResult>(ok());
@@ -34,6 +35,7 @@ export function RemoveFromBacklogButton({ backlogItemId }: RemoveFromBacklogButt
     if (confirming) {
         return (
             <div className="mt-1 flex items-center gap-1">
+                { isScheduled ? <FormError>The scheduled session and all rsvps will be removed</FormError> : null}
                 <Button size="sm" variant="destructive" onClick={handleRemove} disabled={pending}>
                     {pending ? 'Removing...' : 'Remove'}
                 </Button>

@@ -46,6 +46,7 @@ export async function scheduleWatchSession(backlogItemId: string, formData: Form
                     notes,
                     groupId: backlogItem.groupId,
                     mediaItemId: backlogItem.mediaItemId,
+                    backlogItemId: backlogItem.id,
                     createdById: userId,
                 },
             }),

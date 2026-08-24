@@ -131,6 +131,7 @@ model BacklogItem {
   group             Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
   mediaItem         MediaItem @relation(fields: [mediaItemId], references: [id])
   addedBy           User      @relation("BacklogAddedBy", fields: [addedById], references: [id])
+  watchSessions     WatchSession[]
   
   @@unique([groupId, mediaItemId])
 }
@@ -143,6 +144,7 @@ model WatchSession {
   createdById       String
   groupId           String
   mediaItemId       String
+  backlogItemId     String
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   
@@ -150,8 +152,10 @@ model WatchSession {
   mediaItem         MediaItem @relation(fields: [mediaItemId], references: [id])
   createdBy         User  @relation("SessionCreator", fields: [createdById], references: [id])
   rsvps             Rsvp[]
+  backlogItem       BacklogItem @relation(fields: [backlogItemId], references: [id], onDelete: Cascade)
   
   @@index ([groupId, scheduledFor])
+  @@index([backlogItemId])
 }
 
 model Rsvp {
