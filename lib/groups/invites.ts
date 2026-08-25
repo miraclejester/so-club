@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { requireUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import type { Invite } from '@/prisma/generated/prisma/client';
+import { Prisma } from '@/prisma/generated/prisma/client';
 import { GROUPS_URL } from '@/lib/globals';
 import type { ActionResult } from '@/lib/actions/result';
 import { ok, fail, logAndFail } from '@/lib/actions/result';
@@ -136,7 +137,7 @@ export async function redeemInvite(token: string): Promise<ActionResult> {
             return fail('This invite link is no longer active');
         }
         // Invite redemption was not unique. Probably joined concurrently with a different invite to the same group
-        if (e instanceof Error && 'code' in e && (e as { code?: string }).code === 'P2002') {
+        if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
             redirect(groupUrl);
         }
         return logAndFail('redeemInvite', e, 'Could not join the group. Please try again later');

@@ -30,7 +30,7 @@ const googleProvider = Google({
             id: profile.sub,
             email: profile.email,
             image: profile.picture,
-            username: profile.family_name ?? 'unknown_user',
+            username: profile.name ?? 'unknown_user',
         };
     },
 });

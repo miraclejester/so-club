@@ -5,6 +5,7 @@ const EnvSchema = z.object({
     DIRECT_URL: z.string().min(1),
     AUTH_SECRET: z.string().min(1),
     AUTH_GITHUB_ID: z.string().min(1),
+    AUTH_GITHUB_SECRET: z.string().min(1),
     AUTH_GOOGLE_ID: z.string().min(1),
     AUTH_GOOGLE_SECRET: z.string().min(1),
     AUTH_RESEND_KEY: z.string().min(1),
@@ -20,7 +21,7 @@ export function env(): Env {
         return cached;
     }
 
-    if (process.env.SKIP_ENV_VALIDATION === '1') {
+    if (process.env.NODE_ENV !== 'production' && process.env.SKIP_ENV_VALIDATION === '1') {
         cached = process.env as unknown as Env;
         return cached;
     }
