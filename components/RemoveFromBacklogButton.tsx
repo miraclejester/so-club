@@ -35,7 +35,7 @@ export function RemoveFromBacklogButton({ backlogItemId, isScheduled }: RemoveFr
     if (confirming) {
         return (
             <div className="mt-1 flex items-center gap-1">
-                { isScheduled ? <FormError>The scheduled session and all rsvps will be removed</FormError> : null}
+                {isScheduled ? <FormError>The scheduled session and all rsvps will be removed</FormError> : null}
                 <Button size="sm" variant="destructive" onClick={handleRemove} disabled={pending}>
                     {pending ? 'Removing...' : 'Remove'}
                 </Button>

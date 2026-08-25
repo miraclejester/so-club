@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { FormError } from '@/components/ui/form-error';
 import { PageHeading } from '@/components/PageHeading';
+import { EmailSchema } from '@/lib/validation';
 
 const ERROR_MESSAGES: Record<string, string> = {
     OAuthAccountNotLinked:
@@ -27,8 +28,14 @@ export default async function SignInPage({ searchParams }: PageProps<'/signin'>)
 
     async function sendMagicLink(formData: FormData) {
         'use server';
+
+        const parsed = EmailSchema.safeParse(formData.get('email'));
+        if (!parsed.success) {
+            return;
+        }
+
         await signIn('resend', {
-            email: formData.get('email') as string,
+            email: parsed.data,
             redirectTo: redirectUrl,
         });
     }

@@ -30,8 +30,6 @@ export function BacklogList({ items, currentUserId, viewerRole }: BacklogListPro
             </p>
         );
     }
-    
-    
 
     return (
         <ul className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
@@ -58,7 +56,10 @@ export function BacklogList({ items, currentUserId, viewerRole }: BacklogListPro
                         ) : null}
 
                         {item.addedById === currentUserId || roleIsAtLeast(viewerRole, 'ADMIN') ? (
-                            <RemoveFromBacklogButton backlogItemId={item.id} isScheduled={item.status === 'SCHEDULED'} />
+                            <RemoveFromBacklogButton
+                                backlogItemId={item.id}
+                                isScheduled={item.status === 'SCHEDULED'}
+                            />
                         ) : null}
                     </MediaCard>
                 );

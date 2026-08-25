@@ -16,15 +16,15 @@ export async function GET(req: NextRequest): Promise<NextResponse<SearchResponse
         return NextResponse.json({ error: 'Too many searches. Please slow down' }, { status: 429 });
     }
 
-    const q = req.nextUrl.searchParams.get('q')?.trim() ?? '';
+    const parsed = SearchQuerySchema.safeParse(req.nextUrl.searchParams.get('q') ?? '');
 
     // Search is too short
-    if (!SearchQuerySchema.safeParse(q)) {
+    if (!parsed.success) {
         return NextResponse.json([]);
     }
 
     try {
-        const results = await getProvider('TMDB').search(q);
+        const results = await getProvider('TMDB').search(parsed.data);
         return NextResponse.json(results);
     } catch (e) {
         if (e instanceof ProviderError && e.kind === 'rate_limited') {
