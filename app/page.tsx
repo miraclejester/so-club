@@ -12,7 +12,7 @@ export default async function Home() {
     }
 
     return (
-        <main className="mx-auto flex min-h-svh max-w-3xl flex-col items-center justify-center px-4 text-center">
+        <div className="mx-auto flex min-h-svh max-w-3xl flex-col items-center justify-center px-4 text-center">
             <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
                 Complete your backlogs, <span className="text-primary">together</span>
             </h1>
@@ -42,6 +42,6 @@ export default async function Home() {
             <footer className="mt-16 text-xs text-muted-foreground">
                 This product uses the TMDB API but is not endorsed or certified by TMDB
             </footer>
-        </main>
+        </div>
     );
 }
