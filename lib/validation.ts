@@ -6,7 +6,7 @@ export const MediaSourceSchema = z.enum(['TMDB']);
 // TMDB ids should be numeric
 export const TmdbExternalIdSchema = z.string().regex(/^\d+$/, 'Invalid movie id');
 export const RsvpStatusSchema = z.enum(RsvpStatus);
-export const EmailSchema = z.email();
+export const EmailSchema = z.email().trim().toLowerCase();
 export const SearchQuerySchema: ZodString = z.string().trim().min(2).max(100);
 export const ScheduleSessionsSchema = z.object({
     scheduledFor: z
@@ -25,4 +25,12 @@ function optionalText(max: number) {
         .max(max)
         .nullish()
         .transform((v) => v || null);
+}
+
+export function singleStringParamUrl(regexError: string, defaultValue: string = '', max: number = 512) {
+    return z
+        .string()
+        .max(max)
+        .regex(/^\/(?![/\\])[^\\\s]*$/, regexError)
+        .catch(defaultValue);
 }

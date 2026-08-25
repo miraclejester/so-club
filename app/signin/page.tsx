@@ -4,13 +4,23 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { FormError } from '@/components/ui/form-error';
 import { PageHeading } from '@/components/PageHeading';
-import { EmailSchema } from '@/lib/validation';
+import { EmailSchema, singleStringParamUrl } from '@/lib/validation';
+import { redirect } from 'next/navigation';
+import { headers } from 'next/headers';
+import { rateLimit } from '@/lib/rateLimit';
+import { GROUPS_URL } from '@/lib/globals';
 
 const ERROR_MESSAGES: Record<string, string> = {
     OAuthAccountNotLinked:
         'That email is already registered with a different sign-in method. Please sign-in the way' +
         ' you did the first time',
+    RateLimited: 'Your request has been rate limited',
+    InvalidEmail: 'Invalid email address',
 };
+
+function getSignInUrl(errorCode: string, redirectUrl: string) {
+    return `/signin?error=${errorCode}&callbackUrl=${encodeURIComponent(redirectUrl)}`;
+}
 
 export default async function SignInPage({ searchParams }: PageProps<'/signin'>) {
     const { callbackUrl, error } = await searchParams;
@@ -19,7 +29,8 @@ export default async function SignInPage({ searchParams }: PageProps<'/signin'>)
         ? (ERROR_MESSAGES[error as string] ?? 'Could not sign you in. Please try again later')
         : null;
 
-    const redirectUrl = (callbackUrl as string) ?? '/groups';
+    const parser = singleStringParamUrl('Invalid callback url', GROUPS_URL);
+    const redirectUrl = parser.parse(callbackUrl);
 
     async function goToSignIn(providerId: string) {
         'use server';
@@ -31,7 +42,20 @@ export default async function SignInPage({ searchParams }: PageProps<'/signin'>)
 
         const parsed = EmailSchema.safeParse(formData.get('email'));
         if (!parsed.success) {
-            return;
+            redirect(getSignInUrl('InvalidEmail', redirectUrl));
+        }
+
+        const forwarded = (await headers()).get('x-forwarded-for');
+        const ip = forwarded?.split(',')[0]?.trim() || 'unknown';
+
+        const ipBanned = !rateLimit(`magiclink:ip:${ip}`, 10, 15 * 60_000);
+        if (ipBanned) {
+            redirect(getSignInUrl('RateLimited', redirectUrl));
+        }
+
+        const emailBanned = !rateLimit(`magiclink:${parsed.data}`, 3, 15 * 60_000);
+        if (emailBanned) {
+            redirect(getSignInUrl('RateLimited', redirectUrl));
         }
 
         await signIn('resend', {
