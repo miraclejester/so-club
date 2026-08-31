@@ -12,7 +12,7 @@ vi.mock('@/lib/prisma', () => ({
 vi.mock('@/lib/media/index', () => ({ getProvider: vi.fn() }));
 
 import { getProvider, type MediaProvider, type NormalizedMediaItem } from '@/lib/media';
-import { snapshotMediaItem } from '@/lib/media/catalog';
+import { snapshotMediaItem } from '@/lib/media/catalog/actions';
 import type { MediaItem, Prisma } from '@/prisma/generated/prisma/client';
 
 function makeMediaItem(overrides: Partial<MediaItem> = {}): MediaItem {

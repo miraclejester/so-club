@@ -3,8 +3,8 @@
 import { useState, useTransition } from 'react';
 import { Button } from '@/components/ui/button';
 import type { RsvpStatus } from '@/prisma/generated/prisma/enums';
-import { setRsvp } from '@/lib/groups/rsvp';
-import { RSVP_OPTIONS } from '@/lib/groups/data';
+import { setRsvp } from '@/lib/rsvp/actions';
+import { RSVP_OPTIONS } from '@/lib/rsvp/data';
 import type { ActionResult } from '@/lib/actions/result';
 import { ok } from '@/lib/actions/result';
 import { FormError } from '@/components/ui/form-error';

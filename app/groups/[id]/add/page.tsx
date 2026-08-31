@@ -1,6 +1,6 @@
 import { requireMembershipOrNotFound } from '@/lib/authorizationControl';
 import { MovieSearch } from '@/components/MovieSearch';
-import { addToBacklog } from '@/lib/media/backlog';
+import { addToBacklog } from '@/lib/media/backlog/actions';
 import { prisma } from '@/lib/prisma';
 import { Backlink } from '@/components/Backlink';
 import { GROUPS_URL } from '@/lib/globals';

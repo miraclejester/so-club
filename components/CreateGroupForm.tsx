@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
-import { createGroup } from '@/lib/groups/groups';
+import { createGroup } from '@/lib/groups/actions';
 import { SubmitButton } from '@/components/SubmitButton';
 import { Input } from '@/components/ui/input';
 import type { ActionResult } from '@/lib/actions/result';

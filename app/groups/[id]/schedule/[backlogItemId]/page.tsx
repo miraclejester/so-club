@@ -1,7 +1,7 @@
 import { requireMembershipOrNotFound } from '@/lib/authorizationControl';
 import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
-import { scheduleWatchSession } from '@/lib/groups/watchSessions';
+import { scheduleWatchSession } from '@/lib/watchSessions/actions';
 import { ScheduleForm } from '@/components/ScheduleForm';
 import { GROUPS_URL } from '@/lib/globals';
 import type { ActionResult } from '@/lib/actions/result';

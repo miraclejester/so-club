@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/prisma';
-import type { Group, Invite } from '@/prisma/generated/prisma/client';
-
-export type InviteWithDetails = Invite & { group: Group; active: boolean };
+import type { Invite } from '@/prisma/generated/prisma/client';
+import {InviteWithDetails} from '@/lib/invites/types';
 
 export async function getInvite(token: string): Promise<InviteWithDetails | null> {
     const inviteWithGroup = await prisma.invite.findUnique({

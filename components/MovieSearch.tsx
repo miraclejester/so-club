@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import type { NormalizedMediaItem } from '@/lib/media';
-import type { AddAction } from '@/lib/media/backlog';
+import type { AddAction } from '@/lib/media/backlog/actions';
 import { AddToBacklogButton } from '@/components/AddToBacklogButton';
 import { FormError } from '@/components/ui/form-error';
 import { MediaCard } from '@/components/MediaCard';

@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { Prisma, type MediaItem } from '@/prisma/generated/prisma/client';
-import type { MediaSource } from './types';
+import type { MediaSource } from '@/lib/media/types';
 import { getProvider } from '@/lib/media/index';
 
 export async function snapshotMediaItem(source: MediaSource, externalId: string): Promise<MediaItem> {

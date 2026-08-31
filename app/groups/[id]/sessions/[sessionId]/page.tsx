@@ -6,7 +6,7 @@ import { LocalDateTime } from '@/components/LocalDateTime';
 import { RsvpControls } from '@/components/RsvpControls';
 import { Backlink } from '@/components/Backlink';
 import { PageHeading } from '@/components/PageHeading';
-import { RSVP_OPTIONS } from '@/lib/groups/data';
+import { RSVP_OPTIONS } from '@/lib/rsvp/data';
 
 export default async function SessionPage({ params }: PageProps<'/groups/[id]/sessions/[sessionId]'>) {
     const { id, sessionId } = await params;

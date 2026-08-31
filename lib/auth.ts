@@ -32,7 +32,7 @@ const googleProvider = Google({
             image: profile.picture,
             username: profile.name ?? 'unknown_user',
         };
-    },
+    }
 });
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -40,6 +40,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     session: { strategy: 'database' },
     pages: {
         signIn: '/signin',
+        error: '/signin'
     },
     providers: [githubProvider, googleProvider, Resend({ from: 'send@so-club.com' })],
     callbacks: {
@@ -49,6 +50,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             return session;
         },
     },
+    debug: process.env.NODE_ENV === 'development'
 });
 
 export async function getCurrentUser(): Promise<LoggedInUser | null> {

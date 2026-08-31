@@ -1,5 +1,5 @@
 import type { MediaProvider, MediaSource } from './types';
-import { TMDBProvider } from '@/lib/media/tmdb';
+import { TMDBProvider } from '@/lib/media/providers/tmdb';
 import { env } from '@/lib/env';
 
 let registry: Record<MediaSource, MediaProvider> | null = null;

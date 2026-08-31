@@ -1,10 +1,10 @@
-import { redeemInvite } from '@/lib/groups/invites';
+import { redeemInvite } from '@/lib/invites/actions';
 import type { LoggedInUser } from '@/lib/auth';
 import { getCurrentUser } from '@/lib/auth';
 import { RedeemButton } from '@/components/RedeemButton';
 import Link from 'next/link';
-import type { InviteWithDetails } from '@/lib/groups/inviteQueries';
-import { getInvite } from '@/lib/groups/inviteQueries';
+import type { InviteWithDetails } from '@/lib/invites/types';
+import { getInvite } from '@/lib/invites/queries';
 import { PageHeading } from '@/components/PageHeading';
 import { buttonVariants } from '@/components/ui/button';
 

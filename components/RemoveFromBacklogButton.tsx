@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { removeFromBacklog } from '@/lib/media/backlog';
+import { removeFromBacklog } from '@/lib/media/backlog/actions';
 import { Button } from '@/components/ui/button';
 import type { ActionResult } from '@/lib/actions/result';
 import { ok, fail } from '@/lib/actions/result';

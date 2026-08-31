@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { TMDBProvider } from '@/lib/media/tmdb';
+import { TMDBProvider } from '@/lib/media/providers/tmdb';
 
 const sample = {
     results: [

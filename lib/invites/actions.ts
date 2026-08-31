@@ -10,7 +10,7 @@ import { Prisma } from '@/prisma/generated/prisma/client';
 import { GROUPS_URL } from '@/lib/globals';
 import type { ActionResult } from '@/lib/actions/result';
 import { ok, fail, logAndFail } from '@/lib/actions/result';
-import { isInviteActive } from '@/lib/groups/inviteQueries';
+import { isInviteActive } from '@/lib/invites/queries';
 
 class InviteUnavailableError extends Error {}
 

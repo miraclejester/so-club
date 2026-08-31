@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import type { MediaSource } from '@/lib/media';
-import type { AddAction, AddResult } from '@/lib/media/backlog';
+import type { AddAction, AddResult } from '@/lib/media/backlog/actions';
 import { Button } from '@/components/ui/button';
 import { FormError } from '@/components/ui/form-error';
 
