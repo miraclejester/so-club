@@ -6,7 +6,7 @@ let registry: Record<MediaSource, MediaProvider> | null = null;
 
 function build(): Record<MediaSource, MediaProvider> {
     return {
-        TMDB: new TMDBProvider(env().TMDB_ACCESS_TOKEN ?? ''),
+        TMDB: new TMDBProvider(env().TMDB_ACCESS_TOKEN),
     };
 }
 
