@@ -2,7 +2,7 @@
 
 import { useActionState, useState } from 'react';
 import { SubmitButton } from '@/components/layout/SubmitButton';
-import type { ActionResult } from '@/lib/actions/result';
+import type { FormAction } from '@/lib/actions/result';
 import { ok } from '@/lib/actions/result';
 import type { Invite } from '@/prisma/generated/prisma/client';
 import { LocalDateTime } from '@/components/layout/LocalDateTime';
@@ -12,8 +12,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
 type InvitePanelProps = {
-    action: (prev: ActionResult, formData: FormData) => Promise<ActionResult>;
-    revokeAction: (prev: ActionResult, formData: FormData) => Promise<ActionResult>;
+    action: FormAction;
+    revokeAction: FormAction;
     invite: Invite | null;
 };
 

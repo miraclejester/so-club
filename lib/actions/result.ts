@@ -1,5 +1,7 @@
 export type ActionResult<T = undefined> = { ok: true; data: T } | { ok: false; error: string };
 
+export type FormAction<T = undefined> = (prev: ActionResult<T>, formData: FormData) => Promise<ActionResult<T>>;
+
 export function ok(): ActionResult;
 export function ok<T>(data: T): ActionResult<T>;
 export function ok<T>(data?: T): ActionResult<T | undefined> {

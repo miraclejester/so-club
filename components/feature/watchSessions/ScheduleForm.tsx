@@ -4,7 +4,7 @@ import type { ChangeEvent } from 'react';
 import { useActionState, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { localToUTC } from '@/lib/utils';
-import type { ActionResult } from '@/lib/actions/result';
+import type { ActionResult, FormAction } from '@/lib/actions/result';
 import { ok } from '@/lib/actions/result';
 import { FormError } from '@/components/ui/form-error';
 import { Form } from '@base-ui/react/form';
@@ -15,7 +15,7 @@ import { SubmitButton } from '@/components/layout/SubmitButton';
 const initialState: ActionResult = ok();
 
 type ScheduleFormProps = {
-    action: (prev: ActionResult, formData: FormData) => Promise<ActionResult>;
+    action: FormAction;
 };
 
 export function ScheduleForm({ action }: ScheduleFormProps) {
