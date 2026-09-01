@@ -5,12 +5,13 @@ import { createGroup } from '@/lib/groups/actions';
 import { SubmitButton } from '@/components/layout/SubmitButton';
 import { Input } from '@/components/ui/input';
 import type { ActionResult } from '@/lib/actions/result';
+import { ok } from '@/lib/actions/result';
 import { Form } from '@base-ui/react/form';
 import { Textarea } from '@/components/ui/textarea';
 import { FormError } from '@/components/ui/form-error';
 import { Field, FieldControl, FieldError, FieldLabel } from '@/components/ui/field';
 
-const initialState: ActionResult = { ok: true, data: undefined };
+const initialState: ActionResult = ok();
 
 export function CreateGroupForm() {
     const [state, formAction] = useActionState(createGroup, initialState);
