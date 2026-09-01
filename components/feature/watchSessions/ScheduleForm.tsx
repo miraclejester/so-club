@@ -6,11 +6,11 @@ import { Input } from '@/components/ui/input';
 import { localToUTC } from '@/lib/utils';
 import type { ActionResult, FormAction } from '@/lib/actions/result';
 import { ok } from '@/lib/actions/result';
-import { FormError } from '@/components/ui/form-error';
 import { Form } from '@base-ui/react/form';
 import { Field, FieldControl, FieldLabel } from '@/components/ui/field';
 import { Textarea } from '@/components/ui/textarea';
 import { SubmitButton } from '@/components/layout/SubmitButton';
+import { ActionError } from '@/components/layout/ActionError';
 
 const initialState: ActionResult = ok();
 
@@ -52,7 +52,7 @@ export function ScheduleForm({ action }: ScheduleFormProps) {
                 </FieldLabel>
             </Field>
 
-            {state.ok ? null : <FormError>{state.error}</FormError>}
+            <ActionError result={state} />
 
             <SubmitButton pendingText="Scheduling..." disabled={pending || !iso}>
                 Schedule session

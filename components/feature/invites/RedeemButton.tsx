@@ -4,7 +4,7 @@ import { useActionState } from 'react';
 import { SubmitButton } from '@/components/layout/SubmitButton';
 import type { ActionResult, FormAction } from '@/lib/actions/result';
 import { ok } from '@/lib/actions/result';
-import { FormError } from '@/components/ui/form-error';
+import { ActionError } from '@/components/layout/ActionError';
 
 const initialState: ActionResult = ok();
 
@@ -18,7 +18,7 @@ export function RedeemButton({ action }: RedeemButtonProps) {
     return (
         <form action={formAction}>
             <SubmitButton pendingText="Joining...">Join group</SubmitButton>
-            {state.ok ? null : <FormError>{state.error}</FormError>}
+            <ActionError result={state} />
         </form>
     );
 }

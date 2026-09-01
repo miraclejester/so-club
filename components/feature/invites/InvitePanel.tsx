@@ -7,9 +7,9 @@ import { ok } from '@/lib/actions/result';
 import type { Invite } from '@/prisma/generated/prisma/client';
 import { LocalDateTime } from '@/components/layout/LocalDateTime';
 import { useClientValue } from '@/hooks/useClientValue';
-import { FormError } from '@/components/ui/form-error';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { ActionError } from '@/components/layout/ActionError';
 
 type InvitePanelProps = {
     action: FormAction;
@@ -43,13 +43,13 @@ export function InvitePanel({ action, revokeAction, invite }: InvitePanelProps) 
                     {invite !== null ? 'Generate new link' : 'Create invite link'}
                 </SubmitButton>
             </form>
-            {state.ok ? null : <FormError>{state.error}</FormError>}
+            <ActionError result={state} />
             {invite !== null ? (
                 <>
                     <form className="mt-1" action={revokeFormAction}>
                         <SubmitButton pendingText="Revoking...">Revoke invitation</SubmitButton>
                     </form>
-                    {revokeState.ok ? null : <FormError>{revokeState.error}</FormError>}
+                    <ActionError result={revokeState} />
                     <div className="mt-1">
                         <span>
                             Expiry Date:{' '}

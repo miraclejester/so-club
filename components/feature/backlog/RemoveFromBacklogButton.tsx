@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import type { ActionResult } from '@/lib/actions/result';
 import { ok, fail } from '@/lib/actions/result';
 import { FormError } from '@/components/ui/form-error';
+import { ActionError } from '@/components/layout/ActionError';
 
 type RemoveFromBacklogButtonProps = {
     backlogItemId: string;
@@ -51,7 +52,7 @@ export function RemoveFromBacklogButton({ backlogItemId, isScheduled }: RemoveFr
             <Button size="sm" variant="ghost" onClick={startRemovalConfirmation}>
                 Remove
             </Button>
-            {result.ok ? null : <FormError>{result.error}</FormError>}
+            <ActionError result={result} />
         </div>
     );
 }

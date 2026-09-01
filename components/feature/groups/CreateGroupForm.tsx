@@ -8,8 +8,8 @@ import type { ActionResult } from '@/lib/actions/result';
 import { ok } from '@/lib/actions/result';
 import { Form } from '@base-ui/react/form';
 import { Textarea } from '@/components/ui/textarea';
-import { FormError } from '@/components/ui/form-error';
 import { Field, FieldControl, FieldError, FieldLabel } from '@/components/ui/field';
+import { ActionError } from '@/components/layout/ActionError';
 
 const initialState: ActionResult = ok();
 
@@ -30,7 +30,7 @@ export function CreateGroupForm() {
                 <FieldError />
             </Field>
 
-            {state.ok ? null : <FormError>{state.error}</FormError>}
+            <ActionError result={state} />
             <SubmitButton pendingText="Creating...">Create group</SubmitButton>
         </Form>
     );
