@@ -2,7 +2,7 @@ import type { RsvpStatus } from '@/prisma/generated/prisma/enums';
 import Link from 'next/link';
 import { GROUPS_URL } from '@/lib/globals';
 import { Badge } from '@/components/ui/badge';
-import { LocalDateTime } from '@/components/LocalDateTime';
+import { LocalDateTime } from '@/components/layout/LocalDateTime';
 import { Card } from '@/components/ui/card';
 import { RSVP_LABEL } from '@/lib/rsvp/data';
 

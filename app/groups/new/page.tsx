@@ -1,7 +1,7 @@
 import { requireUser } from '@/lib/auth';
-import { CreateGroupForm } from '@/components/CreateGroupForm';
+import { CreateGroupForm } from '@/components/feature/groups/CreateGroupForm';
 import { GROUPS_URL } from '@/lib/globals';
-import { PageHeading } from '@/components/PageHeading';
+import { PageHeading } from '@/components/layout/PageHeading';
 
 export default async function NewGroupPage() {
     await requireUser(`${GROUPS_URL}/new`);

@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { FormError } from '@/components/ui/form-error';
-import { PageHeading } from '@/components/PageHeading';
+import { PageHeading } from '@/components/layout/PageHeading';
 import { EmailSchema, singleStringParamUrl } from '@/lib/validation';
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';

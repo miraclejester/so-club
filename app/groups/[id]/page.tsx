@@ -1,17 +1,17 @@
 import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { requireMembershipOrNotFound, roleIsAtLeast } from '@/lib/authorizationControl';
-import { InvitePanel } from '@/components/InvitePanel';
+import { InvitePanel } from '@/components/feature/invites/InvitePanel';
 import { createInvite, revokeInvite } from '@/lib/invites/actions';
 import Link from 'next/link';
-import { BacklogList } from '@/components/BacklogList';
+import { BacklogList } from '@/components/feature/backlog/BacklogList';
 import { buttonVariants } from '@/components/ui/button';
-import { UpcomingSessions } from '@/components/UpcomingSessions';
+import { UpcomingSessions } from '@/components/feature/watchSessions/UpcomingSessions';
 import { getActiveInvites } from '@/lib/invites/queries';
 import type { Invite } from '@/prisma/generated/prisma/client';
-import { Backlink } from '@/components/Backlink';
+import { Backlink } from '@/components/layout/Backlink';
 import { GROUPS_URL } from '@/lib/globals';
-import { PageHeading } from '@/components/PageHeading';
+import { PageHeading } from '@/components/layout/PageHeading';
 
 export default async function GroupDetailPage({ params }: PageProps<'/groups/[id]'>) {
     const { id } = await params;

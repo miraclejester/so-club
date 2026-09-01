@@ -1,5 +1,5 @@
-import {RsvpOption} from '@/lib/rsvp/types';
-import {RsvpStatus} from '@/prisma/generated/prisma/enums';
+import type { RsvpOption } from '@/lib/rsvp/types';
+import type { RsvpStatus } from '@/prisma/generated/prisma/enums';
 
 export const RSVP_OPTIONS: RsvpOption[] = [
     { value: 'GOING', label: 'Going' },

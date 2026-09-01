@@ -1,11 +1,11 @@
 'use client';
 
 import { useActionState, useState } from 'react';
-import { SubmitButton } from '@/components/SubmitButton';
+import { SubmitButton } from '@/components/layout/SubmitButton';
 import type { ActionResult } from '@/lib/actions/result';
 import { ok } from '@/lib/actions/result';
 import type { Invite } from '@/prisma/generated/prisma/client';
-import { LocalDateTime } from '@/components/LocalDateTime';
+import { LocalDateTime } from '@/components/layout/LocalDateTime';
 import { useClientValue } from '@/hooks/useClientValue';
 import { FormError } from '@/components/ui/form-error';
 import { Input } from '@/components/ui/input';

@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
-import { SubmitButton } from '@/components/SubmitButton';
+import { SubmitButton } from '@/components/layout/SubmitButton';
 import type { ActionResult } from '@/lib/actions/result';
 import { FormError } from '@/components/ui/form-error';
 

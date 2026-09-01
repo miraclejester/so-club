@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { getCurrentUser, signOut } from '@/lib/auth';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { MainContainer } from '@/components/MainContainer';
+import { MainContainer } from '@/components/layout/MainContainer';
 
 export async function AppNav() {
     const user = await getCurrentUser();

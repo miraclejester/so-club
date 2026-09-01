@@ -9,7 +9,7 @@ import { FormError } from '@/components/ui/form-error';
 import { Form } from '@base-ui/react/form';
 import { Field, FieldControl, FieldLabel } from '@/components/ui/field';
 import { Textarea } from '@/components/ui/textarea';
-import { SubmitButton } from '@/components/SubmitButton';
+import { SubmitButton } from '@/components/layout/SubmitButton';
 
 const initialState: ActionResult = { ok: true, data: undefined };
 

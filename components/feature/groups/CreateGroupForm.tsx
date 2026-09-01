@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { createGroup } from '@/lib/groups/actions';
-import { SubmitButton } from '@/components/SubmitButton';
+import { SubmitButton } from '@/components/layout/SubmitButton';
 import { Input } from '@/components/ui/input';
 import type { ActionResult } from '@/lib/actions/result';
 import { Form } from '@base-ui/react/form';

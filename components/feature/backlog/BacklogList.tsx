@@ -1,10 +1,10 @@
 import type { BacklogItem, MediaItem, User, BacklogStatus, Role } from '@/prisma/generated/prisma/client';
 import { roleIsAtLeast } from '@/lib/authorizationControl';
-import { RemoveFromBacklogButton } from '@/components/RemoveFromBacklogButton';
+import { RemoveFromBacklogButton } from '@/components/feature/backlog/RemoveFromBacklogButton';
 import { buttonVariants } from '@/components/ui/button';
 import Link from 'next/link';
 import { GROUPS_URL } from '@/lib/globals';
-import { MediaCard } from '@/components/MediaCard';
+import { MediaCard } from '@/components/media/MediaCard';
 import { formatYear } from '@/lib/utils';
 
 type BacklogEntry = BacklogItem & { mediaItem: MediaItem; addedBy: User };

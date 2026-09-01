@@ -3,9 +3,9 @@
 import { useEffect, useState } from 'react';
 import type { NormalizedMediaItem } from '@/lib/media';
 import type { AddAction } from '@/lib/media/backlog/actions';
-import { AddToBacklogButton } from '@/components/AddToBacklogButton';
+import { AddToBacklogButton } from '@/components/feature/backlog/AddToBacklogButton';
 import { FormError } from '@/components/ui/form-error';
-import { MediaCard } from '@/components/MediaCard';
+import { MediaCard } from '@/components/media/MediaCard';
 import { Input } from '@/components/ui/input';
 import { formatYear } from '@/lib/utils';
 

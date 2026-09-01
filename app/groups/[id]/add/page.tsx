@@ -1,10 +1,10 @@
 import { requireMembershipOrNotFound } from '@/lib/authorizationControl';
-import { MovieSearch } from '@/components/MovieSearch';
+import { MovieSearch } from '@/components/media/MovieSearch';
 import { addToBacklog } from '@/lib/media/backlog/actions';
 import { prisma } from '@/lib/prisma';
-import { Backlink } from '@/components/Backlink';
+import { Backlink } from '@/components/layout/Backlink';
 import { GROUPS_URL } from '@/lib/globals';
-import { PageHeading } from '@/components/PageHeading';
+import { PageHeading } from '@/components/layout/PageHeading';
 
 export default async function AddMediaPage({ params }: PageProps<'/groups/[id]/add'>) {
     const { id } = await params;

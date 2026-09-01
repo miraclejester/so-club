@@ -1,8 +1,8 @@
 import './globals.css';
 import { Inter } from 'next/font/google';
 import { cn } from '@/lib/utils';
-import { AppNav } from '@/components/AppNav';
-import { MainContainer } from '@/components/MainContainer';
+import { AppNav } from '@/components/layout/AppNav';
+import { MainContainer } from '@/components/layout/MainContainer';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 

@@ -1,11 +1,11 @@
 import { redeemInvite } from '@/lib/invites/actions';
 import type { LoggedInUser } from '@/lib/auth';
 import { getCurrentUser } from '@/lib/auth';
-import { RedeemButton } from '@/components/RedeemButton';
+import { RedeemButton } from '@/components/feature/invites/RedeemButton';
 import Link from 'next/link';
 import type { InviteWithDetails } from '@/lib/invites/types';
 import { getInvite } from '@/lib/invites/queries';
-import { PageHeading } from '@/components/PageHeading';
+import { PageHeading } from '@/components/layout/PageHeading';
 import { buttonVariants } from '@/components/ui/button';
 
 export default async function InvitePage({ params }: PageProps<'/invite/[token]'>) {
