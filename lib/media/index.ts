@@ -1,4 +1,5 @@
-import type { MediaProvider, MediaSource } from './types';
+import type { MediaProvider } from './types';
+import type { MediaSource } from '@/prisma/generated/prisma/enums';
 import { TMDBProvider } from '@/lib/media/providers/tmdb';
 import { env } from '@/lib/env';
 

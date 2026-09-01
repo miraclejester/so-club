@@ -1,5 +1,4 @@
-export type MediaSource = 'TMDB'; // More sources later
-export type MediaType = 'MOVIE' | 'BOOK' | 'GAME';
+import type { MediaSource, MediaType } from '@/prisma/generated/prisma/enums';
 
 export interface NormalizedMediaItem {
     source: MediaSource;

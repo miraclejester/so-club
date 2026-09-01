@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { Prisma, type MediaItem } from '@/prisma/generated/prisma/client';
-import type { MediaSource } from '@/lib/media/types';
-import { getProvider } from '@/lib/media/index';
+import type { MediaSource } from '@/prisma/generated/prisma/enums';
+import { getProvider } from '@/lib/media';
 
 export async function snapshotMediaItem(source: MediaSource, externalId: string): Promise<MediaItem> {
     const existing = await prisma.mediaItem.findUnique({
