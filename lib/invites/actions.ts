@@ -10,7 +10,11 @@ import { Prisma } from '@/prisma/generated/prisma/client';
 import { GROUPS_URL } from '@/lib/globals';
 import type { ActionResult } from '@/lib/actions/result';
 import { ok, fail, logAndFail } from '@/lib/actions/result';
-import { isInviteActive } from '@/lib/invites/queries';
+import {
+    getActiveInviteWhereClauseByGroup,
+    getActiveInviteWhereClauseByToken,
+    isInviteActive,
+} from '@/lib/invites/queries';
 
 class InviteUnavailableError extends Error {}
 
@@ -31,16 +35,7 @@ export async function createInvite(groupId: string): Promise<ActionResult> {
                 data: {
                     revokedAt: new Date(),
                 },
-                where: {
-                    groupId,
-                    revokedAt: null,
-                    OR: [{ expiresAt: null }, { expiresAt: { gte: new Date() } }],
-                    AND: [
-                        {
-                            OR: [{ maxUses: null }, { maxUses: { gt: prisma.invite.fields.useCount } }],
-                        },
-                    ],
-                },
+                where: getActiveInviteWhereClauseByGroup(groupId),
             }),
             prisma.invite.create({
                 data: {
@@ -116,12 +111,7 @@ export async function redeemInvite(token: string): Promise<ActionResult> {
     try {
         await prisma.$transaction(async (tx) => {
             const { count } = await tx.invite.updateMany({
-                where: {
-                    token,
-                    revokedAt: null,
-                    OR: [{ expiresAt: null }, { expiresAt: { gte: new Date() } }],
-                    AND: [{ OR: [{ maxUses: null }, { useCount: { lt: prisma.invite.fields.maxUses } }] }],
-                },
+                where: getActiveInviteWhereClauseByToken(token),
                 data: { useCount: { increment: 1 } },
             });
             if (count === 0) {
