@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react';
 import { Button } from '@/components/ui/button';
 import type { RsvpStatus } from '@/prisma/generated/prisma/enums';
 import { setRsvp } from '@/lib/rsvp/actions';
-import { RSVP_OPTIONS } from '@/lib/rsvp/data';
+import { getRsvpOptions } from '@/lib/rsvp/data';
 import type { ActionResult } from '@/lib/actions/result';
 import { ok } from '@/lib/actions/result';
 import { FormError } from '@/components/ui/form-error';
@@ -28,7 +28,7 @@ export function RsvpControls({ sessionId, currentStatus }: RsvpControlsProps) {
     return (
         <>
             <div className="flex gap-2">
-                {RSVP_OPTIONS.map((opt) => (
+                {getRsvpOptions().map((opt) => (
                     <Button
                         key={opt.value}
                         size="sm"

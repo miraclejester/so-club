@@ -7,11 +7,11 @@ import { prisma } from '@/lib/prisma';
 import { checkMembership } from '@/lib/authorizationControl';
 import { revalidatePath } from 'next/cache';
 import { GROUPS_URL } from '@/lib/globals';
-
-const VALID_RSVP_STATUSES = ['GOING', 'MAYBE', 'NOT_GOING'];
+import { RsvpStatusSchema } from '@/lib/validation';
 
 export async function setRsvp(sessionId: string, status: RsvpStatus): Promise<ActionResult> {
-    if (!VALID_RSVP_STATUSES.includes(status)) {
+    const parsed = RsvpStatusSchema.safeParse(status);
+    if (!parsed.success) {
         return fail('Invalid rsvp status');
     }
 
@@ -32,8 +32,8 @@ export async function setRsvp(sessionId: string, status: RsvpStatus): Promise<Ac
     try {
         await prisma.rsvp.upsert({
             where: { watchSessionId_userId: { watchSessionId: sessionId, userId } },
-            update: { status },
-            create: { watchSessionId: sessionId, userId, status },
+            update: { status: parsed.data },
+            create: { watchSessionId: sessionId, userId, status: parsed.data },
         });
     } catch (e) {
         return logAndFail('setRsvp', e, 'Could not save your response. Try again later');
