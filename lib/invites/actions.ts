@@ -65,7 +65,8 @@ export async function revokeInvite(inviteId: string): Promise<ActionResult> {
             prisma.invite.findUnique({
                 where: { id: inviteId },
             }),
-        'Invite not found'
+        'Invite not found',
+        'ADMIN'
     );
 
     if (!loaded.ok) {
