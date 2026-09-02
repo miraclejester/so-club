@@ -7,7 +7,7 @@ import { PageHeading } from '@/components/layout/PageHeading';
 import { EmailSchema, singleStringParamUrl } from '@/lib/validation';
 import { redirect } from 'next/navigation';
 import { getClientIp, rateLimit } from '@/lib/rateLimit';
-import { GROUPS_URL } from '@/lib/globals';
+import { GROUPS_URL } from '@/lib/paths';
 
 const ERROR_MESSAGES: Record<string, string> = {
     OAuthAccountNotLinked:
@@ -52,7 +52,7 @@ export default async function SignInPage({ searchParams }: PageProps<'/signin'>)
             redirect(getSignInUrl('RateLimited', redirectUrl));
         }
 
-        // Rate limit on total email sending
+        // Rate limit on total email sending per instance
         if (!rateLimit(`magiclink:global`, 200, 15 * 60_000)) {
             redirect(getSignInUrl('RateLimited', redirectUrl));
         }

@@ -3,7 +3,7 @@ import { roleIsAtLeast } from '@/lib/authorizationControl';
 import { RemoveFromBacklogButton } from '@/components/feature/backlog/RemoveFromBacklogButton';
 import { buttonVariants } from '@/components/ui/button';
 import Link from 'next/link';
-import { schedulePath } from '@/lib/globals';
+import { schedulePath } from '@/lib/paths';
 import { MediaCard } from '@/components/media/MediaCard';
 import { formatYear } from '@/lib/utils';
 

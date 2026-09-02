@@ -4,7 +4,7 @@ import Google from 'next-auth/providers/google';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { prisma } from '@/lib/prisma';
 import Resend from 'next-auth/providers/resend';
-import { SIGN_IN_URL } from '@/lib/globals';
+import { SIGN_IN_URL } from '@/lib/paths';
 import { redirect } from 'next/navigation';
 
 export type LoggedInUser = {

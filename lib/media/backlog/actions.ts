@@ -6,7 +6,7 @@ import { prisma } from '@/lib/prisma';
 import { snapshotMediaItem } from '@/lib/media/catalog/queries';
 import { Prisma } from '@/prisma/generated/prisma/client';
 import type { MediaSource } from '@/prisma/generated/prisma/enums';
-import { groupPath } from '@/lib/globals';
+import { groupPath } from '@/lib/paths';
 import { MediaSourceSchema, TmdbExternalIdSchema } from '@/lib/validation';
 import type { ActionResult } from '@/lib/actions/result';
 import { ok, fail, logAndFail } from '@/lib/actions/result';

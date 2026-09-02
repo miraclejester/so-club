@@ -1,6 +1,6 @@
 import type { RsvpStatus } from '@/prisma/generated/prisma/enums';
 import Link from 'next/link';
-import { sessionPath } from '@/lib/globals';
+import { sessionPath } from '@/lib/paths';
 import { Badge } from '@/components/ui/badge';
 import { LocalDateTime } from '@/components/layout/LocalDateTime';
 import { Card } from '@/components/ui/card';

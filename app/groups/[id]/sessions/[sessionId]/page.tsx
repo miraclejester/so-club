@@ -1,7 +1,7 @@
 import { requireMembershipOrNotFound } from '@/lib/authorizationControl';
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
-import { groupPath } from '@/lib/globals';
+import { groupPath } from '@/lib/paths';
 import { LocalDateTime } from '@/components/layout/LocalDateTime';
 import { RsvpControls } from '@/components/feature/rsvp/RsvpControls';
 import { Backlink } from '@/components/layout/Backlink';

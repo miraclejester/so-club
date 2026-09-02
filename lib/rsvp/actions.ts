@@ -6,7 +6,7 @@ import { fail, logAndFail, ok } from '../actions/result';
 import { prisma } from '@/lib/prisma';
 import { loadGroupResource } from '@/lib/authorizationControl';
 import { revalidatePath } from 'next/cache';
-import { sessionPath } from '@/lib/globals';
+import { sessionPath } from '@/lib/paths';
 import { RsvpStatusSchema } from '@/lib/validation';
 
 export async function setRsvp(sessionId: string, status: RsvpStatus): Promise<ActionResult> {

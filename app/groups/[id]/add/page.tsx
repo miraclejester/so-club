@@ -3,7 +3,7 @@ import { MovieSearch } from '@/components/media/MovieSearch';
 import { addToBacklog } from '@/lib/media/backlog/actions';
 import { prisma } from '@/lib/prisma';
 import { Backlink } from '@/components/layout/Backlink';
-import { groupPath } from '@/lib/globals';
+import { groupPath } from '@/lib/paths';
 import { PageHeading } from '@/components/layout/PageHeading';
 
 export default async function AddMediaPage({ params }: PageProps<'/groups/[id]/add'>) {

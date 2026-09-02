@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { prisma } from '@/lib/prisma';
 import { snapshotMediaItem } from '@/lib/media/catalog/queries';
 import type { MediaItem, BacklogStatus } from '@/prisma/generated/prisma/client';
-import { invitePath } from '@/lib/globals';
+import { invitePath } from '@/lib/paths';
 
 async function main() {
     if (process.env.DATABASE_URL?.includes('supabase.com')) {

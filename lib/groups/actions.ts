@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { requireUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { groupPath } from '@/lib/globals';
+import { groupPath } from '@/lib/paths';
 import type { ActionResult } from '@/lib/actions/result';
 import { fail, logAndFail } from '@/lib/actions/result';
 

@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { loadGroupResource } from '@/lib/authorizationControl';
 import { prisma } from '@/lib/prisma';
-import { groupPath, sessionPath } from '@/lib/globals';
+import { groupPath, sessionPath } from '@/lib/paths';
 import { ScheduleSessionsSchema } from '@/lib/validation';
 import type { ActionResult } from '@/lib/actions/result';
 import { fail, logAndFail } from '@/lib/actions/result';

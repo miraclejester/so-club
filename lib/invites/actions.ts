@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { requireUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { Prisma } from '@/prisma/generated/prisma/client';
-import { GROUPS_URL, groupPath, invitePath } from '@/lib/globals';
+import { GROUPS_URL, groupPath, invitePath } from '@/lib/paths';
 import type { ActionResult } from '@/lib/actions/result';
 import { ok, fail, logAndFail } from '@/lib/actions/result';
 import { randomBytes } from 'node:crypto';

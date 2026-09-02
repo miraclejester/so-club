@@ -8,7 +8,7 @@ import { getInvite } from '@/lib/invites/queries';
 import { PageHeading } from '@/components/layout/PageHeading';
 import { buttonVariants } from '@/components/ui/button';
 import { getClientIp, rateLimit } from '@/lib/rateLimit';
-import { SIGN_IN_URL, invitePath } from '@/lib/globals';
+import { SIGN_IN_URL, invitePath } from '@/lib/paths';
 
 export default async function InvitePage({ params }: PageProps<'/invite/[token]'>) {
     const [{ token }, ip] = await Promise.all([params, getClientIp()]);

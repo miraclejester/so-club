@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
 import { buttonVariants } from '@/components/ui/button';
-import { GROUPS_URL } from '@/lib/globals';
+import { GROUPS_URL } from '@/lib/paths';
 import { Card } from '@/components/ui/card';
 
 export default async function Home() {

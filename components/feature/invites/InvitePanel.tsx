@@ -10,7 +10,7 @@ import { useClientValue } from '@/hooks/useClientValue';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ActionError } from '@/components/ui/action-error';
-import { invitePath } from '@/lib/globals';
+import { invitePath } from '@/lib/paths';
 
 type InvitePanelProps = {
     action: FormAction;

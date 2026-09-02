@@ -10,7 +10,7 @@ import { UpcomingSessions } from '@/components/feature/watchSessions/UpcomingSes
 import { getActiveInvites } from '@/lib/invites/queries';
 import type { Invite } from '@/prisma/generated/prisma/client';
 import { Backlink } from '@/components/layout/Backlink';
-import { GROUPS_URL } from '@/lib/globals';
+import { GROUPS_URL } from '@/lib/paths';
 import { PageHeading } from '@/components/layout/PageHeading';
 
 export default async function GroupDetailPage({ params }: PageProps<'/groups/[id]'>) {

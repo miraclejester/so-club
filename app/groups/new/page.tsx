@@ -1,6 +1,6 @@
 import { requireUser } from '@/lib/auth';
 import { CreateGroupForm } from '@/components/feature/groups/CreateGroupForm';
-import { GROUPS_URL } from '@/lib/globals';
+import { GROUPS_URL } from '@/lib/paths';
 import { PageHeading } from '@/components/layout/PageHeading';
 
 export default async function NewGroupPage() {
