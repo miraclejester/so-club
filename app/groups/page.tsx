@@ -1,7 +1,7 @@
 import { requireUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
-import { GROUPS_URL } from '@/lib/paths';
+import { groupPath, GROUPS_URL, NEW_GROUP_URL } from '@/lib/paths';
 import { buttonVariants } from '@/components/ui/button';
 import { PageHeading } from '@/components/layout/PageHeading';
 import { Card } from '@/components/ui/card';
@@ -23,14 +23,14 @@ export default async function GroupsPage() {
         <>
             <div className="flex items-center justify-between">
                 <PageHeading className="text-xl font-semibold">Your Groups</PageHeading>
-                <Link href="/groups/new" className={buttonVariants({ variant: 'outline', size: 'sm' })}>
+                <Link href={NEW_GROUP_URL} className={buttonVariants({ variant: 'outline', size: 'sm' })}>
                     Create group
                 </Link>
             </div>
             {memberships.length === 0 ? (
                 <p className="mt-6 text-gray-600">
                     You&apos;re not in any groups yet.{' '}
-                    <Link href="/groups/new" className="underline">
+                    <Link href={NEW_GROUP_URL} className="underline">
                         Create one
                     </Link>{' '}
                     or ask a friend for an invite link.
@@ -39,7 +39,7 @@ export default async function GroupsPage() {
                 <ul className="mt-6 space-y-2">
                     {memberships.map((m) => (
                         <li key={m.group.id}>
-                            <Link href={`/groups/${m.group.id}`}>
+                            <Link href={groupPath(m.group.id)}>
                                 <Card className="px-4 py-3 gap-1 hover:bg-gray-50">
                                     <div className="flex items-center justify-between">
                                         <span className="font-medium">{m.group.name}</span>

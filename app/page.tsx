@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
 import { buttonVariants } from '@/components/ui/button';
-import { GROUPS_URL } from '@/lib/paths';
+import { GROUPS_URL, SIGN_IN_URL } from '@/lib/paths';
 import { Card } from '@/components/ui/card';
 
 export default async function Home() {
@@ -21,7 +21,7 @@ export default async function Home() {
                 after.
             </p>
             <div className="mt-8">
-                <Link href="/signin" className={buttonVariants({ size: 'lg' })}>
+                <Link href={SIGN_IN_URL} className={buttonVariants({ size: 'lg' })}>
                     Get started
                 </Link>
             </div>

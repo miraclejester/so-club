@@ -10,7 +10,7 @@ import { UpcomingSessions } from '@/components/feature/watchSessions/UpcomingSes
 import { getActiveInvites } from '@/lib/invites/queries';
 import type { Invite } from '@/prisma/generated/prisma/client';
 import { Backlink } from '@/components/layout/Backlink';
-import { GROUPS_URL } from '@/lib/paths';
+import { addToBacklogPath, GROUPS_URL } from '@/lib/paths';
 import { PageHeading } from '@/components/layout/PageHeading';
 
 export default async function GroupDetailPage({ params }: PageProps<'/groups/[id]'>) {
@@ -86,7 +86,7 @@ export default async function GroupDetailPage({ params }: PageProps<'/groups/[id
             <section className="mt-8">
                 <div className="flex items-center justify-between">
                     <h2 className="text-sm font-medium text-muted-foreground">Backlog ({backlog.length})</h2>
-                    <Link href={`/groups/${id}/add`} className={buttonVariants({ variant: 'outline', size: 'sm' })}>
+                    <Link href={addToBacklogPath(id)} className={buttonVariants({ variant: 'outline', size: 'sm' })}>
                         Add a movie
                     </Link>
                 </div>

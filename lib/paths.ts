@@ -1,5 +1,6 @@
 export const SIGN_IN_URL = '/signin';
 export const GROUPS_URL = '/groups';
+export const NEW_GROUP_URL = `${GROUPS_URL}/new`;
 
 export function groupPath(groupId: string): string {
     return `${GROUPS_URL}/${groupId}`;
@@ -15,4 +16,8 @@ export function schedulePath(groupId: string, backlogItemId: string): string {
 
 export function invitePath(token: string): string {
     return `/invite/${token}`;
+}
+
+export function addToBacklogPath(groupId: string) {
+    return `${groupPath(groupId)}/add`;
 }

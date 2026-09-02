@@ -39,8 +39,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     adapter: PrismaAdapter(prisma),
     session: { strategy: 'database' },
     pages: {
-        signIn: '/signin',
-        error: '/signin',
+        signIn: SIGN_IN_URL,
+        error: SIGN_IN_URL,
     },
     providers: [githubProvider, googleProvider, Resend({ from: 'send@so-club.com' })],
     callbacks: {
