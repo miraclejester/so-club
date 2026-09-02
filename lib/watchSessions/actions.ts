@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { loadGroupResource } from '@/lib/authorizationControl';
 import { prisma } from '@/lib/prisma';
-import { GROUPS_URL } from '@/lib/globals';
+import { groupPath, sessionPath } from '@/lib/globals';
 import { ScheduleSessionsSchema } from '@/lib/validation';
 import type { ActionResult } from '@/lib/actions/result';
 import { fail, logAndFail } from '@/lib/actions/result';
@@ -64,6 +64,6 @@ export async function scheduleWatchSession(backlogItemId: string, formData: Form
         return logAndFail('scheduleWatchSession', e, 'Could not schedule the session. Please try again');
     }
 
-    revalidatePath(`${GROUPS_URL}/${backlogItem.groupId}`);
-    redirect(`${GROUPS_URL}/${backlogItem.groupId}/sessions/${createdId}`);
+    revalidatePath(groupPath(backlogItem.groupId));
+    redirect(sessionPath(backlogItem.groupId, createdId));
 }

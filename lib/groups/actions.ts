@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { requireUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { GROUPS_URL } from '@/lib/globals';
+import { groupPath } from '@/lib/globals';
 import type { ActionResult } from '@/lib/actions/result';
 import { fail, logAndFail } from '@/lib/actions/result';
 
@@ -47,5 +47,5 @@ export async function createGroup(_prev: ActionResult, formData: FormData): Prom
     }
 
     revalidatePath('/groups');
-    redirect(`${GROUPS_URL}/${group.id}`);
+    redirect(groupPath(group.id));
 }

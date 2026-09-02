@@ -6,7 +6,7 @@ import { prisma } from '@/lib/prisma';
 import { snapshotMediaItem } from '@/lib/media/catalog/queries';
 import { Prisma } from '@/prisma/generated/prisma/client';
 import type { MediaSource } from '@/prisma/generated/prisma/enums';
-import { GROUPS_URL } from '@/lib/globals';
+import { groupPath } from '@/lib/globals';
 import { MediaSourceSchema, TmdbExternalIdSchema } from '@/lib/validation';
 import type { ActionResult } from '@/lib/actions/result';
 import { ok, fail, logAndFail } from '@/lib/actions/result';
@@ -49,7 +49,7 @@ export async function addToBacklog(groupId: string, source: MediaSource, externa
         return logAndFail('addToBacklog', e, 'Could not add to the backlog. Try again later');
     }
 
-    revalidatePath(`${GROUPS_URL}/${groupId}`);
+    revalidatePath(groupPath(groupId));
     return ok({ added: true });
 }
 
@@ -83,6 +83,6 @@ export async function removeFromBacklog(backlogItemId: string): Promise<ActionRe
         return logAndFail('removeFromBacklog', e, 'Could not remove the item. Please try again later');
     }
 
-    revalidatePath(`${GROUPS_URL}/${item.groupId}`);
+    revalidatePath(groupPath(item.groupId));
     return ok();
 }

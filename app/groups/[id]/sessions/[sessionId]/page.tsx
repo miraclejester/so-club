@@ -1,7 +1,7 @@
 import { requireMembershipOrNotFound } from '@/lib/authorizationControl';
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
-import { GROUPS_URL } from '@/lib/globals';
+import { groupPath } from '@/lib/globals';
 import { LocalDateTime } from '@/components/layout/LocalDateTime';
 import { RsvpControls } from '@/components/feature/rsvp/RsvpControls';
 import { Backlink } from '@/components/layout/Backlink';
@@ -30,7 +30,7 @@ export default async function SessionPage({ params }: PageProps<'/groups/[id]/se
 
     return (
         <>
-            <Backlink href={`${GROUPS_URL}/${id}`}>Back to group</Backlink>
+            <Backlink href={groupPath(id)}>Back to group</Backlink>
             <PageHeading>{session.mediaItem.title}</PageHeading>
             <p className="mt-1 text-muted-foreground">
                 <LocalDateTime iso={session.scheduledFor.toISOString()} dateStyle="full" timeStyle="short" />

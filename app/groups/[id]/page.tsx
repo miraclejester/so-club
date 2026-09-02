@@ -61,7 +61,7 @@ export default async function GroupDetailPage({ params }: PageProps<'/groups/[id
 
     return (
         <>
-            <Backlink href={`${GROUPS_URL}`}>Back to your groups</Backlink>
+            <Backlink href={GROUPS_URL}>Back to your groups</Backlink>
 
             <PageHeading>{group.name}</PageHeading>
             {group.description ? <p className="mt-2 text-muted-foreground">{group.description}</p> : null}

@@ -6,7 +6,7 @@ import { fail, logAndFail, ok } from '../actions/result';
 import { prisma } from '@/lib/prisma';
 import { loadGroupResource } from '@/lib/authorizationControl';
 import { revalidatePath } from 'next/cache';
-import { GROUPS_URL } from '@/lib/globals';
+import { sessionPath } from '@/lib/globals';
 import { RsvpStatusSchema } from '@/lib/validation';
 
 export async function setRsvp(sessionId: string, status: RsvpStatus): Promise<ActionResult> {
@@ -39,6 +39,6 @@ export async function setRsvp(sessionId: string, status: RsvpStatus): Promise<Ac
         return logAndFail('setRsvp', e, 'Could not save your response. Try again later');
     }
 
-    revalidatePath(`${GROUPS_URL}/${session.groupId}/sessions/${sessionId}`);
+    revalidatePath(sessionPath(session.groupId, sessionId));
     return ok();
 }

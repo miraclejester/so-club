@@ -1,6 +1,6 @@
 import type { RsvpStatus } from '@/prisma/generated/prisma/enums';
 import Link from 'next/link';
-import { GROUPS_URL } from '@/lib/globals';
+import { sessionPath } from '@/lib/globals';
 import { Badge } from '@/components/ui/badge';
 import { LocalDateTime } from '@/components/layout/LocalDateTime';
 import { Card } from '@/components/ui/card';
@@ -32,7 +32,7 @@ export function UpcomingSessions({ sessions }: UpcomingSessionsProps) {
                 const myStatus = session.rsvps[0]?.status ?? null;
                 return (
                     <li key={session.id}>
-                        <Link href={`${GROUPS_URL}/${session.groupId}/sessions/${session.id}`}>
+                        <Link href={sessionPath(session.groupId, session.id)}>
                             <Card className="p-3 gap-1 hover:bg-muted/50">
                                 <div className="flex items-center justify-between gap-2">
                                     <span className="truncate font-medium">{session.mediaItem.title}</span>

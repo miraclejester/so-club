@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { requireUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { Prisma } from '@/prisma/generated/prisma/client';
-import { GROUPS_URL } from '@/lib/globals';
+import { GROUPS_URL, groupPath, invitePath } from '@/lib/globals';
 import type { ActionResult } from '@/lib/actions/result';
 import { ok, fail, logAndFail } from '@/lib/actions/result';
 import { randomBytes } from 'node:crypto';
@@ -52,7 +52,7 @@ export async function createInvite(groupId: string): Promise<ActionResult> {
             }),
         ]);
 
-        revalidatePath(`${GROUPS_URL}/${groupId}`);
+        revalidatePath(groupPath(groupId));
         return ok();
     } catch (e) {
         return logAndFail('createInvite', e, 'Could not create invite. Please try again later');
@@ -83,13 +83,13 @@ export async function revokeInvite(inviteId: string): Promise<ActionResult> {
         return logAndFail('revokeInvite', e, 'Could not revoke invite');
     }
 
-    revalidatePath(`${GROUPS_URL}/${invite.groupId}`);
+    revalidatePath(groupPath(invite.groupId));
 
     return ok();
 }
 
 export async function redeemInvite(token: string): Promise<ActionResult> {
-    const { id } = await requireUser(`/invite/${token}`);
+    const { id } = await requireUser(invitePath(token));
 
     const invite = await prisma.invite.findUnique({ where: { token } });
     if (!invite) {
@@ -100,7 +100,7 @@ export async function redeemInvite(token: string): Promise<ActionResult> {
         return fail('This invite link is no longer active');
     }
 
-    const groupUrl = `${GROUPS_URL}/${invite.groupId}`;
+    const groupUrl = groupPath(invite.groupId);
 
     // Already a member of the group
     const existing = await prisma.membership.findUnique({

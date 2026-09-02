@@ -3,7 +3,7 @@ import { roleIsAtLeast } from '@/lib/authorizationControl';
 import { RemoveFromBacklogButton } from '@/components/feature/backlog/RemoveFromBacklogButton';
 import { buttonVariants } from '@/components/ui/button';
 import Link from 'next/link';
-import { GROUPS_URL } from '@/lib/globals';
+import { schedulePath } from '@/lib/globals';
 import { MediaCard } from '@/components/media/MediaCard';
 import { formatYear } from '@/lib/utils';
 
@@ -48,7 +48,7 @@ export function BacklogList({ items, currentUserId, viewerRole }: BacklogListPro
 
                         {item.status === 'BACKLOG' ? (
                             <Link
-                                href={`${GROUPS_URL}/${item.groupId}/schedule/${item.id}`}
+                                href={schedulePath(item.groupId, item.id)}
                                 className={buttonVariants({ variant: 'outline', size: 'sm' })}
                             >
                                 Schedule

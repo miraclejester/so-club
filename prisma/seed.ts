@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { prisma } from '@/lib/prisma';
 import { snapshotMediaItem } from '@/lib/media/catalog/queries';
 import type { MediaItem, BacklogStatus } from '@/prisma/generated/prisma/client';
+import { invitePath } from '@/lib/globals';
 
 async function main() {
     if (process.env.DATABASE_URL?.includes('supabase.com')) {
@@ -104,7 +105,7 @@ async function main() {
     }
 
     console.log(`Seeded "${group.name}" with ${items.length} backlog items.`);
-    console.log(`Join it: http://localhost:3000/invite/${inviteToken}`);
+    console.log(`Join it: http://localhost:3000${invitePath(inviteToken)}`);
 }
 
 main()

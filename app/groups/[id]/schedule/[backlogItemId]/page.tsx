@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { scheduleWatchSession } from '@/lib/watchSessions/actions';
 import { ScheduleForm } from '@/components/feature/watchSessions/ScheduleForm';
-import { GROUPS_URL } from '@/lib/globals';
+import { groupPath } from '@/lib/globals';
 import type { ActionResult } from '@/lib/actions/result';
 import { Backlink } from '@/components/layout/Backlink';
 import { PageHeading } from '@/components/layout/PageHeading';
@@ -29,7 +29,7 @@ export default async function SchedulePage({ params }: PageProps<'/groups/[id]/s
 
     return (
         <>
-            <Backlink href={`${GROUPS_URL}/${id}`}>Back to group</Backlink>
+            <Backlink href={groupPath(id)}>Back to group</Backlink>
             <PageHeading>Schedule a session</PageHeading>
             <p className="mt-1 text-muted-foreground">{backlogItem.mediaItem.title}</p>
             <div className="mt-4">

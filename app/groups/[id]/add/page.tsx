@@ -3,7 +3,7 @@ import { MovieSearch } from '@/components/media/MovieSearch';
 import { addToBacklog } from '@/lib/media/backlog/actions';
 import { prisma } from '@/lib/prisma';
 import { Backlink } from '@/components/layout/Backlink';
-import { GROUPS_URL } from '@/lib/globals';
+import { groupPath } from '@/lib/globals';
 import { PageHeading } from '@/components/layout/PageHeading';
 
 export default async function AddMediaPage({ params }: PageProps<'/groups/[id]/add'>) {
@@ -19,7 +19,7 @@ export default async function AddMediaPage({ params }: PageProps<'/groups/[id]/a
 
     return (
         <>
-            <Backlink href={`${GROUPS_URL}/${id}`}>Back to group</Backlink>
+            <Backlink href={groupPath(id)}>Back to group</Backlink>
             <PageHeading>Add a movie</PageHeading>
             <div className="mt-4">
                 <MovieSearch addAction={addToBacklog.bind(null, id)} existingKeys={[...existingKeys]} />

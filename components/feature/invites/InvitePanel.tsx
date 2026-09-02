@@ -10,6 +10,7 @@ import { useClientValue } from '@/hooks/useClientValue';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ActionError } from '@/components/ui/action-error';
+import { invitePath } from '@/lib/globals';
 
 type InvitePanelProps = {
     action: FormAction;
@@ -34,7 +35,7 @@ export function InvitePanel({ action, revokeAction, invite }: InvitePanelProps) 
     );
 
     const token = invite?.token ?? null;
-    const inviteUrl = token ? `${origin}/invite/${token}` : null;
+    const inviteUrl = token ? `${origin}${invitePath(token)}` : null;
 
     return (
         <div className="mt-6 border-t pt-4">
