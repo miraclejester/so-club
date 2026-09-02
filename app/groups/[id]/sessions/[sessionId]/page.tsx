@@ -6,7 +6,7 @@ import { LocalDateTime } from '@/components/layout/LocalDateTime';
 import { RsvpControls } from '@/components/feature/rsvp/RsvpControls';
 import { Backlink } from '@/components/layout/Backlink';
 import { PageHeading } from '@/components/layout/PageHeading';
-import { getRsvpOptions } from '@/lib/rsvp/data';
+import { RSVP_OPTIONS } from '@/lib/rsvp/labels';
 
 export default async function SessionPage({ params }: PageProps<'/groups/[id]/sessions/[sessionId]'>) {
     const { id, sessionId } = await params;
@@ -46,7 +46,7 @@ export default async function SessionPage({ params }: PageProps<'/groups/[id]/se
             </section>
 
             <section className="mt-8 space-y-4">
-                {getRsvpOptions().map(({ value, label }) => {
+                {RSVP_OPTIONS.map(({ value, label }) => {
                     const people = session.rsvps.filter((r) => r.status === value);
                     return (
                         <div key={value}>

@@ -4,7 +4,7 @@ import { GROUPS_URL } from '@/lib/globals';
 import { Badge } from '@/components/ui/badge';
 import { LocalDateTime } from '@/components/layout/LocalDateTime';
 import { Card } from '@/components/ui/card';
-import { RSVP_LABEL } from '@/lib/rsvp/data';
+import { RSVP_LABEL } from '@/lib/rsvp/labels';
 
 type UpcomingSessionData = {
     id: string;
