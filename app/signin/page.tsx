@@ -6,8 +6,7 @@ import { FormError } from '@/components/ui/form-error';
 import { PageHeading } from '@/components/layout/PageHeading';
 import { EmailSchema, singleStringParamUrl } from '@/lib/validation';
 import { redirect } from 'next/navigation';
-import { headers } from 'next/headers';
-import { rateLimit } from '@/lib/rateLimit';
+import { getClientIp, rateLimit } from '@/lib/rateLimit';
 import { GROUPS_URL } from '@/lib/globals';
 
 const ERROR_MESSAGES: Record<string, string> = {
@@ -46,16 +45,20 @@ export default async function SignInPage({ searchParams }: PageProps<'/signin'>)
             redirect(getSignInUrl('InvalidEmail', redirectUrl));
         }
 
-        const forwarded = (await headers()).get('x-forwarded-for');
-        const ip = forwarded?.split(',')[0]?.trim() || 'unknown';
+        const ip = await getClientIp();
 
-        const ipBanned = !rateLimit(`magiclink:ip:${ip}`, 10, 15 * 60_000);
-        if (ipBanned) {
+        // Rate limiting the same Ip
+        if (!rateLimit(`magiclink:ip:${ip}`, 10, 15 * 60_000)) {
             redirect(getSignInUrl('RateLimited', redirectUrl));
         }
 
-        const emailBanned = !rateLimit(`magiclink:${parsed.data}`, 3, 15 * 60_000);
-        if (emailBanned) {
+        // Rate limit on total email sending
+        if (!rateLimit(`magiclink:global`, 200, 15 * 60_000)) {
+            redirect(getSignInUrl('RateLimited', redirectUrl));
+        }
+
+        // Rate limit on the same email
+        if (!rateLimit(`magiclink:${parsed.data}`, 3, 15 * 60_000)) {
             redirect(getSignInUrl('RateLimited', redirectUrl));
         }
 

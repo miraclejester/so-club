@@ -48,7 +48,7 @@ export async function createInvite(groupId: string): Promise<ActionResult> {
                     groupId,
                     createdById: userId,
                     expiresAt: expiryDate,
-                    token: newInviteToken()
+                    token: newInviteToken(),
                 },
             }),
         ]);

@@ -43,3 +43,6 @@ next-env.d.ts
 #prisma
 /prisma/generated/prisma
 
+#IDE user settings
+Folder.DotSettings.user
+
