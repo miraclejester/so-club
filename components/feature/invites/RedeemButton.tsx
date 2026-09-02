@@ -1,10 +1,10 @@
 'use client';
 
 import { useActionState } from 'react';
-import { SubmitButton } from '@/components/layout/SubmitButton';
+import { SubmitButton } from '@/components/ui/submit-button';
 import type { ActionResult, FormAction } from '@/lib/actions/result';
 import { ok } from '@/lib/actions/result';
-import { ActionError } from '@/components/layout/ActionError';
+import { ActionError } from '@/components/ui/action-error';
 
 const initialState: ActionResult = ok();
 

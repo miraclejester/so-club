@@ -2,14 +2,14 @@
 
 import { useActionState } from 'react';
 import { createGroup } from '@/lib/groups/actions';
-import { SubmitButton } from '@/components/layout/SubmitButton';
+import { SubmitButton } from '@/components/ui/submit-button';
 import { Input } from '@/components/ui/input';
 import type { ActionResult } from '@/lib/actions/result';
 import { ok } from '@/lib/actions/result';
 import { Form } from '@base-ui/react/form';
 import { Textarea } from '@/components/ui/textarea';
 import { Field, FieldControl, FieldError, FieldLabel } from '@/components/ui/field';
-import { ActionError } from '@/components/layout/ActionError';
+import { ActionError } from '@/components/ui/action-error';
 
 const initialState: ActionResult = ok();
 

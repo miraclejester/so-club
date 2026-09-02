@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import type { ActionResult } from '@/lib/actions/result';
 import { ok, fail } from '@/lib/actions/result';
 import { FormError } from '@/components/ui/form-error';
-import { ActionError } from '@/components/layout/ActionError';
+import { ActionError } from '@/components/ui/action-error';
 
 type RemoveFromBacklogButtonProps = {
     backlogItemId: string;

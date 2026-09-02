@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react';
 import type { MediaSource } from '@/prisma/generated/prisma/enums';
 import type { AddAction, AddResult } from '@/lib/media/backlog/actions';
 import { Button } from '@/components/ui/button';
-import { ActionError } from '@/components/layout/ActionError';
+import { ActionError } from '@/components/ui/action-error';
 
 type AddToBacklogButtonProps = {
     source: MediaSource;

@@ -9,8 +9,8 @@ import { ok } from '@/lib/actions/result';
 import { Form } from '@base-ui/react/form';
 import { Field, FieldControl, FieldLabel } from '@/components/ui/field';
 import { Textarea } from '@/components/ui/textarea';
-import { SubmitButton } from '@/components/layout/SubmitButton';
-import { ActionError } from '@/components/layout/ActionError';
+import { SubmitButton } from '@/components/ui/submit-button';
+import { ActionError } from '@/components/ui/action-error';
 
 const initialState: ActionResult = ok();
 

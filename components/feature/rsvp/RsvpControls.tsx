@@ -7,7 +7,7 @@ import { setRsvp } from '@/lib/rsvp/actions';
 import { RSVP_OPTIONS } from '@/lib/rsvp/labels';
 import type { ActionResult } from '@/lib/actions/result';
 import { ok } from '@/lib/actions/result';
-import { ActionError } from '@/components/layout/ActionError';
+import { ActionError } from '@/components/ui/action-error';
 
 type RsvpControlsProps = {
     sessionId: string;

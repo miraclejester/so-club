@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState, useState } from 'react';
-import { SubmitButton } from '@/components/layout/SubmitButton';
+import { SubmitButton } from '@/components/ui/submit-button';
 import type { FormAction } from '@/lib/actions/result';
 import { ok } from '@/lib/actions/result';
 import type { Invite } from '@/prisma/generated/prisma/client';
@@ -9,7 +9,7 @@ import { LocalDateTime } from '@/components/layout/LocalDateTime';
 import { useClientValue } from '@/hooks/useClientValue';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { ActionError } from '@/components/layout/ActionError';
+import { ActionError } from '@/components/ui/action-error';
 
 type InvitePanelProps = {
     action: FormAction;
