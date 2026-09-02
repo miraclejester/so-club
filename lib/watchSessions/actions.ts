@@ -12,11 +12,15 @@ import { fail, logAndFail } from '@/lib/actions/result';
 export async function scheduleWatchSession(backlogItemId: string, formData: FormData): Promise<ActionResult> {
     const backlogItem = await prisma.backlogItem.findUnique({
         where: { id: backlogItemId },
-        select: { id: true, groupId: true, mediaItemId: true },
+        select: { id: true, groupId: true, mediaItemId: true, status: true },
     });
 
     if (!backlogItem) {
         return fail('That item is not in any backlog');
+    }
+
+    if (backlogItem.status === 'SCHEDULED') {
+        return fail('That item has already been scheduled');
     }
 
     const check = await checkMembership(backlogItem.groupId);

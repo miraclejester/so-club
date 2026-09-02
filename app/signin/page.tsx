@@ -25,8 +25,9 @@ function getSignInUrl(errorCode: string, redirectUrl: string) {
 export default async function SignInPage({ searchParams }: PageProps<'/signin'>) {
     const { callbackUrl, error } = await searchParams;
 
-    const errorMessage = error
-        ? (ERROR_MESSAGES[error as string] ?? 'Could not sign you in. Please try again later')
+    const errorCode = typeof error === 'string' ? error : null;
+    const errorMessage = errorCode
+        ? (ERROR_MESSAGES[errorCode] ?? 'Could not sign you in. Please try again later')
         : null;
 
     const parser = singleStringParamUrl('Invalid callback url', GROUPS_URL);

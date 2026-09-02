@@ -12,7 +12,7 @@ type BacklogEntry = BacklogItem & { mediaItem: MediaItem; addedBy: User };
 const STATUS_LABELS: Record<BacklogStatus, string> = {
     BACKLOG: 'Backlog',
     SCHEDULED: 'Scheduled',
-    IN_PROGRESS: 'InProgress',
+    IN_PROGRESS: 'In Progress',
     FINISHED: 'Finished',
 };
 

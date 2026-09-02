@@ -32,7 +32,7 @@ export async function addToBacklog(groupId: string, source: MediaSource, externa
     // Snapshot
     let mediaItem;
     try {
-        mediaItem = await snapshotMediaItem(source, externalId);
+        mediaItem = await snapshotMediaItem(parsedSource.data, parsedId.data);
     } catch (e) {
         return logAndFail('addToBacklog', e, 'Could not fetch that title. Try again later');
     }

@@ -17,7 +17,7 @@ export default async function SchedulePage({ params }: PageProps<'/groups/[id]/s
         where: { id: backlogItemId, groupId: id },
         include: { mediaItem: true },
     });
-    if (!backlogItem) {
+    if (!backlogItem || backlogItem.status === 'SCHEDULED') {
         notFound();
     }
 
