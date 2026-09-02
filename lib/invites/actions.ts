@@ -10,6 +10,8 @@ import { Prisma } from '@/prisma/generated/prisma/client';
 import { GROUPS_URL } from '@/lib/globals';
 import type { ActionResult } from '@/lib/actions/result';
 import { ok, fail, logAndFail } from '@/lib/actions/result';
+import { randomBytes } from 'node:crypto';
+
 import {
     getActiveInviteWhereClauseByGroup,
     getActiveInviteWhereClauseByToken,
@@ -19,6 +21,10 @@ import {
 class InviteUnavailableError extends Error {}
 
 const INVITE_TTL_DAYS = 7;
+
+function newInviteToken(): string {
+    return randomBytes(32).toString('base64url');
+}
 
 export async function createInvite(groupId: string): Promise<ActionResult> {
     const check = await checkMembership(groupId, 'ADMIN');
@@ -42,6 +48,7 @@ export async function createInvite(groupId: string): Promise<ActionResult> {
                     groupId,
                     createdById: userId,
                     expiresAt: expiryDate,
+                    token: newInviteToken()
                 },
             }),
         ]);

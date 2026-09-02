@@ -7,9 +7,14 @@ import type { InviteWithDetails } from '@/lib/invites/types';
 import { getInvite } from '@/lib/invites/queries';
 import { PageHeading } from '@/components/layout/PageHeading';
 import { buttonVariants } from '@/components/ui/button';
+import { getClientIp, rateLimit } from '@/lib/rateLimit';
 
 export default async function InvitePage({ params }: PageProps<'/invite/[token]'>) {
-    const { token } = await params;
+    const [{ token }, ip] = await Promise.all([params, getClientIp]);
+    
+    if (!rateLimit(`invite:${ip}`, 20, 60_000)) {
+        return <p>Too many attempts. Please try again in a minute</p>
+    }
 
     const invite: InviteWithDetails | null = await getInvite(token);
     if (!invite) {

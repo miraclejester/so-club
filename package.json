@@ -13,6 +13,7 @@
     "format:fix": "prettier --write .",
     "postinstall": "prisma generate",
     "deploy:prisma": "dotenv -e .env.production.local -- npx prisma migrate deploy",
+    "migrate:dev": "prisma migrate dev",
     "docker:db": "docker compose up -d",
     "db:seed": "prisma db seed"
   },
