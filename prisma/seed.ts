@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { prisma } from '@/lib/prisma';
-import { snapshotMediaItem } from '@/lib/media/catalog/actions';
+import { snapshotMediaItem } from '@/lib/media/catalog/queries';
 import type { MediaItem, BacklogStatus } from '@/prisma/generated/prisma/client';
 
 async function main() {

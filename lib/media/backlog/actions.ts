@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { roleIsAtLeast, checkMembership } from '@/lib/authorizationControl';
 import { prisma } from '@/lib/prisma';
-import { snapshotMediaItem } from '@/lib/media/catalog/actions';
+import { snapshotMediaItem } from '@/lib/media/catalog/queries';
 import { Prisma } from '@/prisma/generated/prisma/client';
 import type { MediaSource } from '@/prisma/generated/prisma/enums';
 import { GROUPS_URL } from '@/lib/globals';
