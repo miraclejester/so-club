@@ -1,11 +1,10 @@
 'use server';
 
-import { checkMembership } from '@/lib/authorizationControl';
+import { checkMembership, loadGroupResource } from '@/lib/authorizationControl';
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { requireUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
-import type { Invite } from '@/prisma/generated/prisma/client';
 import { Prisma } from '@/prisma/generated/prisma/client';
 import { GROUPS_URL } from '@/lib/globals';
 import type { ActionResult } from '@/lib/actions/result';
@@ -61,23 +60,19 @@ export async function createInvite(groupId: string): Promise<ActionResult> {
 }
 
 export async function revokeInvite(inviteId: string): Promise<ActionResult> {
-    let invite: Invite | null = null;
-    try {
-        invite = await prisma.invite.findUnique({
-            where: { id: inviteId },
-        });
-    } catch (e) {
-        return logAndFail('revokeInvite', e, 'Could not revoke invite');
+    const loaded = await loadGroupResource(
+        () =>
+            prisma.invite.findUnique({
+                where: { id: inviteId },
+            }),
+        'Invite not found'
+    );
+
+    if (!loaded.ok) {
+        return loaded;
     }
 
-    if (!invite) {
-        return fail('Invite not found');
-    }
-
-    const check = await checkMembership(invite.groupId, 'ADMIN');
-    if (!check.ok) {
-        return fail(check.error);
-    }
+    const { resource: invite } = loaded.data;
 
     try {
         await prisma.invite.update({

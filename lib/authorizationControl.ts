@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma';
 import type { Role } from '@/prisma/generated/prisma/enums';
 import type { Membership } from '@/prisma/generated/prisma/client';
 import { notFound } from 'next/navigation';
+import type { ActionResult } from '@/lib/actions/result';
+import { fail, ok } from '@/lib/actions/result';
 
 const ROLE_RANK: Record<Role, number> = {
     MEMBER: 1,
@@ -16,6 +18,7 @@ export type MembershipContext = {
 };
 
 export type MembershipCheck = { ok: true; membership: Membership; userId: string } | { ok: false; error: string };
+export type GroupResource<T> = { resource: T; userId: string; membership: Membership };
 
 export class AuthorizationError extends Error {
     constructor(message = 'Not authorized') {
@@ -73,4 +76,23 @@ export async function requireMembershipOrNotFound(
         }
         throw e;
     }
+}
+
+// Loads a resource through the load function. The user should be authenticated within the group the resource points to
+export async function loadGroupResource<T extends { groupId: string }>(
+    load: () => Promise<T | null>,
+    notFoundMessage: string,
+    minRole: Role = 'MEMBER'
+): Promise<ActionResult<GroupResource<T>>> {
+    const resource = await load();
+    if (!resource) {
+        return fail(notFoundMessage);
+    }
+
+    const check = await checkMembership(resource.groupId, minRole);
+    if (!check.ok) {
+        return fail(check.error);
+    }
+
+    return ok({ resource, userId: check.userId, membership: check.membership });
 }

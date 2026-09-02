@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { checkMembership } from '@/lib/authorizationControl';
+import { loadGroupResource } from '@/lib/authorizationControl';
 import { prisma } from '@/lib/prisma';
 import { GROUPS_URL } from '@/lib/globals';
 import { ScheduleSessionsSchema } from '@/lib/validation';
@@ -10,24 +10,24 @@ import type { ActionResult } from '@/lib/actions/result';
 import { fail, logAndFail } from '@/lib/actions/result';
 
 export async function scheduleWatchSession(backlogItemId: string, formData: FormData): Promise<ActionResult> {
-    const backlogItem = await prisma.backlogItem.findUnique({
-        where: { id: backlogItemId },
-        select: { id: true, groupId: true, mediaItemId: true, status: true },
-    });
+    const loaded = await loadGroupResource(
+        () =>
+            prisma.backlogItem.findUnique({
+                where: { id: backlogItemId },
+                select: { id: true, groupId: true, mediaItemId: true, status: true },
+            }),
+        'That item is not in any backlog'
+    );
 
-    if (!backlogItem) {
-        return fail('That item is not in any backlog');
+    if (!loaded.ok) {
+        return loaded;
     }
+
+    const { resource: backlogItem, userId } = loaded.data;
 
     if (backlogItem.status === 'SCHEDULED') {
         return fail('That item has already been scheduled');
     }
-
-    const check = await checkMembership(backlogItem.groupId);
-    if (!check.ok) {
-        return fail(check.error);
-    }
-    const userId = check.userId;
 
     const parsed = ScheduleSessionsSchema.safeParse({
         scheduledFor: formData.get('scheduledFor'),
