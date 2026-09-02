@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react';
 import type { MediaSource } from '@/prisma/generated/prisma/enums';
 import type { AddAction, AddResult } from '@/lib/media/backlog/actions';
 import { Button } from '@/components/ui/button';
-import { FormError } from '@/components/ui/form-error';
+import { ActionError } from '@/components/layout/ActionError';
 
 type AddToBacklogButtonProps = {
     source: MediaSource;
@@ -36,7 +36,7 @@ export function AddToBacklogButton({ source, externalId, action, alreadyInBacklo
             >
                 {pending ? 'Adding...' : inBacklog ? 'In backlog' : 'Add to backlog'}
             </Button>
-            {result && !result.ok ? <FormError>{result.error}</FormError> : null}
+            {result ? <ActionError result={result} /> : null}
         </div>
     );
 }

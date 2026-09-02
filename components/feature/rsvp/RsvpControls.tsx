@@ -7,7 +7,7 @@ import { setRsvp } from '@/lib/rsvp/actions';
 import { RSVP_OPTIONS } from '@/lib/rsvp/labels';
 import type { ActionResult } from '@/lib/actions/result';
 import { ok } from '@/lib/actions/result';
-import { FormError } from '@/components/ui/form-error';
+import { ActionError } from '@/components/layout/ActionError';
 
 type RsvpControlsProps = {
     sessionId: string;
@@ -40,7 +40,7 @@ export function RsvpControls({ sessionId, currentStatus }: RsvpControlsProps) {
                     </Button>
                 ))}
             </div>
-            {result.ok ? null : <FormError className="mt-2">{result.error}</FormError>}
+            <ActionError result={result} className="mt-2" />
         </>
     );
 }
