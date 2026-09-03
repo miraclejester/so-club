@@ -41,14 +41,14 @@ export function ScheduleForm({ action }: ScheduleFormProps) {
             <Field name="location">
                 <FieldLabel>
                     <span className="text-sm font-medium">Location or link (optional)</span>
-                    <Input name="location" placeholder={"Someone's place or a stream/discord link"} />
+                    <Input placeholder={"Someone's place or a stream/discord link"} maxLength={200} />
                 </FieldLabel>
             </Field>
 
             <Field name="notes">
                 <FieldLabel>
                     <span className="text-sm font-medium">Notes (optional)</span>
-                    <FieldControl maxLength={1000} render={<Textarea rows={3} />} />
+                    <FieldControl maxLength={2000} render={<Textarea rows={3} />} />
                 </FieldLabel>
             </Field>
 

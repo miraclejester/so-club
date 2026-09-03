@@ -14,15 +14,15 @@ export const ScheduleSessionsSchema = z.object({
         .refine((v) => v.length > 0 && !Number.isNaN(new Date(v).getTime()), 'Please choose a valid date and time')
         .transform((v) => new Date(v))
         .refine((d) => d.getTime() > Date.now(), 'Please pick a time in the future'),
-    location: optionalText(200),
-    notes: optionalText(2000),
+    location: optionalText(200, 'Location'),
+    notes: optionalText(2000, 'Notes'),
 });
 
-function optionalText(max: number) {
+function optionalText(max: number, label: string) {
     return z
         .string()
         .trim()
-        .max(max)
+        .max(max, `${label} must be ${max} characters or fewer`)
         .nullish()
         .transform((v) => v || null);
 }

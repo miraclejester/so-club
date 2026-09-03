@@ -82,6 +82,7 @@ model Membership {
   group         Group     @relation(fields: [groupId], references:[id], onDelete: Cascade)
   
   @@unique([userId, groupId])
+  @@index([groupId])
 }
 
 model Invite {

@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { BacklogList } from '@/components/feature/backlog/BacklogList';
 import { buttonVariants } from '@/components/ui/button';
 import { UpcomingSessions } from '@/components/feature/watchSessions/UpcomingSessions';
-import { getActiveInvites } from '@/lib/invites/queries';
+import { getActiveInvite } from '@/lib/invites/queries';
 import type { Invite } from '@/prisma/generated/prisma/client';
 import { Backlink } from '@/components/ui/backlink';
 import { addToBacklogPath, GROUPS_URL } from '@/lib/paths';
@@ -44,9 +44,9 @@ export default async function GroupDetailPage({ params }: PageProps<'/groups/[id
         },
     });
 
-    const invitePromise: Promise<Invite[]> = isAdmin ? getActiveInvites(id) : Promise.resolve([]);
+    const invitePromise: Promise<Invite | null> = isAdmin ? getActiveInvite(id) : Promise.resolve(null);
 
-    const [group, backlog, upcoming, invites] = await Promise.all([
+    const [group, backlog, upcoming, activeInvite] = await Promise.all([
         groupPromise,
         backlogPromise,
         upcomingPromise,
@@ -56,8 +56,6 @@ export default async function GroupDetailPage({ params }: PageProps<'/groups/[id
     if (!group) {
         notFound();
     }
-
-    const activeInvite: Invite | null = invites.length === 0 ? null : invites[0];
 
     return (
         <>

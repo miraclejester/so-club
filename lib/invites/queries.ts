@@ -18,8 +18,8 @@ export async function getInvite(token: string): Promise<InviteWithDetails | null
     };
 }
 
-export async function getActiveInvites(groupId: string): Promise<Invite[]> {
-    return prisma.invite.findMany({
+export async function getActiveInvite(groupId: string): Promise<Invite | null> {
+    return prisma.invite.findFirst({
         where: getActiveInviteWhereClauseByGroup(groupId),
         orderBy: { createdAt: 'desc' },
     });
