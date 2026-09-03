@@ -5,8 +5,8 @@ import { scheduleWatchSession } from '@/lib/watchSessions/actions';
 import { ScheduleForm } from '@/components/feature/watchSessions/ScheduleForm';
 import { groupPath } from '@/lib/paths';
 import type { ActionResult } from '@/lib/actions/result';
-import { Backlink } from '@/components/layout/Backlink';
-import { PageHeading } from '@/components/layout/PageHeading';
+import { Backlink } from '@/components/ui/backlink';
+import { PageHeading } from '@/components/ui/page-heading';
 
 export default async function SchedulePage({ params }: PageProps<'/groups/[id]/schedule/[backlogItemId]'>) {
     const { id, backlogItemId } = await params;

@@ -5,7 +5,7 @@ import { SubmitButton } from '@/components/ui/submit-button';
 import type { FormAction } from '@/lib/actions/result';
 import { ok } from '@/lib/actions/result';
 import type { Invite } from '@/prisma/generated/prisma/client';
-import { LocalDateTime } from '@/components/layout/LocalDateTime';
+import { LocalDateTime } from '@/components/ui/local-date-time';
 import { useClientValue } from '@/hooks/useClientValue';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';

@@ -5,7 +5,7 @@ import { RedeemButton } from '@/components/feature/invites/RedeemButton';
 import Link from 'next/link';
 import type { InviteWithDetails } from '@/lib/invites/types';
 import { getInvite } from '@/lib/invites/queries';
-import { PageHeading } from '@/components/layout/PageHeading';
+import { PageHeading } from '@/components/ui/page-heading';
 import { buttonVariants } from '@/components/ui/button';
 import { getClientIp, rateLimit } from '@/lib/rateLimit';
 import { SIGN_IN_URL, invitePath } from '@/lib/paths';

@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import { groupPath, GROUPS_URL, NEW_GROUP_URL } from '@/lib/paths';
 import { buttonVariants } from '@/components/ui/button';
-import { PageHeading } from '@/components/layout/PageHeading';
+import { PageHeading } from '@/components/ui/page-heading';
 import { Card } from '@/components/ui/card';
 
 export default async function GroupsPage() {

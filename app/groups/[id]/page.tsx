@@ -9,9 +9,9 @@ import { buttonVariants } from '@/components/ui/button';
 import { UpcomingSessions } from '@/components/feature/watchSessions/UpcomingSessions';
 import { getActiveInvites } from '@/lib/invites/queries';
 import type { Invite } from '@/prisma/generated/prisma/client';
-import { Backlink } from '@/components/layout/Backlink';
+import { Backlink } from '@/components/ui/backlink';
 import { addToBacklogPath, GROUPS_URL } from '@/lib/paths';
-import { PageHeading } from '@/components/layout/PageHeading';
+import { PageHeading } from '@/components/ui/page-heading';
 
 export default async function GroupDetailPage({ params }: PageProps<'/groups/[id]'>) {
     const { id } = await params;
